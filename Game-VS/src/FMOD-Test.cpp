@@ -12,9 +12,8 @@ const char* AUDIO_FILE = "res/sound/mx_section_1.ogg"; // 00:31:30 loopable musi
 
 /**
 * A simple function which plays a sound file using FMOD's low level audio system.
-* NOTE - For audio playback, the main thread sleeps for a calculated amound of time to allow
-*        for FMOD's to playback sound - This 'calculating' the playback time is not really
-*        the 'default' way to use FMOD to play audio from within your OpenGL game
+* NOTE - To hear the audio playback, the main thread sleeps for a calculated amount. This
+*        is just for the purposes of the test program
 *
 * @var filename - relative path to file from project directory. (Can be .OGG, .WAV, .MP3,
 *                 or any other FMOD-supported audio format)
