@@ -36,10 +36,10 @@
     <ClCompile Include="..\Lib\Widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BezierPatch.cpp">
+    <ClCompile Include="..\Lib\Draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Lib\Draw.cpp">
+    <ClCompile Include="src\3-Demo-RayTrace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

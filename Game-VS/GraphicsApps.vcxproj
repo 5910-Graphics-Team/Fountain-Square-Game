@@ -170,7 +170,7 @@
     <ClCompile Include="..\Lib\Numbers.cpp" />
     <ClCompile Include="..\Lib\Quaternion.cpp" />
     <ClCompile Include="..\Lib\Widgets.cpp" />
-    <ClCompile Include="src\BezierPatch.cpp" />
+    <ClCompile Include="src\3-Demo-RayTrace.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\FacetedCubePersp-Pixel.shader" />
