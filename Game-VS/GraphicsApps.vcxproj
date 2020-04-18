@@ -170,12 +170,15 @@
     <ClCompile Include="..\Lib\Numbers.cpp" />
     <ClCompile Include="..\Lib\Quaternion.cpp" />
     <ClCompile Include="..\Lib\Widgets.cpp" />
-    <ClCompile Include="src\FMOD-Test.cpp" />
+    <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\FacetedCubePersp-Pixel.shader" />
     <None Include="res\shaders\FacetedCubePersp-Vertex.shader" />
     <None Include="res\sound\mx_section_1.ogg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Audio-Engine\AudioEngine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
