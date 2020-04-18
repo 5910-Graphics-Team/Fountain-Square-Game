@@ -39,13 +39,15 @@
     <ClCompile Include="..\Lib\Draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\FMOD-Test.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\FacetedCubePersp-Pixel.shader" />
     <None Include="res\shaders\FacetedCubePersp-Vertex.shader" />
     <None Include="res\sound\mx_section_1.ogg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Audio-Engine\AudioEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
