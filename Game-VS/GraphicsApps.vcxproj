@@ -180,6 +180,9 @@
   <ItemGroup>
     <ClInclude Include="src\Audio-Engine\AudioEngine.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="res\obj\large_basin_water_fountain_v2.obj" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
