@@ -178,10 +178,7 @@
     <None Include="res\sound\mx_section_1.ogg" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Audio-Engine\AudioEngine.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="res\obj\large_basin_water_fountain_v2.obj" />
+    <Image Include="res\objects\environment\grass.tga" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
