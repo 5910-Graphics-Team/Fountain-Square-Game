@@ -15,14 +15,14 @@ int         winW = 600, winH = 600;
 // shaders
 GLuint backgroundShader = 0, foregroundShader = 0;
 GLuint vBuffer = 0; // GPU vertex buffer ID
-vec2 points[] = { vec2(-1,-1), vec2(-1,1), vec2(1,1), vec2(1,-1) };
+vec3 points[] = { vec3(-1,0, -1), vec3(-1,0,1), vec3(1,0,1), vec3(1,0,-1) };
 vec2 uvs[] = { vec2(0,0), vec2(1,0), vec2(1,1), vec2(0,1) };
 
 // interaction
 float objectX = 0, objectY = 0, objectScale = 1;
 float xDown = 0, yDown = 0, oldMouseX = 0, oldMouseY = 0;
 
-void DisplayBackground() {
+void DisplayasdfGround() {
     const char* vShader = R"(
         #version 330
         out vec2 uv;
@@ -50,16 +50,16 @@ void DisplayBackground() {
     glDrawArrays(GL_QUADS, 0, 4);
 }
 
-void DisplayForeground() {
+void DisplayGround() {
     const char* vShader = R"(
         #version 330
-		in vec2 point;
+		in vec3 point;
 		in vec2 uv;
 		uniform mat4 view;
         out vec2 vUv;
         void main() {
             vUv = uv;
-            gl_Position = view*vec4(point, 0, 1);
+            gl_Position = view*vec4(point, 1);
         }
     )";
     const char* pShader = R"(
@@ -85,9 +85,11 @@ void DisplayForeground() {
     VertexAttribPointer(foregroundShader, "point", 2, 0, (void*)0);
     VertexAttribPointer(foregroundShader, "uv", 2, 0, (void*)sizeof(points));
     mat4 trans = Translate(objectX, objectY, 0);
-    mat4 rot = RotateZ(90);
+    mat4 rot = RotateY(45);
+    rot = rot * RotateX(80);
+    //rot = RotateZ(45);
     mat4 scale = Scale(objectScale);
-    SetUniform(foregroundShader, "view", trans * rot * scale);
+    SetUniform(foregroundShader, "view", trans * rot *  scale);
     glDrawArrays(GL_QUADS, 0, 4);
 }
 
@@ -144,13 +146,15 @@ void InitVertexBuffer() {
 int main(int ac, char** av) {
     // init app window and GL context
     glfwInit();
-    GLFWwindow* w = glfwCreateWindow(winW, winH, "QuadSlide", NULL, NULL);
+    GLFWwindow* w = glfwCreateWindow(winW, winH, "Fountain Square Game", NULL, NULL);
     glfwSetWindowPos(w, 100, 100);
     glfwMakeContextCurrent(w);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     // read background, foreground, and mat textures
     glGenTextures(1, textureNames);
-    textureNames[0] = LoadTexture("res/objects/environment/ground_1024_Q3.tga", textureUnits[0]);
+    textureNames[0] = LoadTexture("res/objects/environment/Earth.tga", textureUnits[0]);
+    textureNames[1] = LoadTexture("res/objects/environment/Earth.tga", textureUnits[1]);
+    textureNames[2] = LoadTexture("res/objects/environment/Earth.tga", textureUnits[2]);
     
     InitVertexBuffer();
     // callbacks
@@ -163,7 +167,7 @@ int main(int ac, char** av) {
     while (!glfwWindowShouldClose(w)) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        DisplayBackground();
+        DisplayGround();
         //DisplayForeground();
         glFlush();
         glfwSwapBuffers(w);
