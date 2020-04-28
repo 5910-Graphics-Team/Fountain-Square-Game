@@ -1,29 +1,56 @@
-//#include "AudioEngine.h"
-//
-//
-//
-//AudioEngine::AudioEngine() {
-//    FMOD::System_Create(&sys);
-//    sys->init(AE_MAX_AUDIO_CHANNELS, FMOD_INIT_NORMAL, 0);
-//}
-//
-//
-//
-//void AudioEngine::playSoundFMOD(const char* filename, bool loop = false, int nLoops = 1) {
-//    // sound    
-//    FMOD::Sound* sound;
-//    // the sound's channel
-//    FMOD::Channel* channel;
-//    // create sound
-//    sys->createSound(filename, loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF, 0, &sound);
-//    // assign channel and play sound in 'paused' mode
-//    sys->playSound(sound, 0, true /*start paused*/, &channel);
-//    // actually start the sound
-//    channel->setPaused(false);
-//
-//    // calculate playback time needed (not the'default' way to achieve looping audio playback with FMOD...)
-//    unsigned int msLen;
-//    sound->getLength(&msLen, FMOD_TIMEUNIT_MS);
-//    // sleep main thread for total amount of audio playback time
-//
-//}
+#include "AudioEngine.h"
+#include <iostream>
+
+AudioEngine::AudioEngine() : soundCache() {
+    FMOD::Studio::System::create(&system);
+    system->getCoreSystem(&coreSystem);
+    coreSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_STEREO, 0);
+    system->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0);
+}
+
+void AudioEngine::cacheSoundFile(const char* filepath) {   
+    if (!soundIsCached(filepath)) {
+        std::cout << "Creating and caching sound at " << filepath << "\n";
+        soundCache.insert({ filepath,  createSound(filepath) });
+    }
+    else 
+        std::cout << "Sound was already cached!\n";
+}
+
+
+void AudioEngine::playSoundFile(const char* filepath, bool cache = true) {  
+    FMOD::Sound* sound = createOrGetSound(filepath);
+    // channel for sound to play on
+    FMOD::Channel* channel;
+    coreSystem->playSound(sound, 0, false, &channel);
+}
+
+FMOD::Sound* AudioEngine::createOrGetSound(const char* filepath) {
+    FMOD::Sound* sound;
+    // get sound from cache, or create if not added
+    if (!soundIsCached(filepath)) {
+        // sound has not been created yet
+        std::cout << "sound has not been created yet. Creating!\n";
+        coreSystem->createSound(filepath, FMOD_LOOP_OFF, 0, &sound);
+    }
+    else {
+        sound = getSound(filepath);
+    }
+    return sound;
+}
+
+
+bool AudioEngine::soundIsCached(const char* filepath) {
+    return soundCache.count(filepath) > 0;
+}
+
+FMOD::Sound* AudioEngine::getSound(const char* filepath) {
+    return soundCache[filepath];
+}
+
+
+FMOD::Sound* AudioEngine::createSound(const char* filepath) {
+    FMOD::Sound* sound;
+    coreSystem->createSound(filepath, FMOD_LOOP_OFF, 0, &sound);
+    return sound;
+}

@@ -42,6 +42,9 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Audio-Engine\AudioEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\FacetedCubePersp-Pixel.shader" />
@@ -50,5 +53,24 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\objects\environment\grass.tga" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Audio-Engine\AudioEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="res\sound\Medieval Village2.5_Loop1_ImplementationDemo.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="res\sound\Medieval Village2.5_Loop1_Layer1_54BPM.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="res\sound\Medieval Village2.5_Loop1_Layer2_54BPM.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="res\sound\Medieval Village2.5_Loop1_Layer3_54BPM.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

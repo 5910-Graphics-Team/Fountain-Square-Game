@@ -6,6 +6,13 @@
 #include "GLXtras.h"
 #include "Misc.h"
 #include "VecMat.h"
+#include "Audio-Engine/AudioEngine.h"
+
+AudioEngine audioEngine;
+
+// asset paths
+const char* SOUND_FILE = "res/sound/Medieval Village2.5_Loop1_Layer1_54BPM.wav";
+const char* TEXTURE_EARTH   = "res/objects/environment/Earth.tga";
 
 // display
 GLuint      textureNames[3] = { 0, 0, 0 };
@@ -126,6 +133,13 @@ void MouseMove(GLFWwindow* w, double x, double y) {
         objectY = oldMouseY + ((float)y - yDown) / winH;
     }
 }
+// 
+void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+        audioEngine.playSoundFile(SOUND_FILE, true);
+}
+
 
 // Application
 
@@ -143,8 +157,14 @@ void InitVertexBuffer() {
     glBufferSubData(GL_ARRAY_BUFFER, sizeof(points), sizeof(uvs), uvs);
 }
 
+void InitAudioEngine() {
+    //  pre-load audio assets
+    audioEngine.cacheSoundFile(SOUND_FILE);
+}
+
 int main(int ac, char** av) {
-    // init app window and GL context
+    // init audio engine, app window and GL context
+    InitAudioEngine();
     glfwInit();
     GLFWwindow* w = glfwCreateWindow(winW, winH, "Fountain Square Game", NULL, NULL);
     glfwSetWindowPos(w, 100, 100);
@@ -152,9 +172,9 @@ int main(int ac, char** av) {
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     // read background, foreground, and mat textures
     glGenTextures(1, textureNames);
-    textureNames[0] = LoadTexture("res/objects/environment/Earth.tga", textureUnits[0]);
-    textureNames[1] = LoadTexture("res/objects/environment/Earth.tga", textureUnits[1]);
-    textureNames[2] = LoadTexture("res/objects/environment/Earth.tga", textureUnits[2]);
+    textureNames[0] = LoadTexture(TEXTURE_EARTH, textureUnits[0]);
+    textureNames[1] = LoadTexture(TEXTURE_EARTH, textureUnits[1]);
+    textureNames[2] = LoadTexture(TEXTURE_EARTH, textureUnits[2]);
     
     InitVertexBuffer();
     // callbacks
@@ -162,8 +182,13 @@ int main(int ac, char** av) {
     glfwSetCursorPosCallback(w, MouseMove);
     glfwSetScrollCallback(w, MouseWheel);
     glfwSetWindowSizeCallback(w, Resize);
+    glfwSetKeyCallback(w, KeyCallback);
     // event loop
     glfwSwapInterval(1);
+
+    std::cout << "Press Space bar to start sound!";
+    
+    // GL render loop
     while (!glfwWindowShouldClose(w)) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
