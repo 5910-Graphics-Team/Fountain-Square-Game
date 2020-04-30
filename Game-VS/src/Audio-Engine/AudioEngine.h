@@ -8,6 +8,18 @@
 #include <FMOD/fmod_studio.hpp>
 #include <FMOD/fmod.hpp>
 
+class Sound {
+private:
+    FMOD::Sound*   sound;
+    FMOD::Channel* channel;
+public:
+    //Sound(FMOD::Sound* sound, FMOD::Channel* channel) : sound(sound), channel(channel) {
+    //    channel.get
+    //}
+    //void setRetriggerBehavior() {
+    //}
+};
+
 class AudioEngine {
 
 public:
@@ -70,7 +82,5 @@ private:
     * Creates a sound without checking if it already has been created and cached.
     */
     FMOD::Sound* createSound(const char* filepath);
-
-
 
 };

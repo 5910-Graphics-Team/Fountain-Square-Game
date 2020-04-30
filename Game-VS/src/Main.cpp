@@ -3,15 +3,18 @@
 #include <glad.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
+#include "Camera.h"
 #include "GLXtras.h"
 #include "Misc.h"
 #include "VecMat.h"
 #include "Audio-Engine/AudioEngine.h"
 
+
+Camera camera;
 AudioEngine audioEngine;
 
 // asset paths
-const char* SOUND_FILE = "res/sound/Medieval Village2.5_Loop1_Layer1_54BPM.wav";
+const char* SOUND_FILE      = "res/sound/Medieval Village2.5_Loop1_Layer1_54BPM.wav";
 const char* TEXTURE_EARTH   = "res/objects/environment/Earth.tga";
 
 // display
@@ -22,40 +25,12 @@ int         winW = 600, winH = 600;
 // shaders
 GLuint backgroundShader = 0, foregroundShader = 0;
 GLuint vBuffer = 0; // GPU vertex buffer ID
-vec3 points[] = { vec3(-1,0, -1), vec3(-1,0,1), vec3(1,0,1), vec3(1,0,-1) };
-vec2 uvs[] = { vec2(0,0), vec2(1,0), vec2(1,1), vec2(0,1) };
+vec3 points[] = { vec3(-1, 0, -1), vec3(-1, 0, 1), vec3(1, 0, 1), vec3(1, 0, -1) };
+vec2 uvs[] =    { vec2(0, 0), vec2(1,0), vec2(1,1), vec2(0,1) };
 
 // interaction
 float objectX = 0, objectY = 0, objectScale = 1;
 float xDown = 0, yDown = 0, oldMouseX = 0, oldMouseY = 0;
-
-void DisplayasdfGround() {
-    const char* vShader = R"(
-        #version 330
-        out vec2 uv;
-        void main() {
-            vec2 pts[] = vec2[4](vec2(-1,-1), vec2(-1,1), vec2(1,1), vec2(1,-1));
-            uv = (pts[2]+pts[gl_VertexID])/2;
-            gl_Position = vec4(pts[gl_VertexID], 0, 1);
-        }
-    )";
-    const char* pShader = R"(
-        #version 330
-        in vec2 uv;
-        out vec4 pColor;
-        uniform sampler2D textureImage;
-        void main() {
-            pColor = texture(textureImage, uv);
-        }
-    )";
-    if (!backgroundShader)
-        backgroundShader = LinkProgramViaCode(&vShader, &pShader);
-    glUseProgram(backgroundShader);
-    glActiveTexture(GL_TEXTURE0 + textureUnits[0]);
-    glBindTexture(GL_TEXTURE_2D, textureNames[0]);
-    SetUniform(backgroundShader, "textureImage", textureUnits[0]);
-    glDrawArrays(GL_QUADS, 0, 4);
-}
 
 void DisplayGround() {
     const char* vShader = R"(
@@ -93,10 +68,10 @@ void DisplayGround() {
     VertexAttribPointer(foregroundShader, "uv", 2, 0, (void*)sizeof(points));
     mat4 trans = Translate(objectX, objectY, 0);
     mat4 rot = RotateY(45);
-    rot = rot * RotateX(80);
+    //rot = rot * RotateX(80);
     //rot = RotateZ(45);
     mat4 scale = Scale(objectScale);
-    SetUniform(foregroundShader, "view", trans * rot *  scale);
+    SetUniform(foregroundShader, "view", trans /* rot */ * scale);
     glDrawArrays(GL_QUADS, 0, 4);
 }
 

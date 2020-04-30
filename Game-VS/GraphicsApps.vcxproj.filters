@@ -39,10 +39,10 @@
     <ClCompile Include="..\Lib\Draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Main.cpp">
+    <ClCompile Include="src\Audio-Engine\AudioEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Audio-Engine\AudioEngine.cpp">
+    <ClCompile Include="src\LOGL_model_loading_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,6 +56,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio-Engine\AudioEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LOGL_Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
