@@ -201,8 +201,8 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
 
     string filename = string(path);
     filename = directory + '/' + filename;
-    printf("%s\n", filename);
-    std::cout << "filename";
+    //printf("%s\n", filename);
+    
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
