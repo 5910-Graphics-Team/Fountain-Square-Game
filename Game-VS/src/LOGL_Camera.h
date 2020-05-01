@@ -1,8 +1,7 @@
 #pragma once
-#include <glad.h>
-#include <VecMat.h>
-#include <vector>
 
+#include <glm/glm.hpp>
+#include <vector>
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 enum Camera_Movement {
@@ -25,11 +24,11 @@ class Camera
 {
 public:
     // Camera Attributes
-    vec3 Position;
-    vec3 Front;
-    vec3 Up;
-    vec3 Right;
-    vec3 WorldUp;
+    glm::vec3 Position;
+    glm::vec3 Front;
+    glm::vec3 Up;
+    glm::vec3 Right;
+    glm::vec3 WorldUp;
     // Euler Angles
     float Yaw;
     float Pitch;
@@ -39,7 +38,7 @@ public:
     float Zoom;
 
     // Constructor with vectors
-    Camera(vec3 position = vec3(0.0f, 0.0f, 0.0f), vec3 up = vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
         Position = position;
         WorldUp = up;
@@ -48,19 +47,19 @@ public:
         updateCameraVectors();
     }
     // Constructor with scalar values
-    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
-        Position = vec3(posX, posY, posZ);
-        WorldUp = vec3(upX, upY, upZ);
+        Position = glm::vec3(posX, posY, posZ);
+        WorldUp = glm::vec3(upX, upY, upZ);
         Yaw = yaw;
         Pitch = pitch;
         updateCameraVectors();
     }
 
     // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
-    mat4 GetViewMatrix()
+    glm::mat4 GetViewMatrix()
     {
-        return lookAt(Position, Position + Front, Up);
+        return glm::lookAt(Position, Position + Front, Up);
     }
 
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
@@ -110,51 +109,18 @@ public:
             Zoom = 45.0f;
     }
 
-    // Custom implementation of the LookAt function
-    static mat4 lookAt(vec3 position, vec3 target, vec3 worldUp)
-    {
-        // 1. Position = known
-        // 2. Calculate cameraDirection
-        vec3 zaxis = normalize(position - target);
-        // 3. Get positive right axis vector
-        vec3 xaxis = normalize(cross(normalize(worldUp), zaxis));
-        // 4. Calculate camera up vector
-        vec3 yaxis = cross(zaxis, xaxis);
-
-        // Create translation and rotation matrix
-        // In glm we access elements as mat[col][row] due to column-major layout
-        mat4 translation; // Identity matrix by default
-        translation[3][0] = -position.x; // Third column, first row
-        translation[3][1] = -position.y;
-        translation[3][2] = -position.z;
-        mat4 rotation;
-        rotation[0][0] = xaxis.x; // First column, first row
-        rotation[1][0] = xaxis.y;
-        rotation[2][0] = xaxis.z;
-        rotation[0][1] = yaxis.x; // First column, second row
-        rotation[1][1] = yaxis.y;
-        rotation[2][1] = yaxis.z;
-        rotation[0][2] = zaxis.x; // First column, third row
-        rotation[1][2] = zaxis.y;
-        rotation[2][2] = zaxis.z;
-
-        // Return lookAt matrix as combination of translation and rotation matrix
-        return rotation * translation; // Remember to read from right to left (first translation then rotation)
-    }
-
-
 private:
     // Calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors()
     {
         // Calculate the new Front vector
-        vec3 front;
-        front.x = cos(Radians(Yaw)) * cos(Radians(Pitch));
-        front.y = sin(Radians(Pitch));
-        front.z = sin(Radians(Yaw)) * cos(Radians(Pitch));
-        Front = normalize(front);
+        glm::vec3 front;
+        front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+        front.y = sin(glm::radians(Pitch));
+        front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+        Front = glm::normalize(front);
         // Also re-calculate the Right and Up vector
-        Right = normalize(cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-        Up = normalize(cross(Right, Front));
+        Right = glm::normalize(glm::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+        Up = glm::normalize(glm::cross(Right, Front));
     }
 };

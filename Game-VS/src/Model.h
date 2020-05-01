@@ -11,6 +11,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 
+
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -24,13 +25,12 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
 class Model
 {
 public:
-    /*  Model Data */
+    // model data 
     vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-    vector<Mesh> meshes;
+    vector<Mesh>    meshes;
     string directory;
     bool gammaCorrection;
 
-    /*  Functions   */
     // constructor, expects a filepath to a 3D model.
     Model(string const& path, bool gamma = false) : gammaCorrection(gamma)
     {
@@ -45,7 +45,6 @@ public:
     }
 
 private:
-    /*  Functions   */
     // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
     void loadModel(string const& path)
     {
@@ -91,11 +90,11 @@ private:
         vector<unsigned int> indices;
         vector<Texture> textures;
 
-        // Walk through each of the mesh's vertices
+        // walk through each of the mesh's vertices
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
         {
             Vertex vertex;
-            vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+            glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
             // positions
             vector.x = mesh->mVertices[i].x;
             vector.y = mesh->mVertices[i].y;
@@ -109,7 +108,7 @@ private:
             // texture coordinates
             if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
             {
-                vec2 vec;
+                glm::vec2 vec;
                 // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
                 // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
                 vec.x = mesh->mTextureCoords[0][i].x;
@@ -117,7 +116,7 @@ private:
                 vertex.TexCoords = vec;
             }
             else
-                vertex.TexCoords = vec2(0.0f, 0.0f);
+                vertex.TexCoords = glm::vec2(0.0f, 0.0f);
             // tangent
             vector.x = mesh->mTangents[i].x;
             vector.y = mesh->mTangents[i].y;
@@ -201,9 +200,11 @@ private:
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma)
 {
+
     string filename = string(path);
     filename = directory + '/' + filename;
-
+    printf("%s\n", filename);
+    std::cout << "filename";
     unsigned int textureID;
     glGenTextures(1, &textureID);
 

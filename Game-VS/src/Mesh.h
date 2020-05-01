@@ -1,27 +1,28 @@
 #pragma once
 #include <glad.h> // holds all OpenGL type declarations
 
-#include <VecMat.h>
+//#include <glad/glad.h> // holds all OpenGL type declarations
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "Shader.h"
 
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
 #include <vector>
 using namespace std;
 
 struct Vertex {
     // position
-    vec3 Position;
+    glm::vec3 Position;
     // normal
-    vec3 Normal;
+    glm::vec3 Normal;
     // texCoords
-    vec2 TexCoords;
+    glm::vec2 TexCoords;
     // tangent
-    vec3 Tangent;
+    glm::vec3 Tangent;
     // bitangent
-    vec3 Bitangent;
+    glm::vec3 Bitangent;
 };
 
 struct Texture {
@@ -32,13 +33,12 @@ struct Texture {
 
 class Mesh {
 public:
-    /*  Mesh Data  */
-    vector<Vertex> vertices;
+    // mesh Data
+    vector<Vertex>       vertices;
     vector<unsigned int> indices;
-    vector<Texture> textures;
+    vector<Texture>      textures;
     unsigned int VAO;
 
-    /*  Functions  */
     // constructor
     Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
     {
@@ -89,10 +89,9 @@ public:
     }
 
 private:
-    /*  Render data  */
+    // render data 
     unsigned int VBO, EBO;
 
-    /*  Functions    */
     // initializes all the buffer objects/arrays
     void setupMesh()
     {
@@ -105,7 +104,7 @@ private:
         // load data into vertex buffers
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         // A great thing about structs is that their memory layout is sequential for all its items.
-        // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a vec3/2 array which
+        // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
         // again translates to 3/2 floats which translates to a byte array.
         glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 

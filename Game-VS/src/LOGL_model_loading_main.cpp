@@ -1,7 +1,7 @@
 #include <glad.h>
 #include <GLFW/glfw3.h>
 
-#include <VecMat.h>
+#include <glm/glm.hpp>
 
 #include "Shader.h"
 #include "Model.h"
@@ -19,7 +19,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -66,6 +66,9 @@ int main()
         return -1;
     }
 
+    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
+    stbi_set_flip_vertically_on_load(true);
+
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
@@ -76,7 +79,7 @@ int main()
 
     // load models
     // -----------
-    Model ourModel("res/LearnOpenGL/objects/backpack/backpack.obj");
+    Model ourModel("res/objects/flora/HazelnutBush/Hazelnut.obj");
 
 
     // draw in wireframe
@@ -105,15 +108,15 @@ int main()
         ourShader.use();
 
         // view/projection transformations
-        mat4 projection = Perspective(Radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        mat4 view = camera.GetViewMatrix();
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
         // render the loaded model
-        mat4 model = mat4(1.0f);
-        model = *Translate(0.0f, -1.75f, 0.0f); //translate(model, vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
-        model = *Scale(0.2f, 0.2f, 0.2f); //scale(model, vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
 
