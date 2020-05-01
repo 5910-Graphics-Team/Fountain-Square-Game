@@ -50,7 +50,6 @@
     <None Include="res\shaders\FacetedCubePersp-Pixel.shader" />
     <None Include="res\shaders\FacetedCubePersp-Vertex.shader" />
     <None Include="res\sound\mx_section_1.ogg" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\objects\environment\grass.tga" />

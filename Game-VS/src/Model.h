@@ -1,5 +1,4 @@
 #pragma once
-
 #include <glad.h> 
 
 #include <assimp/Importer.hpp>
@@ -10,7 +9,6 @@
 
 #include "Mesh.h"
 #include "Shader.h"
-
 
 #include <string>
 #include <fstream>
