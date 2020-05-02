@@ -28,10 +28,56 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+// Container for a Model and its default translaftion and scale values. 
+struct GameObject {
+    Model model;
+    glm::vec3 trans, scale;
+
+    GameObject(const char* filepath, glm::vec3 defaultTrans, glm::vec3 defaultScale) : model(filepath), trans(defaultTrans), scale(defaultScale) {
+        std::cout << "Created model for " << filepath << "\n";
+        
+    }
+    void setTranslation(const glm::vec3 newTrans) {
+        trans.x = newTrans.x;
+        trans.y = newTrans.y;
+        trans.z = newTrans.z;
+    }
+    void setScale(const glm::vec3 newScale) {
+        scale.x = newScale.x;
+        scale.y = newScale.y;
+        scale.z = newScale.z;
+    }
+};
+
+// Simple 'singleton' renderer (non-instantializable) 
+// Performs the OpenGL calls to renter a GameObject with a provided shader.
+class Renderer {
+private:
+    Renderer() {} // private constructor to prevent instantiation
+public:
+    static void renderGameObject(GameObject* gameObject , Shader* shader) {
+        // enable shader before setting uniforms
+        shader->use();
+
+        // view/projection transformations
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        shader->setMat4("projection", projection);
+        shader->setMat4("view", view);
+
+        // render the loaded model 
+        // TODO rename local var 'm' to more descriptive name (used to be 'model')
+        glm::mat4 m = glm::mat4(1.0f);
+        m = glm::translate(m, gameObject->trans); // translate it down so it's at the center of the scene
+        m = glm::scale(m, gameObject->scale);	  // scale object
+        shader->setMat4("model", m);
+        gameObject->model.Draw(*shader);
+    }
+};
+
+
 int main()
 {
-    // glfw: initialize and configure
-    // ------------------------------
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -41,9 +87,7 @@ int main()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    // glfw window creation 
-    // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Fountain Game", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -77,14 +121,19 @@ int main()
     // -------------------------
     Shader ourShader("res/LearnOpenGL/shaders/1.model_loading.vs", "res/LearnOpenGL/shaders/1.model_loading.fs");
 
-    // load models
-    // -----------
-    Model ourModel("res/objects/fountains/fountainOBJ/fountain.obj");
+    std::vector<GameObject> gameObjects;
+   
+    
+    // create and load models with default trans/scale (TODO move object 'default' params to config file?)
+    GameObject fountain("res/objects/fountains/fountainOBJ/fountain.obj",glm::vec3(-30.0f, -12.5f, -70.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+    gameObjects.push_back(fountain);
 
+    GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj", glm::vec3(0.5f, -1.2f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+    gameObjects.push_back(backpack);
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+    
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -104,21 +153,13 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // don't forget to enable shader before setting uniforms
-        ourShader.use();
+       // TODO update positions of game objects before next for-loop
 
-        // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 view = camera.GetViewMatrix();
-        ourShader.setMat4("projection", projection);
-        ourShader.setMat4("view", view);
+        // render objects
+        for (int i = 0; i < gameObjects.size(); i++) {
+            Renderer::renderGameObject(&gameObjects[i], &ourShader);
+        }
 
-        // render the loaded model
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -25.0f, -90.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-        ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -132,6 +173,9 @@ int main()
     glfwTerminate();
     return 0;
 }
+
+
+
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
@@ -159,12 +203,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-// glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-    if (firstMouse)
-    {
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    if (firstMouse) {
         lastX = xpos;
         lastY = ypos;
         firstMouse = false;
@@ -179,9 +219,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
-// glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     camera.ProcessMouseScroll(yoffset);
 }
+
