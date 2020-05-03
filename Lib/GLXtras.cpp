@@ -310,6 +310,17 @@ bool SetUniform(int program, const char *name, mat4 m, bool report) {
 	return true;
 }
 
+bool SetUniform(int program, const char* name, glm::mat4 m, bool report) {
+	GLint id = glGetUniformLocation(program, name);
+	if (id < 0)
+		return Bad(report, name);
+	glUniformMatrix4fv(id, 1, true, (float*)&m[0][0]);
+	return true;
+}
+
+
+
+
 // Attribute Access
 
 void DisableVertexAttribute(int program, const char *name) {

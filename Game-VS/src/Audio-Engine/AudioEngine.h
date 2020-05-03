@@ -51,8 +51,9 @@ public:
 
 private:    
     FMOD::Studio::System* system = nullptr;              // FMOD Studio API
-    FMOD::System*         coreSystem = nullptr;          // FMOD's low-level audio system, obtained from Studio System    
+    FMOD::System* coreSystem = nullptr;          // FMOD's low-level audio system, obtained from Studio System    
     static const unsigned int MAX_AUDIO_CHANNELS = 1024; // Max FMOD audio channels for this audio engine 
+    const float DISTANCEFACTOR = 1.0f;          // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
     
     /*
     * Map which stores the low-level sound cache. 

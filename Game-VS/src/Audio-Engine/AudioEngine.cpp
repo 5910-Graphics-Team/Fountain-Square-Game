@@ -5,7 +5,9 @@ AudioEngine::AudioEngine() : soundCache() {
     FMOD::Studio::System::create(&system);
     system->getCoreSystem(&coreSystem);
     coreSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_STEREO, 0);
+    coreSystem->set3DSettings(1.0, DISTANCEFACTOR, 1.0f);
     system->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0);
+    
 }
 
 void AudioEngine::cacheSoundFile(const char* filepath) {   
@@ -24,6 +26,11 @@ void AudioEngine::playSoundFile(const char* filepath, bool cache = true) {
     FMOD::Channel* channel;
     coreSystem->playSound(sound, 0, false, &channel);
 }
+
+
+
+
+// private method definitions
 
 FMOD::Sound* AudioEngine::createOrGetSound(const char* filepath) {
     FMOD::Sound* sound;
