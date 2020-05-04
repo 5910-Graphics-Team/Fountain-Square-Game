@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Shader.h"
 #include "Model.h"
@@ -33,130 +34,47 @@ float lastFrame = 0.0f;
 // audio engine
 AudioEngine audioEngine;
 
+
 static glm::mat4 getProjection() {
     return glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 }
 
-static glm::mat4 getModel(glm::vec3* trans, glm::vec3* scale) {
-    glm::mat4 m = glm::mat4(1.0f);
-    m = glm::translate(m, *trans); // translate it down so it's at the center of the scene
-    m = glm::scale(m, *scale);	  // scale object
-    return m;
-}
-
-
-const char* vertexShader = R"(
-    #version 130
-    in vec3 point;
-    in vec3 normal;
-    in vec2 uv;
-    out vec3 vPoint;
-    out vec3 vNormal;
-    out vec2 vUv;
-    uniform mat4 modelview;
-    uniform mat4 persp;
-    void main() {
-        vPoint = (modelview*vec4(point, 1)).xyz;
-        vNormal = (modelview*vec4(normal, 0)).xyz;
-        gl_Position = persp*vec4(vPoint, 1);
-        vUv = uv;
-    }
-)";
-
-const char* pixelShader = R"(
-    #version 130
-    in vec3 vPoint;
-    in vec3 vNormal;
-    in vec2 vUv;
-    out vec4 pColor;
-    uniform vec3 light;
-    uniform sampler2D textureImage;
-    void main() {
-        vec3 N = normalize(vNormal);       // surface normal
-        vec3 L = normalize(light-vPoint);  // light vector
-        vec3 E = normalize(vPoint);        // eye vector
-        vec3 R = reflect(L, N);            // highlight vector
-        float d = abs(dot(N, L));          // two-sided diffuse
-        float s = abs(dot(R, E));          // two-sided specular
-        float intensity = clamp(d+pow(s, 50), 0, 1);
-        vec3 color = texture(textureImage, vUv).rgb;
-        pColor = vec4(intensity*color, 1);
-    }
-)";
-
-GLuint      shaderProgram = 0;
-int			gTextureUnit = 0;
-class Ground {
+// Container for a Model and its default translation,scale, and rotation values. 
+class GameObject {
+private:
+    Model model; // TODO could allocate memory for this (make pointer)
+    glm::vec3 trans, scale, rotAngs;
 public:
-    Ground() { };
-    // GPU vertex buffer and texture
-    GLuint vBufferId = 0, textureId = 0, textureUnit = 0;
-    size_t sizePts = 0, sizeNrms = 0, sizeUvs = 0;
-    // operations
-    void Buffer() {
-        float size = 5, ht = -.55f;
-        glm::vec3 points[] = { glm::vec3(-size, ht, -size), glm::vec3(size, ht, -size), glm::vec3(size, ht, size), glm::vec3(-size, ht, size) };
-        glm::vec3 normals[] = { glm::vec3(0, 0, 1), glm::vec3(0, 0, 1), glm::vec3(0, 0, 1), glm::vec3(0, 0, 1) };
-        glm::vec2 uvs[] = { glm::vec2(0, 0), glm::vec2(1, 0), glm::vec2(1, 1), glm::vec2(0, 1) };
-        sizePts = sizeof(points);
-        sizeNrms = sizeof(normals);
-        sizeUvs = sizeof(uvs);
-        // allocate and download vertices
-        glGenBuffers(1, &vBufferId);
-        glBindBuffer(GL_ARRAY_BUFFER, vBufferId);
-        glBufferData(GL_ARRAY_BUFFER, sizePts + sizeNrms + sizeUvs, NULL, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizePts, points);
-        glBufferSubData(GL_ARRAY_BUFFER, sizePts, sizeNrms, normals);
-        glBufferSubData(GL_ARRAY_BUFFER, sizePts + sizeNrms, sizeUvs, uvs);
-        textureUnit = gTextureUnit++;
-        textureId = LoadTexture("res/objects/environment/ground_1024_Q3.tga", textureUnit);
-        
-    }
-    void Draw() {
-        glUseProgram(shaderProgram);
-
-        glBindBuffer(GL_ARRAY_BUFFER, vBufferId);
-        // render four vertices as a quad
-        VertexAttribPointer(shaderProgram, "point", 3, 0, (void*)0);
-        VertexAttribPointer(shaderProgram, "normal", 3, 0, (void*)sizePts);
-        VertexAttribPointer(shaderProgram, "uv", 2, 0, (void*)(sizePts + sizeNrms));
-        glActiveTexture(GL_TEXTURE1 + textureUnit);
-        glBindTexture(GL_TEXTURE_2D, textureId);
-        SetUniform(shaderProgram, "textureImage", (int)textureId);
-        // set default trans/scale
-        glm::vec3 trans(10.0f, -20.0f, 5.0f), scale(1.0f, 1.0f, 1.0f);
-        SetUniform(shaderProgram, "modelview",  getModel(&trans, &scale) * camera.GetViewMatrix());
-        SetUniform(shaderProgram, "persp", getProjection());
-        glDrawArrays(GL_QUADS, 0, 4);
-    }
-};
-
-// Container for a Model and its default translaftion and scale values. 
-struct GameObject {
-    Model model;
-    glm::vec3 trans, scale;
-
-    GameObject(const char* filepath, glm::vec3 defaultTrans, glm::vec3 defaultScale) : model(filepath), trans(defaultTrans), scale(defaultScale) {
+    GameObject(const char* filepath) : GameObject(filepath, glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(0.0f)) {}
+    GameObject(const char* filepath, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) : model(filepath), trans(defTrans), scale(defScale), rotAngs(defRot) {
         std::cout << "Created model for " << filepath << "\n";
-        
     }
-   void setTranslation(const glm::vec3 newTrans) {
-        trans.x = newTrans.x;
-        trans.y = newTrans.y;
-        trans.z = newTrans.z;
+    void draw(Shader* shader) {
+        model.Draw(*shader);
     }
-    void setScale(const glm::vec3 newScale) {
-        scale.x = newScale.x;
-        scale.y = newScale.y;
-        scale.z = newScale.z;
+
+    glm::vec3 getTranslation() {
+        return trans;
+    }
+    glm::vec3 getScale() {
+        return scale;
+    }
+    glm::vec3 getRotationAngles() {
+        return rotAngs;
+    }
+    glm::mat4 getModel() {
+        glm::mat4 m = glm::mat4(1.0f);
+        m = glm::translate(m, trans); // translate it down so it's at the center of the scene
+        m = glm::rotate(m, glm::radians(rotAngs.x), glm::vec3(1.0f, 0.0f, 0.0f)); //rotation x
+        m = glm::rotate(m, glm::radians(rotAngs.y), glm::vec3(0.0f, 1.0f, 0.0f)); //rotation y
+        m = glm::rotate(m, glm::radians(rotAngs.z), glm::vec3(0.0f, 0.0f, 1.0f)); //rotation z 
+        m = glm::scale(m, scale);	  // scale object
+        return m;
     }
 };
 
 
-
-// Simple 'singleton' renderer (non-instantializable) 
-// Performs the OpenGL calls to renter a GameObject with a provided shader.
-
+// Performs the OpenGL calls to render a GameObject with a provided shader.
 static void renderGameObject(GameObject* gameObject, Shader* shader) {
     // enable shader before setting uniforms
     shader->use();
@@ -168,13 +86,12 @@ static void renderGameObject(GameObject* gameObject, Shader* shader) {
     shader->setMat4("view", view);
 
     // render the loaded model 
-    // TODO rename local var 'm' to more descriptive name (used to be 'model')
-
-    shader->setMat4("model", getModel(&gameObject->trans, &gameObject->scale));
-    gameObject->model.Draw(*shader);
+    // TODO refactor GameObject to do this itself in draw()
+    shader->setMat4("model", gameObject->getModel());
+    gameObject->draw(shader);
 }
 
-Ground ground;
+
 
 int main()
 {
@@ -202,8 +119,7 @@ int main()
     // tell GLFW what to do with mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
+    // load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
@@ -214,32 +130,27 @@ int main()
     stbi_set_flip_vertically_on_load(true);
 
     // configure global opengl state
-    // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
     // build and compile shaders
-    // -------------------------
     Shader ourShader("res/LearnOpenGL/shaders/1.model_loading.vs", "res/LearnOpenGL/shaders/1.model_loading.fs");
-    shaderProgram = LinkProgramViaCode(&vertexShader, &pixelShader);
-    ground.Buffer();
-
-    std::vector<GameObject> gameObjects;
-   
     
-    // create and load models with default trans/scale (TODO move object 'default' params to config file?)
-    GameObject fountain("res/objects/fountains/fountainOBJ/fountain.obj", glm::vec3(-30.0f, -12.5f, -70.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+    std::vector<GameObject> gameObjects;
+    
+    // create and load models with default trans/scale/rotation  (TODO move object 'default' params to config file?)
+    GameObject fountain("res/objects/fountains/fountainOBJ/fountain.obj", glm::vec3(-30.0f, -12.5f, -70.0f), glm::vec3(0.5f), glm::vec3(0.0f));
     gameObjects.push_back(fountain);
 
-    GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj",  glm::vec3(0.5f, -1.2f, 0.0f),      glm::vec3(0.5f, 0.5f, 0.5f));
+    GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj",  glm::vec3(0.5f, -1.2f, 0.0f), glm::vec3(0.5f), glm::vec3(0.0f));
     gameObjects.push_back(backpack);
 
-
+    GameObject groundObj("res/objects/ground/ground.obj", glm::vec3(50.0f, -17.0f, -200.0f), glm::vec3(20.0f), glm::vec3(90.0f, 0.0f, 0.0f)); 
+    gameObjects.push_back(groundObj);
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
     // render loop
-    // -----------
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -257,14 +168,10 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-       // TODO update positions of game objects before next for-loop
-        ground.Draw();
+   
         // render objects
-        for (int i = 0; i < gameObjects.size(); i++) {
+        for (int i = 0; i < gameObjects.size(); i++) 
             renderGameObject(&gameObjects[i], &ourShader);
-        }
-        
-
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -327,3 +234,4 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     camera.ProcessMouseScroll(yoffset);
 }
 
+\
