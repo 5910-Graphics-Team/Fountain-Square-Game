@@ -20,7 +20,9 @@ public:
     */
     AudioEngine();
 
-    void set3DListenerPosition(float forwardX, float forwardY, float forwardZ);
+    void set3DListenerPosition(float posX,     float posY,     float posZ,
+                               float forwardX, float forwardY, float forwardZ, 
+                               float upX,      float upY,      float upZ);
 
     /**
     * Loads a sound file into the cache to prepare for later playback.
@@ -89,40 +91,40 @@ private:
     */
     FMOD::Sound* createSound(const char* filepath);
     
-    class Sound {
-    private:
+    //class Sound {
+    //private:
 
-        //bool dim3D, loop;
-        FMOD_VECTOR position;// { 0.0f, 0.0f, 0.0f};
+    //    //bool dim3D, loop;
+    //    FMOD_VECTOR position;// { 0.0f, 0.0f, 0.0f};
 
-    public:
-        //std::shared_ptr<FMOD::Sound>* sound;
-        FMOD::Sound* sound;
-        FMOD::Channel* channel;
+    //public:
+    //    //std::shared_ptr<FMOD::Sound>* sound;
+    //    FMOD::Sound* sound;
+    //    FMOD::Channel* channel;
 
-        Sound(FMOD::Sound* sound, FMOD::Channel* channel, float x = 0.0f, float y = 0.0f, float z = 0.0f) {
-            sound = sound;
-            channel = channel;
-            std::cout << "Created sound at with channel = " << channel << "\n";
-            setPosition(x, y, z);
-        }
-        FMOD::Sound* getSound() {
-            return sound;
-        }
-        FMOD::Channel** getChannel() {
-            return &channel;
-        }
-        void setPosition(float x, float y, float z) {
-            //position = { x, y, z };
-            position = { -10.0f /* * DISTANCEFACTOR*/, 0.0f, 0.0f };
-            FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
-            channel->set3DAttributes(&position, &velocity);
-        }
-        FMOD_VECTOR getPosition() {
-            return position;
-        }
-        void setPaused(bool paused) {
-            channel->setPaused(paused);
-        }
-    };
+    //    Sound(FMOD::Sound* sound, FMOD::Channel* channel, float x = 0.0f, float y = 0.0f, float z = 0.0f) {
+    //        sound = sound;
+    //        channel = channel;
+    //        std::cout << "Created sound at with channel = " << channel << "\n";
+    //        setPosition(x, y, z);
+    //    }
+    //    FMOD::Sound* getSound() {
+    //        return sound;
+    //    }
+    //    FMOD::Channel** getChannel() {
+    //        return &channel;
+    //    }
+    //    void setPosition(float x, float y, float z) {
+    //        //position = { x, y, z };
+    //        position = { -10.0f /* * DISTANCEFACTOR*/, 0.0f, 0.0f };
+    //        FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
+    //        channel->set3DAttributes(&position, &velocity);
+    //    }
+    //    FMOD_VECTOR getPosition() {
+    //        return position;
+    //    }
+    //    void setPaused(bool paused) {
+    //        channel->setPaused(paused);
+    //    }
+    //};
 };

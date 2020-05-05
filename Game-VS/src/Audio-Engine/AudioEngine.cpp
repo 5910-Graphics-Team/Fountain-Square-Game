@@ -28,9 +28,10 @@ AudioEngine::AudioEngine() : soundCache() {
 //    //sound->setPaused(false);
 //}
 
-void AudioEngine::set3DListenerPosition(float forwardX, float forwardY, float forwardZ) {
-    forward = { forwardX, forwardY, forwardZ };
-
+void AudioEngine::set3DListenerPosition(float posX, float posY, float posZ, float forwardX, float forwardY, float forwardZ, float upX, float upY, float upZ) {
+    listenerpos = { posX,     posY,     posZ };
+    forward =     { forwardX, forwardY, forwardZ };
+    up =          { upX,      upY,      upZ      };
     coreSystem->set3DListenerAttributes(0, &listenerpos, 0, &forward, &up);
     //FMOD_VECTOR vel;
 

@@ -138,9 +138,9 @@ int main()
     std::vector<GameObject> gameObjects;
     
     // create and load models with default trans/scale/rotation  (TODO move object 'default' params to config file?)
-    glm::vec3 fountainTran(-30.0f, -12.5f, -70.0f), fountainScale(0.5f), fountainRot(0.0f);
+    glm::vec3 fountainTran(-15.0f, -5.0f, -20.0f),  fountainScale(0.2f), fountainRot(0.0f);
     glm::vec3 backpackTran(0.5f, -1.2f, 0.0f),      backpackScale(0.5f), backpackRot(0.0f);
-    glm::vec3 groundTran(50.0f, -17.0f, -200.0f),   groundScale(20.0f),  groundRot(90.0f, 0.0f, 0.0f);
+    glm::vec3 groundTran  (50.0f, -8.0f, -200.0f),   groundScale(20.0f),  groundRot(90.0f, 0.0f, 0.0f);
     
     GameObject fountain("res/objects/fountains/fountainOBJ/fountain.obj", fountainTran, fountainScale, fountainRot);
     GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj",  backpackTran, backpackScale, backpackRot);
@@ -158,7 +158,7 @@ int main()
     audioEngine.loadSoundFile(FOUNTAIN_SFX, true, true);
 
     audioEngine.play3DSound(FOUNTAIN_SFX, fountainTran.x, fountainTran.y, fountainTran.z); //, -10.0f, 0.0f, 0.0f);
-    //audioEngine.playSoundFile(MUSIC);
+    audioEngine.playSoundFile(MUSIC);
     
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -181,7 +181,11 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        audioEngine.set3DListenerPosition(lastX, lastY, 0.0f);
+        audioEngine.set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
+                                          camera.Front.x, camera.Front.y, camera.Front.z, 
+                                          camera.Up.x,    camera.Up.y,    camera.Up.z
+                                          
+        );
         // render objects
         for (int i = 0; i < gameObjects.size(); i++) 
             renderGameObject(&gameObjects[i], &ourShader);
