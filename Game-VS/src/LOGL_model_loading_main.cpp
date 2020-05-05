@@ -33,6 +33,12 @@ float lastFrame = 0.0f;
 
 // audio engine
 AudioEngine audioEngine;
+// audio assets
+const char* MUSIC        = "res/sound/Medieval Village Full Theme Demo_2.5.1.3.wav";
+const char* STINGER_1    = "res/sound/Medieval Village_Stinger1 Guitar_2.5.1.3.wav";
+const char* STINGER_2    = "res/sound/Medieval Village_Stinger2 Guitar_2.5.1.3.wav";
+const char* STINGER_3    = "res/sound/Medieval Village_Stinger3 Harp_2.5.1.3.wav";
+const char* FOUNTAIN_SFX = "res/sound/Fountain_Loop.wav";
 
 
 static glm::mat4 getProjection() {
@@ -150,12 +156,13 @@ int main()
     gameObjects.push_back(backpack);
     gameObjects.push_back(groundObj);
 
-    // create sound effects/music
-    const char* MUSIC        = "res/sound/Medieval Village2.5_Loop1_ImplementationDemo.wav";
-    const char* FOUNTAIN_SFX = "res/sound/Fountain_Loop.wav";
-
-    audioEngine.loadSoundFile(MUSIC, false, true);
-    audioEngine.loadSoundFile(FOUNTAIN_SFX, true, true);
+    // load sound effects/music
+    audioEngine.loadSoundFile(MUSIC,        false, true);
+    audioEngine.loadSoundFile(STINGER_1,    false, false);
+    audioEngine.loadSoundFile(STINGER_2,    false, false);
+    audioEngine.loadSoundFile(STINGER_3,    false, false);
+    audioEngine.loadSoundFile(FOUNTAIN_SFX, true,  true);
+    
 
     audioEngine.play3DSound(FOUNTAIN_SFX, fountainTran.x, fountainTran.y, fountainTran.z); //, -10.0f, 0.0f, 0.0f);
     audioEngine.playSoundFile(MUSIC);
@@ -181,12 +188,14 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+        // Update listener position
         audioEngine.set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
                                           camera.Front.x, camera.Front.y, camera.Front.z, 
                                           camera.Up.x,    camera.Up.y,    camera.Up.z
                                           
         );
-        // render objects
+        // render Game Objects
         for (int i = 0; i < gameObjects.size(); i++) 
             renderGameObject(&gameObjects[i], &ourShader);
 
@@ -203,7 +212,8 @@ int main()
 }
 
 
-
+float stinger1Time, stinger2Time, stinger3Time;
+float MIN_STINGER_RETRIGGER_TIME = 0.5f;
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
@@ -220,6 +230,15 @@ void processInput(GLFWwindow* window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    // Audio Processing
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        audioEngine.playSoundFile(STINGER_1);
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        audioEngine.playSoundFile(STINGER_2);
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        audioEngine.playSoundFile(STINGER_3);
+
+
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
