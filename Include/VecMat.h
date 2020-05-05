@@ -102,6 +102,7 @@ public:
     // access
     float &operator [] (int i) { return *(&x+i); } // causes ambiguity
     const float operator [] (int i) const { return *(&x+i); }
+	operator const float* () const { return static_cast<const float*>(&x); } // ADDED
     // arithmetic
     vec3 operator - () const { return vec3(-x, -y, -z); }
     vec3 operator + (const vec3 &v) const { return vec3(x+v.x, y+v.y, z+v.z); }
@@ -177,6 +178,32 @@ inline vec4 normalize(const vec4 &v) { return v/length(v); }
 //     Scale, Translate, RotateX, RotateY, RotateZ
 //     Orthographic, Perspective
 //     LookAt, Transpose
+
+// TODO test this class
+class mat2 {
+public:
+	vec2 row[2];
+	//  constructors
+	mat2(float diag = 1) { row[0].x = row[1].y = diag; }
+	mat2(const vec2& r0, const vec2& r1) { row[0] = r0; row[1] = r1; }
+	mat2(const mat2& m) { for (int i = 0; i < 2; i++) row[i] = m.row[i]; }
+	// access
+	vec2& operator [] (int i) { return row[i]; }
+	const vec2& operator [] (int i) const { return row[i]; }
+	operator const float* () const { return static_cast<const float*>(&row[0].x); }
+	// methods
+	mat2 operator * (float s) const { return mat2(s * row[0], s * row[1]); }
+	friend mat2 operator * (float s, const mat2& m) { return m * s; }
+	mat2 operator * (const mat2& m) const {
+		mat2 a(0);
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 2; j++)
+				for (int k = 0; k < 2; k++)
+					a[i][j] += row[i][k] * m[k][j];
+		return a;
+	}
+	vec2 operator * (const vec2& v) const { return vec2(dot(row[0], v), dot(row[1], v)); }
+};
 
 class mat3 {
 public:
@@ -254,7 +281,14 @@ inline mat4 Translate(float x, float y, float z) {
 
 inline mat4 Translate(vec3 t) { return Translate(t.x, t.y, t.z); }
 
-static float DegreesToRadians = 3.14159265358f/180.f;
+constexpr float PI = 3.14159265358f;
+
+static float DegreesToRadians = PI / 180.f;
+
+// TODO test
+inline float Radians(const float deg) {
+	return tan(deg * PI / 180.0);
+}
 
 inline mat4 RotateX(float theta) {
 	float angle = DegreesToRadians*theta;

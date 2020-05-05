@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# TODO deal with large .rar and other large model assets
+#*.rar
+
 # User-specific files
 *.rsuser
 *.suo
@@ -28,7 +31,7 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
-[Oo]bj/
+#[Oo]bj/
 [Ll]og/
 [Ll]ogs/
 
@@ -74,7 +77,7 @@ StyleCopReport.xml
 *_h.h
 *.ilk
 *.meta
-*.obj
+#*.obj
 *.iobj
 *.pch
 *.pdb

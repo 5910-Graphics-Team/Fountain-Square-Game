@@ -5,6 +5,7 @@
 
 #include <glad.h>
 #include "VecMat.h"
+#include <glm/mat4x4.hpp>
 
 // Print Info
 int PrintGLErrors();
@@ -40,6 +41,7 @@ bool SetUniform3(int program, const char *name, float *v, bool report = true);
 bool SetUniform3v(int program, const char *name, int count, float *v, bool report = true);
 bool SetUniform4v(int program, const char *name, int count, float *v, bool report = true);
 bool SetUniform(int program, const char *name, mat4 m, bool report = true);
+bool SetUniform(int program, const char* name, glm::mat4 m, bool report = true);
 	// if no such named uniform and report, print error message
 
 // Attribute Access
