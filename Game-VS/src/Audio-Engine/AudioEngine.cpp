@@ -10,6 +10,71 @@ AudioEngine::AudioEngine() : soundCache() {
     
 }
 
+
+AudioEngine::Sound* AudioEngine::createSound(const char* filepath, bool dim3D, bool loop) {
+    FMOD::Sound* sound;
+    coreSystem->createSound(filepath, dim3D ? FMOD_3D : FMOD_2D, 0, &sound);
+    if (dim3D) sound->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR);
+    sound->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
+    FMOD::Channel* channel = 0;
+    Sound s(sound, channel); // TODO test
+    
+    return &s;
+}
+
+void AudioEngine::playSound(Sound* sound) {
+    FMOD::Channel* channel;
+    coreSystem->playSound(sound->sound, 0, false, &channel);
+    //sound->setPaused(false);
+}
+
+void AudioEngine::update3DListenerPosition(float forwardX, float forwardY, float forwardZ) {
+    forward = { forwardX, forwardY, forwardZ };
+
+    coreSystem->set3DListenerAttributes(0, &listenerpos, 0, &forward, &up);
+    //FMOD_VECTOR vel;
+
+
+        //if (listenerflag)
+        //{
+        //    listenerpos.x = (float)sin(t * 0.05f) * 24.0f * DISTANCEFACTOR; // left right pingpong
+        //}
+
+        // ********* NOTE ******* READ NEXT COMMENT!!!!!
+        // vel = how far we moved last FRAME (m/f), then time compensate it to SECONDS (m/s).
+        /*vel.x = (listenerpos.x - lastpos.x) * (1000 / INTERFACE_UPDATETIME);
+        vel.y = (listenerpos.y - lastpos.y) * (1000 / INTERFACE_UPDATETIME);
+        vel.z = (listenerpos.z - lastpos.z) * (1000 / INTERFACE_UPDATETIME);*/
+
+        // store pos for next time
+        //lastpos = listenerpos;
+
+
+
+        //t += (30 * (1.0f / (float)INTERFACE_UPDATETIME));    // t is just a time value .. it increments in 30m/s steps in this example
+
+        //FMOD_VECTOR  listenervel = { velocity.x, 0.0f, velocity.y };
+        ////update position & velocity of listener
+        ////position of listener needed for spatial & reverb effects
+        ////velocity of listener needed for dopper effects
+        //FMOD_VECTOR  listenerpos = { listenerSprite.getPosition().x, 0.0f, listenerSprite.getPosition().y };
+        ////final pair of parameters are forward direction and up direction of listener (not needed in 2D)
+        //FMODsys->set3DListenerAttributes(0, &listenerpos, &listenervel, 0, 0);
+
+        ////update position of sound
+        //if (channel) {
+        //    FMOD_VECTOR  sourcePos = { sourceSprite.getPosition().x, 0.0f, sourceSprite.getPosition().y };
+        //    //source is fixed so velocity is zero
+        //    channel->set3DAttributes(&sourcePos, 0);
+        //}
+}
+
+
+
+
+
+
+
 void AudioEngine::cacheSoundFile(const char* filepath) {   
     if (!soundIsCached(filepath)) {
         std::cout << "Creating and caching sound at " << filepath << "\n";

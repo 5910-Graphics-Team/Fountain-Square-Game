@@ -5,28 +5,64 @@
 // CPSC 5910 Graphics/Game Project 
 #include <map>
 #include <string>
+#include <iostream>
 #include <FMOD/fmod_studio.hpp>
 #include <FMOD/fmod.hpp>
 
-class Sound {
-private:
-    FMOD::Sound*   sound;
-    FMOD::Channel* channel;
-public:
-    //Sound(FMOD::Sound* sound, FMOD::Channel* channel) : sound(sound), channel(channel) {
-    //    channel.get
-    //}
-    //void setRetriggerBehavior() {
-    //}
-};
+
 
 class AudioEngine {
 
 public:
+    class Sound {
+    private:
+
+        //bool dim3D, loop;
+        FMOD_VECTOR position;// { 0.0f, 0.0f, 0.0f};
+
+    public:
+        //std::shared_ptr<FMOD::Sound>* sound;
+        FMOD::Sound* sound;
+        FMOD::Channel* channel;
+
+        Sound(FMOD::Sound* sound, FMOD::Channel* channel, float x = 0.0f, float y = 0.0f, float z = 0.0f) {
+            sound = sound;
+            channel = channel;
+            std::cout << "Created sound at with channel = " << channel << "\n";
+            setPosition(x, y, z);
+        }
+        FMOD::Sound* getSound() {
+            return sound;
+        }
+        FMOD::Channel** getChannel() {
+            return &channel;
+        }
+        void setPosition(float x, float y, float z) {
+            //position = { x, y, z };
+            position = { -10.0f /* * DISTANCEFACTOR*/, 0.0f, 0.0f };
+            FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
+            channel->set3DAttributes(&position, &velocity);
+        }
+        FMOD_VECTOR getPosition() {
+            return position;
+        }
+        void setPaused(bool paused) {
+            channel->setPaused(paused);
+        }
+    };
     /**
     * Initializes Audio Engine Studio and Core systems
     */
     AudioEngine();
+
+    Sound* createSound(const char* filepath, bool dim3D, bool loop);
+
+    void playSound(Sound* sound);
+
+    void update3DListenerPosition(float forwardX, float forwardY, float forwardZ);
+
+
+
     /**
     * Loads a sound file into the cache to prepare for later playback. 
     * Only reads file and creates the sound if it has not already been added to the cache.
@@ -46,15 +82,18 @@ public:
     */
     void playSoundFile(const char* filepath, bool cache);
 
-    // TODO
-    //void stopSoundFile(const char* filename);
 
 private:    
     FMOD::Studio::System* system = nullptr;              // FMOD Studio API
     FMOD::System* coreSystem = nullptr;          // FMOD's low-level audio system, obtained from Studio System    
     static const unsigned int MAX_AUDIO_CHANNELS = 1024; // Max FMOD audio channels for this audio engine 
-    const float DISTANCEFACTOR = 1.0f;          // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
     
+    float t = 0;
+    const float DISTANCEFACTOR = 1.0f;          // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
+    FMOD_VECTOR listenerpos = { 0.0f, 0.0f, -1.0f * DISTANCEFACTOR };
+    FMOD_VECTOR forward = { 0.0f, 0.0f, 1.0f };
+    FMOD_VECTOR up = { 0.0f, 1.0f, 0.0f };
+
     /*
     * Map which stores the low-level sound cache. 
     * Key is the relative file path of each unique sound asset. TODO Refactor to use numeric UID as key

@@ -18,8 +18,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 720;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -139,7 +139,11 @@ int main()
     
     // create and load models with default trans/scale/rotation  (TODO move object 'default' params to config file?)
     GameObject fountain("res/objects/fountains/fountainOBJ/fountain.obj", glm::vec3(-30.0f, -12.5f, -70.0f), glm::vec3(0.5f), glm::vec3(0.0f));
+    AudioEngine::Sound* sound = audioEngine.createSound("res/sound/Medieval Village2.5_Loop1_ImplementationDemo.wav", true, true);
     gameObjects.push_back(fountain);
+
+    AudioEngine::Sound* sound2 = audioEngine.createSound("res/sound/Medieval Village2.5_Loop1_Layer3.wav", true, true);
+
 
     GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj",  glm::vec3(0.5f, -1.2f, 0.0f), glm::vec3(0.5f), glm::vec3(0.0f));
     gameObjects.push_back(backpack);
@@ -150,6 +154,9 @@ int main()
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
+    std::cout << "Playing sound...";
+    audioEngine.playSound(sound);
+    std::cout << "Woohoo, got through playSound()";
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -168,7 +175,7 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-   
+        audioEngine.update3DListenerPosition(lastX, lastY, 0.0f);
         // render objects
         for (int i = 0; i < gameObjects.size(); i++) 
             renderGameObject(&gameObjects[i], &ourShader);
@@ -233,5 +240,3 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     camera.ProcessMouseScroll(yoffset);
 }
-
-\
