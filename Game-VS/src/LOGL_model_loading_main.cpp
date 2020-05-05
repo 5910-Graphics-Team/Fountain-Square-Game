@@ -138,25 +138,31 @@ int main()
     std::vector<GameObject> gameObjects;
     
     // create and load models with default trans/scale/rotation  (TODO move object 'default' params to config file?)
-    GameObject fountain("res/objects/fountains/fountainOBJ/fountain.obj", glm::vec3(-30.0f, -12.5f, -70.0f), glm::vec3(0.5f), glm::vec3(0.0f));
-    AudioEngine::Sound* sound = audioEngine.createSound("res/sound/Medieval Village2.5_Loop1_ImplementationDemo.wav", true, true);
+    glm::vec3 fountainTran(-30.0f, -12.5f, -70.0f), fountainScale(0.5f), fountainRot(0.0f);
+    glm::vec3 backpackTran(0.5f, -1.2f, 0.0f),      backpackScale(0.5f), backpackRot(0.0f);
+    glm::vec3 groundTran(50.0f, -17.0f, -200.0f),   groundScale(20.0f),  groundRot(90.0f, 0.0f, 0.0f);
+    
+    GameObject fountain("res/objects/fountains/fountainOBJ/fountain.obj", fountainTran, fountainScale, fountainRot);
+    GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj",  backpackTran, backpackScale, backpackRot);
+    GameObject groundObj("res/objects/ground/ground.obj",                 groundTran,   groundScale,   groundRot);
+    
     gameObjects.push_back(fountain);
-
-    AudioEngine::Sound* sound2 = audioEngine.createSound("res/sound/Medieval Village2.5_Loop1_Layer3.wav", true, true);
-
-
-    GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj",  glm::vec3(0.5f, -1.2f, 0.0f), glm::vec3(0.5f), glm::vec3(0.0f));
     gameObjects.push_back(backpack);
-
-    GameObject groundObj("res/objects/ground/ground.obj", glm::vec3(50.0f, -17.0f, -200.0f), glm::vec3(20.0f), glm::vec3(90.0f, 0.0f, 0.0f)); 
     gameObjects.push_back(groundObj);
 
+    // create sound effects/music
+    const char* MUSIC        = "res/sound/Medieval Village2.5_Loop1_ImplementationDemo.wav";
+    const char* FOUNTAIN_SFX = "res/sound/Fountain_Loop.wav";
+
+    audioEngine.loadSoundFile(MUSIC, false, true);
+    audioEngine.loadSoundFile(FOUNTAIN_SFX, true, true);
+
+    audioEngine.play3DSound(FOUNTAIN_SFX, fountainTran.x, fountainTran.y, fountainTran.z); //, -10.0f, 0.0f, 0.0f);
+    //audioEngine.playSoundFile(MUSIC);
+    
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
-    std::cout << "Playing sound...";
-    audioEngine.playSound(sound);
-    std::cout << "Woohoo, got through playSound()";
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -175,7 +181,7 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        audioEngine.update3DListenerPosition(lastX, lastY, 0.0f);
+        audioEngine.set3DListenerPosition(lastX, lastY, 0.0f);
         // render objects
         for (int i = 0; i < gameObjects.size(); i++) 
             renderGameObject(&gameObjects[i], &ourShader);
