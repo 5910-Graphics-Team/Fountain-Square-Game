@@ -97,7 +97,7 @@ static void renderGameObject(GameObject* gameObject, Shader* shader) {
     gameObject->draw(shader);
 }
 
-
+float currentFrame = 0.0f;
 
 int main()
 {
@@ -175,10 +175,12 @@ int main()
     {
         // per-frame time logic
         // --------------------
-        float currentFrame = glfwGetTime();
+        currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+        //std::cout << "current frame: " << currentFrame << "\n";
+        
         // input
         // -----
         processInput(window);
@@ -212,7 +214,7 @@ int main()
 }
 
 
-float stinger1Time, stinger2Time, stinger3Time;
+float stinger1LastTime = 0.0f, stinger2LastTime = 0.0f, stinger3LastTime = 0.0f;
 float MIN_STINGER_RETRIGGER_TIME = 0.5f;
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -231,13 +233,18 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
     // Audio Processing
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && currentFrame - stinger1LastTime >= MIN_STINGER_RETRIGGER_TIME) {
         audioEngine.playSoundFile(STINGER_1);
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        stinger1LastTime = currentFrame;
+    }
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && currentFrame - stinger2LastTime >= MIN_STINGER_RETRIGGER_TIME) {
         audioEngine.playSoundFile(STINGER_2);
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        stinger2LastTime = currentFrame;
+    }
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && currentFrame - stinger3LastTime >= MIN_STINGER_RETRIGGER_TIME) {
         audioEngine.playSoundFile(STINGER_3);
-
+        stinger3LastTime = currentFrame;
+    }
 
 }
 
