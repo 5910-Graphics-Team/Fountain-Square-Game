@@ -1,180 +1,285 @@
-// QuadSlide.cpp - display and manipulate texture maps
-
 #include <glad.h>
 #include <GLFW/glfw3.h>
-#include <stdio.h>
-#include "Camera.h"
-#include "GLXtras.h"
-#include "Misc.h"
-#include "VecMat.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "Shader.h"
+#include "Model.h"
+#include "LOGL_Camera.h"
 #include "Audio-Engine/AudioEngine.h"
+#include "Misc.h"
+#include "GLXtras.h"
+#include <iostream>
 
+void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
+void MouseCallback(GLFWwindow* window, double xpos, double ypos);
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+void ProcessInput(GLFWwindow* window);
 
-Camera camera;
+// screen settings
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 720;
+
+// camera
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+// timing
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
+// audio timing
+float stinger1LastTime = 0.0f, stinger2LastTime = 0.0f, stinger3LastTime = 0.0f;
+float MIN_STINGER_RETRIGGER_TIME = 0.5f;
+
+// audio engine
 AudioEngine audioEngine;
 
-// asset paths
-const char* SOUND_FILE      = "res/sound/Medieval Village2.5_Loop1_Layer1_54BPM.wav";
-const char* TEXTURE_EARTH   = "res/objects/environment/Earth.tga";
+// audio assets
+const char* MUSIC        = "res/sound/Medieval Village Full Theme Demo_2.5.1.3.wav";
+const char* STINGER_1    = "res/sound/Medieval Village_Stinger1 Guitar_2.5.1.3.wav";
+const char* STINGER_2    = "res/sound/Medieval Village_Stinger2 Guitar_2.5.1.3.wav";
+const char* STINGER_3    = "res/sound/Medieval Village_Stinger3 Harp_2.5.1.3.wav";
+const char* FOUNTAIN_SFX = "res/sound/Fountain_Loop.wav";
 
-// display
-GLuint      textureNames[3] = { 0, 0, 0 };
-int			textureUnits[3] = { 0, 1, 2 };
-int         winW = 600, winH = 600;
 
-// shaders
-GLuint backgroundShader = 0, foregroundShader = 0;
-GLuint vBuffer = 0; // GPU vertex buffer ID
-vec3 points[] = { vec3(-1, 0, -1), vec3(-1, 0, 1), vec3(1, 0, 1), vec3(1, 0, -1) };
-vec2 uvs[] =    { vec2(0, 0), vec2(1,0), vec2(1,1), vec2(0,1) };
-
-// interaction
-float objectX = 0, objectY = 0, objectScale = 1;
-float xDown = 0, yDown = 0, oldMouseX = 0, oldMouseY = 0;
-
-void DisplayGround() {
-    const char* vShader = R"(
-        #version 330
-		in vec3 point;
-		in vec2 uv;
-		uniform mat4 view;
-        out vec2 vUv;
-        void main() {
-            vUv = uv;
-            gl_Position = view*vec4(point, 1);
-        }
-    )";
-    const char* pShader = R"(
-        #version 330
-        in vec2 vUv;
-        out vec4 pColor;
-        uniform sampler2D textureImage;
-        uniform sampler2D textureMat;
-        void main() {
-            pColor = texture(textureImage, vUv);
-			pColor.a = texture(textureMat, vUv).r;
-        }
-    )";
-    if (!foregroundShader)
-        foregroundShader = LinkProgramViaCode(&vShader, &pShader);
-    glUseProgram(foregroundShader);
-    glActiveTexture(GL_TEXTURE0 + textureUnits[1]);
-    glBindTexture(GL_TEXTURE_2D, textureNames[1]);
-    SetUniform(foregroundShader, "textureImage", textureUnits[1]);
-    glActiveTexture(GL_TEXTURE0 + textureUnits[2]);
-    glBindTexture(GL_TEXTURE_2D, textureNames[2]);
-    SetUniform(foregroundShader, "textureMat", textureUnits[2]);
-    VertexAttribPointer(foregroundShader, "point", 2, 0, (void*)0);
-    VertexAttribPointer(foregroundShader, "uv", 2, 0, (void*)sizeof(points));
-    mat4 trans = Translate(objectX, objectY, 0);
-    mat4 rot = RotateY(45);
-    //rot = rot * RotateX(80);
-    //rot = RotateZ(45);
-    mat4 scale = Scale(objectScale);
-    SetUniform(foregroundShader, "view", trans /* rot */ * scale);
-    glDrawArrays(GL_QUADS, 0, 4);
-}
-
-// Mouse
-
-int WindowHeight(GLFWwindow* w) {
-    int width, height;
-    glfwGetWindowSize(w, &width, &height);
-    return height;
-}
-
-void MouseWheel(GLFWwindow* w, double xoffset, double yoffset) {
-    objectScale += .1f * (float)yoffset;
-}
-
-void MouseButton(GLFWwindow* w, int butn, int action, int mods) {
-    double x, y;
-    glfwGetCursorPos(w, &x, &y);
-    y = WindowHeight(w) - y; // invert y for upward-increasing screen space
-    if (action == GLFW_PRESS) {
-        xDown = (float)x;
-        yDown = (float)y;
+// Container for a Model and its default translation,scale, and rotation values. 
+class GameObject {
+private:
+    Model model; // TODO could allocate memory for this (make pointer)
+    glm::vec3 trans, scale, rotAngs;
+public:
+    GameObject(const char* filepath) : GameObject(filepath, glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(0.0f)) {}
+    GameObject(const char* filepath, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) : model(filepath), trans(defTrans), scale(defScale), rotAngs(defRot) {
+        std::cout << "Created model for " << filepath << "\n";
     }
-    else {
-        oldMouseX = objectX;
-        oldMouseY = objectY;
+    void draw(Shader* shader) {
+        model.Draw(*shader);
     }
+
+    glm::vec3 getTranslation() {
+        return trans;
+    }
+    glm::vec3 getScale() {
+        return scale;
+    }
+    glm::vec3 getRotationAngles() {
+        return rotAngs;
+    }
+    glm::mat4 getModel() {
+        glm::mat4 m = glm::mat4(1.0f);
+        m = glm::translate(m, trans); // translate it down so it's at the center of the scene
+        m = glm::rotate(m, glm::radians(rotAngs.x), glm::vec3(1.0f, 0.0f, 0.0f)); //rotation x
+        m = glm::rotate(m, glm::radians(rotAngs.y), glm::vec3(0.0f, 1.0f, 0.0f)); //rotation y
+        m = glm::rotate(m, glm::radians(rotAngs.z), glm::vec3(0.0f, 0.0f, 1.0f)); //rotation z 
+        m = glm::scale(m, scale);	  // scale object
+        return m;
+    }
+};
+
+static glm::mat4 getProjection() {
+    return glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 }
 
-void MouseMove(GLFWwindow* w, double x, double y) {
-    if (glfwGetMouseButton(w, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) { // drag
-        y = WindowHeight(w) - y;
-        objectX = oldMouseX + ((float)x - xDown) / winW;
-        objectY = oldMouseY + ((float)y - yDown) / winH;
-    }
+// Performs the OpenGL calls to render a GameObject with a provided shader.
+static void renderGameObject(GameObject* gameObject, Shader* shader) {
+    // enable shader before setting uniforms
+    shader->use();
+
+    // view/projection transformations
+    glm::mat4 projection = getProjection();//glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 view = camera.GetViewMatrix();
+    shader->setMat4("projection", projection);
+    shader->setMat4("view", view);
+
+    // render the loaded model 
+    // TODO refactor GameObject to do this itself in draw()
+    shader->setMat4("model", gameObject->getModel());
+    gameObject->draw(shader);
 }
-// 
-void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+
+float currentFrame = 0.0f;
+
+int main()
 {
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-        audioEngine.playSoundFile(SOUND_FILE, true);
-}
-
-
-// Application
-
-void Resize(GLFWwindow* w, int width, int height) {
-    glViewport(0, 0, winW = width, winH = height);
-}
-
-void InitVertexBuffer() {
-    // define GPU buffer, make it active
-    glGenBuffers(1, &vBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vBuffer);
-    // allocate and fill vertex buffer
-    glBufferData(GL_ARRAY_BUFFER, sizeof(points) + sizeof(uvs), NULL, GL_STATIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(points), points);
-    glBufferSubData(GL_ARRAY_BUFFER, sizeof(points), sizeof(uvs), uvs);
-}
-
-void InitAudioEngine() {
-    //  pre-load audio assets
-    audioEngine.cacheSoundFile(SOUND_FILE);
-}
-
-int main(int ac, char** av) {
-    // init audio engine, app window and GL context
-    InitAudioEngine();
     glfwInit();
-    GLFWwindow* w = glfwCreateWindow(winW, winH, "Fountain Square Game", NULL, NULL);
-    glfwSetWindowPos(w, 100, 100);
-    glfwMakeContextCurrent(w);
-    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    // read background, foreground, and mat textures
-    glGenTextures(1, textureNames);
-    textureNames[0] = LoadTexture(TEXTURE_EARTH, textureUnits[0]);
-    textureNames[1] = LoadTexture(TEXTURE_EARTH, textureUnits[1]);
-    textureNames[2] = LoadTexture(TEXTURE_EARTH, textureUnits[2]);
-    
-    InitVertexBuffer();
-    // callbacks
-    glfwSetMouseButtonCallback(w, MouseButton);
-    glfwSetCursorPosCallback(w, MouseMove);
-    glfwSetScrollCallback(w, MouseWheel);
-    glfwSetWindowSizeCallback(w, Resize);
-    glfwSetKeyCallback(w, KeyCallback);
-    // event loop
-    glfwSwapInterval(1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    std::cout << "Press Space bar to start sound!";
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Fountain Game", NULL, NULL);
+    if (window == NULL)
+    {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
+    glfwSetCursorPosCallback(window, MouseCallback);
+    glfwSetScrollCallback(window, ScrollCallback);
+
+    // tell GLFW what to do with mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+    // load all OpenGL function pointers
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+
+    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
+    stbi_set_flip_vertically_on_load(true);
+
+    // configure global opengl state
+    glEnable(GL_DEPTH_TEST);
+
+    // build and compile shaders
+    Shader ourShader("res/shaders/1.model_loading.vs", "res/shaders/1.model_loading.fs");
     
-    // GL render loop
-    while (!glfwWindowShouldClose(w)) {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        DisplayGround();
-        //DisplayForeground();
-        glFlush();
-        glfwSwapBuffers(w);
+    std::vector<GameObject> gameObjects;
+    
+    // create and load models with default trans/scale/rotation  (TODO move object 'default' params to config file?)
+    glm::vec3 fountainTran(-15.0f, -5.0f, -20.0f),  fountainScale(0.2f), fountainRot(0.0f);
+    glm::vec3 backpackTran(0.5f, -1.2f, 0.0f),      backpackScale(0.5f), backpackRot(0.0f);
+    glm::vec3 houseTran(-10.0f, -5.0f, -2.0f),      houseScale(0.5f),    houseRot(0.0f);
+    glm::vec3 groundTran  (50.0f, -8.0f, -200.0f),  groundScale(20.0f),  groundRot(90.0f, 0.0f, 0.0f);
+    
+    //res/LearnOpenGL/objects/backpack/backpack.obj
+    GameObject fountain("res/objects/fountains/fountainOBJ/fountain.obj", fountainTran, fountainScale, fountainRot);
+    GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj", backpackTran, backpackScale, backpackRot);
+    GameObject house("res/objects/Monster House/Monster House.obj", houseTran, houseScale, houseRot);
+    GameObject groundObj("res/objects/ground/ground.obj",                 groundTran,   groundScale,   groundRot);
+    
+    gameObjects.push_back(fountain);
+    gameObjects.push_back(backpack);
+    gameObjects.push_back(house);
+    gameObjects.push_back(groundObj);
+
+    // load sound effects/music
+    audioEngine.loadSoundFile(MUSIC,        false, true);
+    audioEngine.loadSoundFile(STINGER_1,    false, false);
+    audioEngine.loadSoundFile(STINGER_2,    false, false);
+    audioEngine.loadSoundFile(STINGER_3,    false, false);
+    audioEngine.loadSoundFile(FOUNTAIN_SFX, true,  true);
+    
+
+    audioEngine.play3DSound(FOUNTAIN_SFX, fountainTran.x, fountainTran.y, fountainTran.z); //, -10.0f, 0.0f, 0.0f);
+    audioEngine.playSoundFile(MUSIC);
+    
+    // draw in wireframe
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    
+    // render loop
+    while (!glfwWindowShouldClose(window))
+    {
+        // per-frame time logic
+        // --------------------
+        currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        //std::cout << "current frame: " << currentFrame << "\n";
+        
+        // input
+        // -----
+        ProcessInput(window);
+
+        // render
+        // ------
+        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+        // Update listener position
+        audioEngine.set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
+                                          camera.Front.x, camera.Front.y, camera.Front.z, 
+                                          camera.Up.x,    camera.Up.y,    camera.Up.z
+                                          
+        );
+        // render Game Objects
+        for (int i = 0; i < gameObjects.size(); i++) 
+            renderGameObject(&gameObjects[i], &ourShader);
+
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
+        glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glDeleteBuffers(3, textureNames);
-    glfwDestroyWindow(w);
+
+    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // ------------------------------------------------------------------
     glfwTerminate();
+    return 0;
+}
+
+
+
+
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+void ProcessInput(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
+    // Audio Processing
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && currentFrame - stinger1LastTime >= MIN_STINGER_RETRIGGER_TIME) {
+        audioEngine.playSoundFile(STINGER_1);
+        stinger1LastTime = currentFrame;
+    }
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && currentFrame - stinger2LastTime >= MIN_STINGER_RETRIGGER_TIME) {
+        audioEngine.playSoundFile(STINGER_2);
+        stinger2LastTime = currentFrame;
+    }
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && currentFrame - stinger3LastTime >= MIN_STINGER_RETRIGGER_TIME) {
+        audioEngine.playSoundFile(STINGER_3);
+        stinger3LastTime = currentFrame;
+    }
+
+}
+
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+    // make sure the viewport matches the new window dimensions; note that width and 
+    // height will be significantly larger than specified on retina displays.
+    glViewport(0, 0, width, height);
+}
+
+void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+    camera.ProcessMouseScroll(yoffset);
 }

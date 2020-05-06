@@ -9,8 +9,6 @@
 #include <FMOD/fmod_studio.hpp>
 #include <FMOD/fmod.hpp>
 
-
-
 class AudioEngine {
 
 public:
@@ -33,8 +31,6 @@ public:
     
 
     void play3DSound(const char* filename, float x, float y, float z);
-
-   
 
     /**
     * Plays a sound file using FMOD's low level audio system. If the sound file has not been 
@@ -90,41 +86,5 @@ private:
     * Creates a sound without checking if it already has been created and cached.
     */
     FMOD::Sound* createSound(const char* filepath);
-    
-    //class Sound {
-    //private:
-
-    //    //bool dim3D, loop;
-    //    FMOD_VECTOR position;// { 0.0f, 0.0f, 0.0f};
-
-    //public:
-    //    //std::shared_ptr<FMOD::Sound>* sound;
-    //    FMOD::Sound* sound;
-    //    FMOD::Channel* channel;
-
-    //    Sound(FMOD::Sound* sound, FMOD::Channel* channel, float x = 0.0f, float y = 0.0f, float z = 0.0f) {
-    //        sound = sound;
-    //        channel = channel;
-    //        std::cout << "Created sound at with channel = " << channel << "\n";
-    //        setPosition(x, y, z);
-    //    }
-    //    FMOD::Sound* getSound() {
-    //        return sound;
-    //    }
-    //    FMOD::Channel** getChannel() {
-    //        return &channel;
-    //    }
-    //    void setPosition(float x, float y, float z) {
-    //        //position = { x, y, z };
-    //        position = { -10.0f /* * DISTANCEFACTOR*/, 0.0f, 0.0f };
-    //        FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
-    //        channel->set3DAttributes(&position, &velocity);
-    //    }
-    //    FMOD_VECTOR getPosition() {
-    //        return position;
-    //    }
-    //    void setPaused(bool paused) {
-    //        channel->setPaused(paused);
-    //    }
-    //};
+ 
 };

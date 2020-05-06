@@ -10,28 +10,10 @@ AudioEngine::AudioEngine() : soundCache() {
 }
 
 
-//AudioEngine::Sound* AudioEngine::createSound(const char* filepath, bool dim3D, bool loop) {
-//    FMOD::Sound* sound;
-//    coreSystem->createSound(filepath, dim3D ? FMOD_3D : FMOD_2D, 0, &sound);
-//    
-//    if (dim3D) sound->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR);
-//    sound->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
-//    FMOD::Channel* channel = 0;
-//    Sound s(sound, channel); // TODO test
-//    
-//    return &s;
-//}
-
-//void AudioEngine::playSound(Sound* sound) {
-//    FMOD::Channel* channel;
-//    coreSystem->playSound(sound->sound, 0, false, &channel);
-//    //sound->setPaused(false);
-//}
-
 void AudioEngine::set3DListenerPosition(float posX, float posY, float posZ, float forwardX, float forwardY, float forwardZ, float upX, float upY, float upZ) {
     listenerpos = { posX,     posY,     posZ };
-    forward =     { forwardX, forwardY, forwardZ };
-    up =          { upX,      upY,      upZ      };
+    forward =     { forwardY, forwardX, forwardZ };
+    up =          { upY,      upX,      upZ      };
     coreSystem->set3DListenerAttributes(0, &listenerpos, 0, &forward, &up);
     //FMOD_VECTOR vel;
 
