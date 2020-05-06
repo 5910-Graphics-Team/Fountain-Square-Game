@@ -150,14 +150,18 @@ int main()
     // create and load models with default trans/scale/rotation  (TODO move object 'default' params to config file?)
     glm::vec3 fountainTran(-15.0f, -5.0f, -20.0f),  fountainScale(0.2f), fountainRot(0.0f);
     glm::vec3 backpackTran(0.5f, -1.2f, 0.0f),      backpackScale(0.5f), backpackRot(0.0f);
+    glm::vec3 houseTran(-10.0f, -5.0f, -2.0f),      houseScale(0.5f),    houseRot(0.0f);
     glm::vec3 groundTran  (50.0f, -8.0f, -200.0f),  groundScale(20.0f),  groundRot(90.0f, 0.0f, 0.0f);
     
+    //res/LearnOpenGL/objects/backpack/backpack.obj
     GameObject fountain("res/objects/fountains/fountainOBJ/fountain.obj", fountainTran, fountainScale, fountainRot);
-    GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj",  backpackTran, backpackScale, backpackRot);
+    GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj", backpackTran, backpackScale, backpackRot);
+    GameObject house("res/objects/Monster House/Monster House.obj", houseTran, houseScale, houseRot);
     GameObject groundObj("res/objects/ground/ground.obj",                 groundTran,   groundScale,   groundRot);
     
     gameObjects.push_back(fountain);
     gameObjects.push_back(backpack);
+    gameObjects.push_back(house);
     gameObjects.push_back(groundObj);
 
     // load sound effects/music
