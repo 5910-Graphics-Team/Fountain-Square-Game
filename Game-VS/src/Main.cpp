@@ -71,7 +71,7 @@ public:
     }
     glm::mat4 getModel() {
         glm::mat4 m = glm::mat4(1.0f);
-        m = glm::translate(m, trans); // translate it down so it's at the center of the scene
+        m = glm::translate(m, trans);
         m = glm::rotate(m, glm::radians(rotAngs.x), glm::vec3(1.0f, 0.0f, 0.0f)); //rotation x
         m = glm::rotate(m, glm::radians(rotAngs.y), glm::vec3(0.0f, 1.0f, 0.0f)); //rotation y
         m = glm::rotate(m, glm::radians(rotAngs.z), glm::vec3(0.0f, 0.0f, 1.0f)); //rotation z 
@@ -90,7 +90,7 @@ static void renderGameObject(GameObject* gameObject, Shader* shader) {
     shader->use();
 
     // view/projection transformations
-    glm::mat4 projection = getProjection();//glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = getProjection();
     glm::mat4 view = camera.GetViewMatrix();
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
@@ -148,31 +148,45 @@ int main()
     std::vector<GameObject> gameObjects;
     
     // create and load models with default trans/scale/rotation  (TODO move object 'default' params to config file?)
-    glm::vec3 fountainTran(-15.0f, -5.0f, -20.0f),  fountainScale(0.2f), fountainRot(0.0f);
-    glm::vec3 backpackTran(0.5f, -1.2f, 0.0f),      backpackScale(0.5f), backpackRot(0.0f);
-    glm::vec3 houseTran(-10.0f, -5.0f, -2.0f),      houseScale(0.5f),    houseRot(0.0f);
-    glm::vec3 groundTran  (50.0f, -8.0f, -200.0f),  groundScale(20.0f),  groundRot(90.0f, 0.0f, 0.0f);
-    
+   
+    glm::vec3 backpackTran(0.5f,   -1.2f,  0.0f),   backpackScale(0.5f), backpackRot(0.0f);
+    glm::vec3 houseTran   (-10.0f, -5.0f, -2.0f),   houseScale   (0.35f),    houseRot(0.0f, 90.0f, 0.0f);
+    glm::vec3 groundTran  (50.0f,  -8.0f, -200.0f), groundScale  (20.0f),  groundRot(90.0f, 0.0f, 0.0f);
+    glm::vec3 treeFirTran (0.0f,  -8.0f,  -10.0f), treeFirScale (0.01f),  treeFirRot(0.0f);
+    // Fountain + harp 
+    glm::vec3 fountainTran(-15.0f, -5.0f, -20.0f), fountainScale(0.08f), fountainRot(0.0f);
+    glm::vec3 harpTran(fountainTran.x, fountainTran.y + 7.0f, fountainTran.z), harpScale(0.008f), harpRot(0.0f, 90.0f, 0.0f); //(-2.0f, 0.0f, -10.0f)
+
     //res/LearnOpenGL/objects/backpack/backpack.obj
     GameObject fountain("res/objects/fountains/fountainOBJ/fountain.obj", fountainTran, fountainScale, fountainRot);
-    GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj", backpackTran, backpackScale, backpackRot);
-    GameObject house("res/objects/Monster House/Monster House.obj", houseTran, houseScale, houseRot);
-    GameObject groundObj("res/objects/ground/ground.obj",                 groundTran,   groundScale,   groundRot);
-    
-    gameObjects.push_back(fountain);
-    gameObjects.push_back(backpack);
-    gameObjects.push_back(house);
-    gameObjects.push_back(groundObj);
+    GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj",  backpackTran, backpackScale, backpackRot);
+    GameObject house("res/objects/Monster House/Monster House.obj",       houseTran,    houseScale,    houseRot);
+    GameObject ground("res/objects/ground/ground.obj",                    groundTran,   groundScale,   groundRot);
+    GameObject treeFir("res/objects/flora/trees/fir/fir.obj",             treeFirTran,  treeFirScale,  treeFirRot);
+    GameObject harp("res/objects/instruments/harp/3d-model.obj",          harpTran,     harpScale,     harpRot);
 
-    // load sound effects/music
-    audioEngine.loadSoundFile(MUSIC,        false, true);
+
+    gameObjects.push_back(fountain);
+    //gameObjects.push_back(backpack);
+    gameObjects.push_back(house);
+    gameObjects.push_back(ground);
+    gameObjects.push_back(treeFir);
+    gameObjects.push_back(harp);
+
+    // load non-looping sound effects
     audioEngine.loadSoundFile(STINGER_1,    false, false);
     audioEngine.loadSoundFile(STINGER_2,    false, false);
-    audioEngine.loadSoundFile(STINGER_3,    false, false);
+    // load looping sfx and main music
+    audioEngine.loadSoundFile(STINGER_3, true, true);
+    audioEngine.loadSoundFile(MUSIC,        false, true);
     audioEngine.loadSoundFile(FOUNTAIN_SFX, true,  true);
     
 
-    audioEngine.play3DSound(FOUNTAIN_SFX, fountainTran.x, fountainTran.y, fountainTran.z); //, -10.0f, 0.0f, 0.0f);
+
+
+    // play inital soundscape
+    audioEngine.play3DSound(FOUNTAIN_SFX, fountainTran.x, fountainTran.y, fountainTran.z); 
+    audioEngine.play3DSound(STINGER_3,    harpTran.x,     harpTran.y,     harpTran.z);
     audioEngine.playSoundFile(MUSIC);
     
     // draw in wireframe
@@ -230,7 +244,6 @@ void ProcessInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -244,11 +257,11 @@ void ProcessInput(GLFWwindow* window)
         audioEngine.playSoundFile(STINGER_1);
         stinger1LastTime = currentFrame;
     }
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && currentFrame - stinger2LastTime >= MIN_STINGER_RETRIGGER_TIME) {
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS  && currentFrame - stinger2LastTime >= MIN_STINGER_RETRIGGER_TIME) {
         audioEngine.playSoundFile(STINGER_2);
         stinger2LastTime = currentFrame;
     }
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && currentFrame - stinger3LastTime >= MIN_STINGER_RETRIGGER_TIME) {
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS  && currentFrame - stinger3LastTime >= MIN_STINGER_RETRIGGER_TIME) {
         audioEngine.playSoundFile(STINGER_3);
         stinger3LastTime = currentFrame;
     }

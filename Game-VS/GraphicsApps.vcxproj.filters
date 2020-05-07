@@ -68,6 +68,9 @@
     <ClInclude Include="src\LOGL_Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Util\Console.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="res\sound\Medieval Village2.5_Loop1_ImplementationDemo.wav">

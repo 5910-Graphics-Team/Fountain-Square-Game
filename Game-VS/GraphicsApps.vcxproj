@@ -187,6 +187,7 @@
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\Util\Console.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="res\sound\Medieval Village2.5_Loop1_ImplementationDemo.wav" />
