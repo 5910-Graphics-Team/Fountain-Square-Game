@@ -148,20 +148,20 @@ int main()
     std::vector<GameObject> gameObjects;
     
     // create and load models with default trans/scale/rotation  (TODO move object 'default' params to config file?)
-   
-    glm::vec3 backpackTran(0.5f,   -1.2f,  0.0f),   backpackScale(0.5f), backpackRot(0.0f);
-    glm::vec3 houseTran   (-10.0f, -5.0f, -2.0f),   houseScale   (0.35f),    houseRot(0.0f, 90.0f, 0.0f);
+    //glm::vec3 backpackTran(0.5f,   -1.2f,  0.0f),   backpackScale(0.5f),   backpackRot(0.0f);
+    glm::vec3 houseTran   (-15.0f, -8.0f, -20.0f),  houseScale   (0.42f),  houseRot(0.0f, 70.0f, 0.0f);
     glm::vec3 groundTran  (50.0f,  -8.0f, -200.0f), groundScale  (20.0f),  groundRot(90.0f, 0.0f, 0.0f);
-    glm::vec3 treeFirTran (0.0f,  -8.0f,  -10.0f), treeFirScale (0.01f),  treeFirRot(0.0f);
-    // Fountain + harp 
-    glm::vec3 fountainTran(-15.0f, -5.0f, -20.0f), fountainScale(0.08f), fountainRot(0.0f);
-    glm::vec3 harpTran(fountainTran.x, fountainTran.y + 7.0f, fountainTran.z), harpScale(0.008f), harpRot(0.0f, 90.0f, 0.0f); //(-2.0f, 0.0f, -10.0f)
+    glm::vec3 treeFirTran (0.0f,  -8.0f,  -10.0f),  treeFirScale (0.008f), treeFirRot(0.0f);
+    glm::vec3 rockTran    (-8.0f, -8.0f, -15.0f),   rockScale(0.34f),      rockRot(0.0f);
+    glm::vec3 fountainTran(-10.0f, -7.9f, -5.0f),   fountainScale(0.08f),  fountainRot(0.0f);
+    // Harp location based on fountain location
+    glm::vec3 harpTran(fountainTran.x, fountainTran.y + 4.0f, fountainTran.z), harpScale(0.003f),    harpRot(0.0f, 120.0f, 0.0f); //(-2.0f, 0.0f, -10.0f)
 
-    //res/LearnOpenGL/objects/backpack/backpack.obj
     GameObject fountain("res/objects/fountains/fountainOBJ/fountain.obj", fountainTran, fountainScale, fountainRot);
-    GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj",  backpackTran, backpackScale, backpackRot);
+    //GameObject backpack("res/LearnOpenGL/objects/backpack/backpack.obj",  backpackTran, backpackScale, backpackRot);
     GameObject house("res/objects/Monster House/Monster House.obj",       houseTran,    houseScale,    houseRot);
-    GameObject ground("res/objects/ground/ground.obj",                    groundTran,   groundScale,   groundRot);
+    GameObject rock("res/objects/ground/rock/rock.obj",                   rockTran,     rockScale,     rockRot);
+    GameObject ground("res/objects/ground/groundModel/ground.obj",        groundTran,   groundScale,   groundRot);
     GameObject treeFir("res/objects/flora/trees/fir/fir.obj",             treeFirTran,  treeFirScale,  treeFirRot);
     GameObject harp("res/objects/instruments/harp/3d-model.obj",          harpTran,     harpScale,     harpRot);
 
@@ -172,22 +172,21 @@ int main()
     gameObjects.push_back(ground);
     gameObjects.push_back(treeFir);
     gameObjects.push_back(harp);
-
+    gameObjects.push_back(rock);
+    
     // load non-looping sound effects
     audioEngine.loadSoundFile(STINGER_1,    false, false);
     audioEngine.loadSoundFile(STINGER_2,    false, false);
     // load looping sfx and main music
     audioEngine.loadSoundFile(STINGER_3, true, true);
-    audioEngine.loadSoundFile(MUSIC,        false, true);
+    audioEngine.loadSoundFile(MUSIC,        false, true); 
     audioEngine.loadSoundFile(FOUNTAIN_SFX, true,  true);
     
-
-
 
     // play inital soundscape
     audioEngine.play3DSound(FOUNTAIN_SFX, fountainTran.x, fountainTran.y, fountainTran.z); 
     audioEngine.play3DSound(STINGER_3,    harpTran.x,     harpTran.y,     harpTran.z);
-    audioEngine.playSoundFile(MUSIC);
+    //audioEngine.playSoundFile(MUSIC);
     
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -219,6 +218,7 @@ int main()
                                           camera.Up.x,    camera.Up.y,    camera.Up.z
                                           
         );
+
         // render Game Objects
         for (int i = 0; i < gameObjects.size(); i++) 
             renderGameObject(&gameObjects[i], &ourShader);
