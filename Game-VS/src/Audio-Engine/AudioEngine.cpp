@@ -9,50 +9,12 @@ AudioEngine::AudioEngine() : soundCache() {
     system->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0);
 }
 
-
 void AudioEngine::set3DListenerPosition(float posX, float posY, float posZ, float forwardX, float forwardY, float forwardZ, float upX, float upY, float upZ) {
     listenerpos = { posX,     posY,     posZ };
     forward =     { forwardY, forwardX, forwardZ };
     up =          { upY,      upX,      upZ      };
     coreSystem->set3DListenerAttributes(0, &listenerpos, 0, &forward, &up);
-    //FMOD_VECTOR vel;
-
-
-        //if (listenerflag)
-        //{
-        //    listenerpos.x = (float)sin(t * 0.05f) * 24.0f * DISTANCEFACTOR; // left right pingpong
-        //}
-
-        // ********* NOTE ******* READ NEXT COMMENT!!!!!
-        // vel = how far we moved last FRAME (m/f), then time compensate it to SECONDS (m/s).
-        /*vel.x = (listenerpos.x - lastpos.x) * (1000 / INTERFACE_UPDATETIME);
-        vel.y = (listenerpos.y - lastpos.y) * (1000 / INTERFACE_UPDATETIME);
-        vel.z = (listenerpos.z - lastpos.z) * (1000 / INTERFACE_UPDATETIME);*/
-
-        // store pos for next time
-        //lastpos = listenerpos;
-
-
-
-        //t += (30 * (1.0f / (float)INTERFACE_UPDATETIME));    // t is just a time value .. it increments in 30m/s steps in this example
-
-        //FMOD_VECTOR  listenervel = { velocity.x, 0.0f, velocity.y };
-        ////update position & velocity of listener
-        ////position of listener needed for spatial & reverb effects
-        ////velocity of listener needed for dopper effects
-        //FMOD_VECTOR  listenerpos = { listenerSprite.getPosition().x, 0.0f, listenerSprite.getPosition().y };
-        ////final pair of parameters are forward direction and up direction of listener (not needed in 2D)
-        //FMODsys->set3DListenerAttributes(0, &listenerpos, &listenervel, 0, 0);
-
-        ////update position of sound
-        //if (channel) {
-        //    FMOD_VECTOR  sourcePos = { sourceSprite.getPosition().x, 0.0f, sourceSprite.getPosition().y };
-        //    //source is fixed so velocity is zero
-        //    channel->set3DAttributes(&sourcePos, 0);
-        //}
 }
-
-
 
 void AudioEngine::loadSoundFile(const char* filepath, bool dim3D, bool loop) {
     if (!soundIsCached(filepath)) {
@@ -97,28 +59,6 @@ void AudioEngine::playSoundFile(const char* filepath) {
         std::cout << "AudioEngine: Trying to play a sound that wasn't loaded!\n";
 }
 
-//FMOD::Sound* AudioEngine::createSound(const char* filepath) {
-//    FMOD::Sound* sound;
-//    coreSystem->createSound(filepath, FMOD_LOOP_OFF, 0, &sound);
-//    return sound;
-//}
-
-
-// private method definitions
-
-//FMOD::Sound* AudioEngine::createOrGetSound(unsigned int id) {
-//    FMOD::Sound* sound;
-//    // get sound from cache, or create if not added
-//    if (!soundIsCached(1)) {
-//        // sound has not been created yet
-//        std::cout << "sound has not been created yet. Creating!\n";
-//        coreSystem->createSound(filepath, FMOD_LOOP_OFF, 0, &sound);
-//    }
-//    else {
-//        sound = getSound(filepath);
-//    }
-//    return sound;
-//}
 
 
 bool AudioEngine::soundIsCached(const char* filepath) {
