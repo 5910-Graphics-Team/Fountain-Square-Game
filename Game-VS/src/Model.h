@@ -31,7 +31,8 @@ public:
     // constructor, expects a filepath to a 3D model.
     Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma)
     {
-        loadModel(path);
+        std::cout << "Loading Model " << path << "\n";
+        loadModel(path); 
     }
 
     // draws the model, and thus all its meshes
@@ -135,8 +136,7 @@ private:
             vertex.Bitangent = vector;
             vertices.push_back(vertex);
         }
-        //std::cout << (texCoords ? "... It has texture coords!" : "No Tex Coords!")<<"\n";
-        std::cout << "Num textures: " << textures.size() <<"\n";
+        
         // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
         for (unsigned int i = 0; i < mesh->mNumFaces; i++)
         {
@@ -208,7 +208,7 @@ private:
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
 {
-
+    std::cout << "Loading Texture from file " << path << "\n";
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
    
