@@ -91,9 +91,7 @@ public:
         
         Yaw += xoffset;
         Pitch += yoffset;
-        
-        //std::cout << "xoffset: " << xoffset << "  yoffset: " << yoffset << "  Yaw: "<< Yaw <<"  Pitch: " << Pitch <<" \n";
-        
+        std::cout << "xoffset: " << xoffset << "  yoffset: " << yoffset << "  Yaw: "<< Yaw <<"  Pitch: " << Pitch <<" \n";
         // Make sure that when pitch is out of bounds, screen doesn't get flipped
         if (constrainPitch)
         {
