@@ -33,6 +33,7 @@ void AudioEngine::loadSoundFile(const char* filepath, bool dim3D, bool loop) {
         std::cout << "Sound was already cached!\n";
 }
 
+
 void AudioEngine::play3DSound(const char* filepath, float x, float y, float z) {
     //position = { x, y, z };
     if (soundIsCached(filepath)) {
@@ -59,7 +60,15 @@ void AudioEngine::playSoundFile(const char* filepath) {
         std::cout << "AudioEngine: Trying to play a sound that wasn't loaded!\n";
 }
 
-
+//void AudioEngine::playSound(Sound& sound) {
+//    FMOD::Channel* channel;
+//    coreSystem->playSound(sound.sound, 0, false, &channel);
+//}
+//
+//
+//void AudioEngine::initSound(Sound& sound) {
+//    coreSystem->createSound(sound.filepath, FMOD_2D, 0, &sound.sound);
+//}
 
 bool AudioEngine::soundIsCached(const char* filepath) {
     return soundCache.count(filepath) > 0;

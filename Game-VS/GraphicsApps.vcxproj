@@ -176,17 +176,26 @@
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="res\sound\mx_section_1.ogg" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\objects\environment\grass.tga" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Audio-Engine\LoopingSound.h" />
+    <ClInclude Include="src\Audio-Engine\SoundEmitter.h" />
+    <ClInclude Include="src\Game-Engine\Animation.h" />
+    <ClInclude Include="src\Game-Engine\Bird.h" />
+    <ClInclude Include="src\Game-Engine\Fountain.h" />
+    <ClInclude Include="src\GameData.h" />
+    <ClInclude Include="src\Game-Engine\GameObject.h" />
     <ClInclude Include="src\Audio-Engine\AudioEngine.h" />
-    <ClInclude Include="src\LOGL_Camera.h" />
-    <ClInclude Include="src\Mesh.h" />
-    <ClInclude Include="src\Model.h" />
-    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\Audio-Engine\Sound.h" />
+    <ClInclude Include="src\Game-Engine\LOGL_Camera.h" />
+    <ClInclude Include="src\Game-Engine\Mesh.h" />
+    <ClInclude Include="src\Game-Engine\Model.h" />
+    <ClInclude Include="src\Game-Engine\Shader.h" />
     <ClInclude Include="src\Util\Console.h" />
   </ItemGroup>
   <ItemGroup>

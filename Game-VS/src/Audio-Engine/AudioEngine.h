@@ -8,6 +8,7 @@
 #include <iostream>
 #include <FMOD/fmod_studio.hpp>
 #include <FMOD/fmod.hpp>
+#include "Sound.h"
 
 class AudioEngine {
 
@@ -44,7 +45,27 @@ public:
     */
     void playSoundFile(const char* filepath);
 
+    //void initSound(Sound& sound); 
 
+    
+    void initFMOD3DSound(FMOD::Sound* sound, const char* filePath) {
+        coreSystem->createSound(filePath, FMOD_3D, 0, &sound);
+    }
+
+    void playFMOD3DSound(FMOD::Sound* sound, FMOD::Channel* channel, float x, float y, float z) {
+        coreSystem->playSound(sound, 0, true, &channel);
+        updateChannel3DAttributes(channel, x, y, z);
+        channel->setPaused(false);
+    }
+
+    void updateChannel3DAttributes(FMOD::Channel* channel, float x, float y, float z) {
+        FMOD_VECTOR position = { x * DISTANCEFACTOR, y * DISTANCEFACTOR, z * DISTANCEFACTOR };
+        FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
+        channel->set3DAttributes(&position, &velocity);
+    }
+
+    //void playSound(Sound& sound);
+    
 private:    
 
 
@@ -85,6 +106,6 @@ private:
     /**
     * Creates a sound without checking if it already has been created and cached.
     */
-    FMOD::Sound* createSound(const char* filepath);
+    //FMOD::Sound* createSound(const char* filepath);
  
 };

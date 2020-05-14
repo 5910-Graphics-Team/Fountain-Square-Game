@@ -5,7 +5,9 @@
 
 # TODO deal with large .rar and other large model assets
 #*.rar
-
+# VS Class Diagram files
+*.cd
+*.prn
 # User-specific files
 *.rsuser
 *.suo
