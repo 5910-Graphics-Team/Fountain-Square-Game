@@ -48,7 +48,13 @@ static void renderGameObject(GameObject* gameObject, Shader* shader) {
     glm::mat4 view = camera.GetViewMatrix();
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
-
+    if (gameObject->getObjFilePath() == OBJ_HARP) {
+        glm::vec3 temp = gameObject->getRotationAngles();
+        temp.y += 10.0f;
+        if (temp.y == 360.f)
+            temp.y = 0.0f;
+        gameObject->setRotation(temp);
+    }
     // render the loaded model
     shader->setMat4("model", gameObject->getModel());
            
