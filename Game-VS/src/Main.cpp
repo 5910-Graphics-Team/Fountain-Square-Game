@@ -18,7 +18,7 @@ void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 void ProcessInput(GLFWwindow* window);
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+CharacterCamera camera(STARTING_PLAYER_LOCATION);
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -38,10 +38,6 @@ static glm::mat4 getProjection() {
     return glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 }
 
-void updateBirdLocation(float t) {
-
-}
-
 // Performs the OpenGL calls to render a GameObject with a provided shader.
 static void renderGameObject(GameObject* gameObject, Shader* shader) {
     // enable shader before setting uniforms
@@ -53,22 +49,9 @@ static void renderGameObject(GameObject* gameObject, Shader* shader) {
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
 
-
-    //if (gameObject->getObjFilePath() == OBJ_BIRDS) {
-    ////    Bird b = (Bird)gameObject;//updateLocation(currentFrame);
-    ////    std::cout << "model.z: " << gameObject->getTranslation().z << "\n";
-    //    glm::vec3 trans = gameObject->getTranslation();
-    //    gameObject->setTranslation({ trans.x, trans.y, trans.z - 0.5f });
-
-    //    std::cout << "trans.z: " << trans.z << "\n";
-    //    /*lastFrameTime = time;
-    //    updateBirdLocation();*/
-    //}
-   
     // render the loaded model
     shader->setMat4("model", gameObject->getModel());
-   
-        
+           
     gameObject->draw(shader);
 }
 
@@ -94,11 +77,12 @@ int main()
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, MouseCallback);
     glfwSetScrollCallback(window, ScrollCallback);
 
     // tell GLFW what to do with mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     // load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -127,6 +111,7 @@ int main()
     GameObject treeFir (OBJ_TREE,     tranTreeFir,  scaleTreeFir,  rotTreeFir);
     GameObject harp    (OBJ_HARP,     tranHarp,     scaleHarp,     rotHarp);
     //GameObject stoneFloor(OBJ_STONEFLOOR, dtranHouse, glm::vec3(0.05f), rotHouse);
+
 
     Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds, &audioEngine, SFX_LO0P_BIRD);
 
@@ -163,7 +148,7 @@ int main()
 
     // play inital soundscape
     birds->startSound();
-    //audioEngine.play3DSound(FOUNTAIN_SFX, tranFountain.x, tranFountain.y, tranFountain.z); 
+    audioEngine.play3DSound(FOUNTAIN_SFX, tranFountain.x, tranFountain.y, tranFountain.z); 
     //audioEngine.play3DSound(STINGER_3,    tranHarp.x,     tranHarp.y,     tranHarp.z);
     //audioEngine.playSoundFile(MUSIC);
     
@@ -203,6 +188,7 @@ int main()
             renderGameObject(&gameObjects[i], &ourShader);
 
         birds->updateLocation(currentFrame);
+        // audioEngine->update3DPosition(newTrans.x, newtransy., z)
         renderGameObject(birds, &ourShader);
 
 

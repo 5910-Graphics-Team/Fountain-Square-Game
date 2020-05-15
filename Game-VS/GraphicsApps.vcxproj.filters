@@ -96,6 +96,9 @@
     <ClInclude Include="src\Audio-Engine\LoopingSound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Game-Engine\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="res\sound\Medieval Village2.5_Loop1_ImplementationDemo.wav">
