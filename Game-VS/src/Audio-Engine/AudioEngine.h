@@ -1,24 +1,43 @@
 #pragma once
-// AudioEngine.h
-// @author Ross Hoyt
-// Seattle University SQ2020
-// CPSC 5910 Graphics/Game Project 
-#include <map>
-#include <string>
-#include <iostream>
+///
+/// @file AudioEngine.h
+/// 
+/// This audio engine is an FMOD wrapper with provides 2D/3D audio 
+/// playback and sound loading
+///
+/// @author Ross Hoyt
+/// @dependencies FMOD Studio/Core .dll's, lib's
+///
 #include <FMOD/fmod_studio.hpp>
 #include <FMOD/fmod.hpp>
+#include <iostream>
+#include <string>
+#include <map>
+
 #include "Sound.h"
 
+
+struct SoundID {
+
+    unsigned int UID;
+
+};
 class AudioEngine {
 
 public:
     
     /**
-    * Initializes Audio Engine Studio and Core systems
+    * Constructor that initializes Audio Engine Studio and Core systems
+    * DISTANCE_FACTOR is set to 1 Unit per 1 Meter by default
     */
-    AudioEngine();
+    AudioEngine(float distanceFactor);
 
+
+
+    /** 
+    * Method used to set the 'head' position of the player in the game world,
+    * so that 3D audio effects
+    */
     void set3DListenerPosition(float posX,     float posY,     float posZ,
                                float forwardX, float forwardY, float forwardZ, 
                                float upX,      float upY,      float upZ);
@@ -33,6 +52,10 @@ public:
 
     void play3DSound(const char* filename, float x, float y, float z);
 
+
+    void update3DSoundPosition(const char* filename, float x, float y, float z);
+    
+    
     /**
     * Plays a sound file using FMOD's low level audio system. If the sound file has not been 
     * previously created and cached prior to this method call, it is done before playback starts.
@@ -44,25 +67,13 @@ public:
     *              if sound file has already been cached, value is ignored
     */
     void playSoundFile(const char* filepath);
-
-    //void initSound(Sound& sound); 
-
+  
     
-    void initFMOD3DSound(FMOD::Sound* sound, const char* filePath) {
-        coreSystem->createSound(filePath, FMOD_3D, 0, &sound);
-    }
+    void initFMOD3DSound(FMOD::Sound* sound, const char* filePath);
 
-    void playFMOD3DSound(FMOD::Sound* sound, FMOD::Channel* channel, float x, float y, float z) {
-        coreSystem->playSound(sound, 0, true, &channel);
-        updateChannel3DAttributes(channel, x, y, z);
-        channel->setPaused(false);
-    }
+    void playFMOD3DSound(FMOD::Sound* sound, FMOD::Channel* channel, float x, float y, float z);
 
-    void updateChannel3DAttributes(FMOD::Channel* channel, float x, float y, float z) {
-        FMOD_VECTOR position = { x * DISTANCEFACTOR, y * DISTANCEFACTOR, z * DISTANCEFACTOR };
-        FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
-        channel->set3DAttributes(&position, &velocity);
-    }
+    void updateChannel3DAttributes(FMOD::Channel* channel, float x, float y, float z);
 
     //void playSound(Sound& sound);
     
@@ -74,7 +85,7 @@ private:
     static const unsigned int MAX_AUDIO_CHANNELS = 1024; // Max FMOD audio channels for this audio engine 
     
     float t = 0;
-    const float DISTANCEFACTOR = 1.0f;          // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
+    float DISTANCEFACTOR; // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
     FMOD_VECTOR listenerpos = { 0.0f, 0.0f, -1.0f * DISTANCEFACTOR };
     FMOD_VECTOR forward = { 0.0f, 0.0f, 1.0f };
     FMOD_VECTOR up = { 0.0f, 1.0f, 0.0f };
@@ -85,6 +96,8 @@ private:
     * Value is the FMOD::Sound* to be played back.
     */
     std::map<std::string, FMOD::Sound*> soundCache;      
+
+    std::map<std::string, FMOD::Channel*> channelMap;
 
     /**
     * Gets a sound from the sound cache, or creates it if it hasn't been cached

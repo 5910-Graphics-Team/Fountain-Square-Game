@@ -1,8 +1,8 @@
 #pragma once
-
+#include <glm/glm.hpp>
 
 class Animation {
 
 public:
-	virtual	void updateLocation(float time) = 0;
+	virtual glm::vec3 updateLocation(float time) = 0;
 };

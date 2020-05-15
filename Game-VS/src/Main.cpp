@@ -148,10 +148,13 @@ int main()
     //Sound stinger2(STINGER_2);
     audioEngine.loadSoundFile(STINGER_1,    true, true);
     audioEngine.loadSoundFile(STINGER_2,    true, true);
+    
+    audioEngine.loadSoundFile(SFX_LO0P_BIRD, true, true);
+
     // load looping sfx and main music
-    audioEngine.loadSoundFile(STINGER_3,    true, true);
+    //audioEngine.loadSoundFile(STINGER_3,    true, true);
     //audioEngine.loadSoundFile(MUSIC,        false, true); 
-    audioEngine.loadSoundFile(FOUNTAIN_SFX, true,  true);
+    //audioEngine.loadSoundFile(FOUNTAIN_SFX, true,  true);
     
     
     //Sound mainScore(MUSIC), stinger1(STINGER_1), stinger2(STINGER_2);
@@ -162,7 +165,8 @@ int main()
     
 
     // play inital soundscape
-    birds->startSound();
+    audioEngine.play3DSound(SFX_LO0P_BIRD, tranBirds.x, tranBirds.y, tranBirds.z);
+    //birds->startSound();
     //audioEngine.play3DSound(FOUNTAIN_SFX, tranFountain.x, tranFountain.y, tranFountain.z); 
     //audioEngine.play3DSound(STINGER_3,    tranHarp.x,     tranHarp.y,     tranHarp.z);
     //audioEngine.playSoundFile(MUSIC);
@@ -202,7 +206,9 @@ int main()
         for (int i = 0; i < gameObjects.size(); i++) 
             renderGameObject(&gameObjects[i], &ourShader);
 
-        birds->updateLocation(currentFrame);
+        glm::vec3 newTrans = birds->updateLocation(currentFrame);
+        audioEngine.update3DSoundPosition(SFX_LO0P_BIRD, newTrans.x, newTrans.y, newTrans.z);
+
         renderGameObject(birds, &ourShader);
 
 

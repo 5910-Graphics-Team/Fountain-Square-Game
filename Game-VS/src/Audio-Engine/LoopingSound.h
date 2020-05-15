@@ -10,11 +10,12 @@
 class LoopingSound3D : public Sound {
 public:
 	LoopingSound3D(AudioEngine* audioEngine, const char* filePath, float x, float y, float z) : Sound(audioEngine, filePath) {
+		init();
 		setSoundPosition(x, y, z);
 		std::cout << "in LoopingSound3D Constructor for " << filePath <<"\n";
 	}
 	
-	void init() override {
+	void init() {
 		audioEngine->initFMOD3DSound(theSound, filePath);
 	}
 

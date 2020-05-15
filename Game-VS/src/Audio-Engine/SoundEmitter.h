@@ -8,23 +8,24 @@
 class SoundEmitter {
 public:
 
-	SoundEmitter(AudioEngine* audioEngine, const char* soundFile, float x, float y, float z) : soundLoop(audioEngine, soundFile, x, y, z) {
-		
+	SoundEmitter(AudioEngine* audioEngine, const char* soundFile, float x, float y, float z) {
+		soundLoop = new LoopingSound3D(audioEngine, soundFile, x, y, z);
+		soundLoop->init();
 	}
 
 	void startSound()  {
-		soundLoop.play();
+		soundLoop->play();
 	}
 
 
 	void stopSound() {
-		soundLoop.stop();
+		soundLoop->stop();
 	}
 
 	void updateSoundPosition(float x, float y, float z) {
-		soundLoop.setSoundPosition(x, y, z);
+		soundLoop->setSoundPosition(x, y, z);
 	}
 
 private:
-	LoopingSound3D soundLoop;
+	LoopingSound3D* soundLoop;
 };

@@ -20,7 +20,7 @@ public:
 		
 	}
 
-	void updateLocation(float time) override {
+	glm::vec3 updateLocation(float time) override {
 		float timePassed = time - lastFrameTime;
 
 
@@ -28,8 +28,9 @@ public:
 		
 		lastFrameTime = time;
 
-		updateSoundPosition(trans.x, trans.y, trans.z);
-	
+		return trans;
+		//updateSoundPosition(trans.x, trans.y, trans.z);
+		
 	}
 	
 
