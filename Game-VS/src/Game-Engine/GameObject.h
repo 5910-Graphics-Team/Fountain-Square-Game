@@ -48,6 +48,10 @@ public:
         this->trans = trans;
     }
 
+    void setRotation(glm::vec3 rot) {
+        this->rotAngs = rot;
+    }
+
     glm::vec3 getTranslation() {
         return trans;
     }
