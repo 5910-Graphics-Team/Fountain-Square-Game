@@ -126,11 +126,12 @@ int main()
     GameObject ground  (OBJ_GROUND,   tranGround,   scaleGround,   rotGround);
     GameObject treeFir (OBJ_TREE,     tranTreeFir,  scaleTreeFir,  rotTreeFir);
     GameObject harp    (OBJ_HARP,     tranHarp,     scaleHarp,     rotHarp);
+	GameObject pine    (OBJ_PINE,     tranPine,     scalePine,     rotPine);
     //GameObject stoneFloor(OBJ_STONEFLOOR, dtranHouse, glm::vec3(0.05f), rotHouse);
 
     Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds, &audioEngine, SFX_LO0P_BIRD);
 
-
+	
     gameObjects.push_back(fountain);
     //gameObjects.push_back(backpack);
     gameObjects.push_back(house);   
@@ -139,6 +140,8 @@ int main()
     gameObjects.push_back(treeFir);
     gameObjects.push_back(harp);
     gameObjects.push_back(rock);
+	gameObjects.push_back(pine);
+
     //gameObjects.push_back(birds);
     
 
