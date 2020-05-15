@@ -11,6 +11,7 @@
 #include "GameData.h"
 // custom game objects
 #include "Game-Engine/Bird.h"
+#include "Game-Engine/Harp.h"
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 void MouseCallback(GLFWwindow* window, double xpos, double ypos);
@@ -39,7 +40,7 @@ static glm::mat4 getProjection() {
 }
 
 // Performs the OpenGL calls to render a GameObject with a provided shader.
-static void renderGameObject(GameObject* gameObject, Shader* shader) {
+static void renderGameObject(GameObject &gameObject, Shader* shader) {
     // enable shader before setting uniforms
     shader->use();
 
@@ -48,17 +49,11 @@ static void renderGameObject(GameObject* gameObject, Shader* shader) {
     glm::mat4 view = camera.GetViewMatrix();
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
-    if (gameObject->getObjFilePath() == OBJ_HARP) {
-        glm::vec3 temp = gameObject->getRotationAngles();
-        temp.y += 10.0f;
-        if (temp.y == 360.f)
-            temp.y = 0.0f;
-        gameObject->setRotation(temp);
-    }
+    
     // render the loaded model
-    shader->setMat4("model", gameObject->getModel());
+    shader->setMat4("model", gameObject.getModel());
            
-    gameObject->draw(shader);
+    gameObject.draw(shader);
 }
 
 float currentFrame = 0.0f;
@@ -106,33 +101,46 @@ int main()
     // build and compile shaders
     Shader ourShader("res/shaders/1.model_loading.vs", "res/shaders/1.model_loading.fs");
     
-    std::vector<GameObject> gameObjects;
+
+    /*
+        Initialize game objects and add to list
+    */
+
+    GameObject* fountain = new GameObject(OBJ_FOUNTAIN, tranFountain, scaleFountain, rotFountain);
+    //GameObject* backpack = new GameObject(OBJ_BACKPACK, tranBackpack, scaleBackpack, rotBackpack);
+    GameObject* house    = new GameObject(OBJ_HOUSE,    tranHouse,    scaleHouse,    rotHouse);
+    GameObject* rock     = new GameObject(OBJ_ROCK,     tranRock,     scaleRock,     rotRock);
+    GameObject* ground   = new GameObject(OBJ_GROUND,   tranGround,   scaleGround,   rotGround);
+    GameObject* treeFir  = new GameObject(OBJ_TREE,     tranTreeFir,  scaleTreeFir,  rotTreeFir);
+	GameObject* pine     = new GameObject(OBJ_PINE,     tranPine,     scalePine,     rotPine);
     
+    // List for all game obejcts
+    std::vector<GameObject*> gameObjects;
 
-    GameObject fountain(OBJ_FOUNTAIN, tranFountain, scaleFountain, rotFountain);
-    //GameObject backpack(OBJ_BACKPACK, tranBackpack, scaleBackpack, rotBackpack);
-    GameObject house   (OBJ_HOUSE,    tranHouse,    scaleHouse,    rotHouse);
-    GameObject rock    (OBJ_ROCK,     tranRock,     scaleRock,     rotRock);
-    GameObject ground  (OBJ_GROUND,   tranGround,   scaleGround,   rotGround);
-    GameObject treeFir (OBJ_TREE,     tranTreeFir,  scaleTreeFir,  rotTreeFir);
-    GameObject harp    (OBJ_HARP,     tranHarp,     scaleHarp,     rotHarp);
-	GameObject pine    (OBJ_PINE,     tranPine,     scalePine,     rotPine);
-    //GameObject stoneFloor(OBJ_STONEFLOOR, dtranHouse, glm::vec3(0.05f), rotHouse);
-
-
-    Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds, &audioEngine, SFX_LO0P_BIRD);
-
-	
     gameObjects.push_back(fountain);
     //gameObjects.push_back(backpack);
     gameObjects.push_back(house);   
-    //gameObjects.push_back(stoneFloor);
     gameObjects.push_back(ground);
     gameObjects.push_back(treeFir);
-    gameObjects.push_back(harp);
     gameObjects.push_back(rock);
 	gameObjects.push_back(pine);
 
+    /*
+        Initialize animatable game objects and add to list of game objects, and to another animation objects list
+    */
+    Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds, &audioEngine, SFX_LO0P_BIRD);
+    Harp* harp = new Harp(OBJ_HARP, tranHarp, scaleHarp, rotHarp);
+    
+    gameObjects.push_back(birds);
+    gameObjects.push_back(harp);
+
+    // list for all animation objects which need to be updated each frame
+    std::vector<Animation*> animationObjects;
+    animationObjects.push_back(birds);
+    animationObjects.push_back(harp);
+
+
+   
     //gameObjects.push_back(birds);
     
 
@@ -192,13 +200,17 @@ int main()
                                           
         );
 
+        for (int i = 0; i < animationObjects.size(); i++) {
+            animationObjects[i]->update(currentFrame);
+        }
         // render Game Objects
         for (int i = 0; i < gameObjects.size(); i++) 
-            renderGameObject(&gameObjects[i], &ourShader);
+            renderGameObject(*gameObjects[i], &ourShader);
 
-        birds->updateLocation(currentFrame);
+        
+        //birds->update(currentFrame);
         // audioEngine->update3DPosition(newTrans.x, newtransy., z)
-        renderGameObject(birds, &ourShader);
+        //renderGameObject(birds, &ourShader);
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

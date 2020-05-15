@@ -188,6 +188,7 @@
     <ClInclude Include="src\Game-Engine\Animation.h" />
     <ClInclude Include="src\Game-Engine\Bird.h" />
     <ClInclude Include="src\Game-Engine\Fountain.h" />
+    <ClInclude Include="src\Game-Engine\Harp.h" />
     <ClInclude Include="src\Game-Engine\Player.h" />
     <ClInclude Include="src\GameData.h" />
     <ClInclude Include="src\Game-Engine\GameObject.h" />

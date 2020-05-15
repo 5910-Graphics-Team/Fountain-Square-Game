@@ -20,7 +20,7 @@ public:
 		
 	}
 
-	void updateLocation(float time) override {
+	void update(float time) override {
 		float timePassed = time - lastFrameTime;
 
 
