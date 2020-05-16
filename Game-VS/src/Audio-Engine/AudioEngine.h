@@ -1,14 +1,19 @@
 #pragma once
-// AudioEngine.h
-// @author Ross Hoyt
-// Seattle University SQ2020
-// CPSC 5910 Graphics/Game Project 
+///
+/// @file AudioEngine.h
+/// 
+/// This audio engine is an FMOD wrapper with provides 2D/3D audio 
+/// playback and sound loading
+///
+/// @author Ross Hoyt
+/// @dependencies FMOD Studio & Core .dll's, lib's
+/// 
 #include <map>
 #include <string>
 #include <iostream>
 #include <FMOD/fmod_studio.hpp>
 #include <FMOD/fmod.hpp>
-#include "Sound.h"
+
 
 class AudioEngine {
 
@@ -28,8 +33,11 @@ public:
     * Only reads file and creates the sound if it has not already been added to the cache.
     * To play the sound later, use method playSoundFile()
     */
-    void loadSoundFile(const char* filepath, bool dim3D, bool loop);
+    void loadSoundFile(const char* filepath,bool loop);
     
+    void load3DSoundFile(const char* filepath, bool loop);
+   
+    void update3DSoundPosition(const char* filename, float x, float y, float z);
 
     void play3DSound(const char* filename, float x, float y, float z);
 
@@ -45,26 +53,6 @@ public:
     */
     void playSoundFile(const char* filepath);
 
-    //void initSound(Sound& sound); 
-
-    
-    void initFMOD3DSound(FMOD::Sound* sound, const char* filePath) {
-        coreSystem->createSound(filePath, FMOD_3D, 0, &sound);
-    }
-
-    void playFMOD3DSound(FMOD::Sound* sound, FMOD::Channel* channel, float x, float y, float z) {
-        coreSystem->playSound(sound, 0, true, &channel);
-        updateChannel3DAttributes(channel, x, y, z);
-        channel->setPaused(false);
-    }
-
-    void updateChannel3DAttributes(FMOD::Channel* channel, float x, float y, float z) {
-        FMOD_VECTOR position = { x * DISTANCEFACTOR, y * DISTANCEFACTOR, z * DISTANCEFACTOR };
-        FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
-        channel->set3DAttributes(&position, &velocity);
-    }
-
-    //void playSound(Sound& sound);
     
 private:    
 
@@ -86,10 +74,8 @@ private:
     */
     std::map<std::string, FMOD::Sound*> soundCache;      
 
-    /**
-    * Gets a sound from the sound cache, or creates it if it hasn't been cached
-    */
-    //FMOD::Sound* createOrGetSound(const char* filepath);
+    std::map<std::string, FMOD::Channel*> channelMap;
+
     
     /**
     * Checks if a sound is in the cache
@@ -102,10 +88,5 @@ private:
     * key value (but it won't be initialized or work)
     */
     FMOD::Sound* getSound(const char* filepath);
-
-    /**
-    * Creates a sound without checking if it already has been created and cached.
-    */
-    //FMOD::Sound* createSound(const char* filepath);
  
 };

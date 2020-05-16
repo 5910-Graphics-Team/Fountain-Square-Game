@@ -16,8 +16,8 @@ const char* MUSIC         = "res/sound/Medieval Village Full Theme Demo_2.5.1.3.
 const char* STINGER_1     = "res/sound/Medieval Village_Stinger1 Guitar_2.5.1.3.wav";
 const char* STINGER_2     = "res/sound/Medieval Village_Stinger2 Guitar_2.5.1.3.wav";
 const char* STINGER_3     = "res/sound/Medieval Village_Stinger3 Harp_2.5.1.3.wav";
-const char* FOUNTAIN_SFX  = "res/sound/Fountain_Loop.wav";
-const char* SFX_LO0P_BIRD = "res/sound/animals/birds/SFX_LOOP_BIRDS.wav";
+const char* SFX_LOOP_FOUNTAIN  = "res/sound/Fountain_Loop.wav";
+const char* SFX_LOOP_BIRD = "res/sound/animals/birds/SFX_LOOP_BIRDS.wav";
 
 // obj file locations
 const char* OBJ_FOUNTAIN   = "res/objects/fountains/fountainOBJ/fountainOBJ.obj";
@@ -33,10 +33,10 @@ const char* OBJ_PINE       = "res/objects/flora/trees/Pine/Tree2.obj";
 
 // game object starting positions
 glm::vec3 tranBackpack(0.5f, -1.2f, 0.0f),    scaleBackpack(0.5f),  rotBackpack(0.0f);
-glm::vec3 tranHouse(-15.0f, -8.0f, -20.0f),   scaleHouse(0.68f),    rotHouse(0.0f, 70.0f, 0.0f);
+glm::vec3 tranHouse(-18.0f, -8.0f, -23.0f),   scaleHouse(0.72f),    rotHouse(0.0f, 70.0f, 0.0f);
 glm::vec3 tranGround(50.0f, -8.0f, -200.0f),  scaleGround(40.0f),   rotGround(0.0f, 180.0f, 180.0f);
 glm::vec3 tranTreeFir(0.0f, -8.0f, -10.0f),   scaleTreeFir(0.008f), rotTreeFir(0.0f);
-glm::vec3 tranRock(-8.0f, -8.0f, -15.0f),     scaleRock(0.34f),     rotRock(0.0f);
+glm::vec3 tranRock(-8.0f, -8.0f, -15.0f),     scaleRock(0.38f),     rotRock(0.0f);
 glm::vec3 tranFountain(-10.0f, -7.9f, -5.0f), scaleFountain(0.06f), rotFountain(0.0f);
 glm::vec3 tranBirds(tranBackpack), scaleBirds(0.05f), rotBirds(0.0f, 180.0f, 0.0f);
 glm::vec3 tranPine(-28.0f, -9.0f, -10.0f),    scalePine(0.70f),     rotPine(0.0f);

@@ -116,7 +116,6 @@ int main()
     
     // List for all game obejcts
     std::vector<GameObject*> gameObjects;
-
     gameObjects.push_back(fountain);
     //gameObjects.push_back(backpack);
     gameObjects.push_back(house);   
@@ -128,8 +127,8 @@ int main()
     /*
         Initialize animatable game objects and add to list of game objects, and to another animation objects list
     */
-    Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds, &audioEngine, SFX_LO0P_BIRD);
-    Harp* harp = new Harp(OBJ_HARP, tranHarp, scaleHarp, rotHarp);
+    Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds);
+    Harp* harp  = new Harp(OBJ_HARP, tranHarp, scaleHarp, rotHarp);
     
     gameObjects.push_back(birds);
     gameObjects.push_back(harp);
@@ -148,13 +147,13 @@ int main()
     // load non-looping sound effects
     //Sound stinger1(STINGER_1);
     //Sound stinger2(STINGER_2);
-    audioEngine.loadSoundFile(STINGER_1,    true, true);
-    audioEngine.loadSoundFile(STINGER_2,    true, true);
+    //audioEngine.loadSoundFile(STINGER_1,  true);
+    //audioEngine.loadSoundFile(STINGER_2,  true);
     // load looping sfx and main music
-    audioEngine.loadSoundFile(STINGER_3,    true, true);
+    //audioEngine.loadSoundFile(STINGER_3, true);
     //audioEngine.loadSoundFile(MUSIC,        false, true); 
-    audioEngine.loadSoundFile(FOUNTAIN_SFX, true,  true);
-    
+    audioEngine.load3DSoundFile(SFX_LOOP_FOUNTAIN, true);
+    audioEngine.load3DSoundFile(SFX_LOOP_BIRD, true);
     
     //Sound mainScore(MUSIC), stinger1(STINGER_1), stinger2(STINGER_2);
     //audioEngine.initSound(mainScore);    
@@ -164,8 +163,9 @@ int main()
     
 
     // play inital soundscape
-    birds->startSound();
-    audioEngine.play3DSound(FOUNTAIN_SFX, tranFountain.x, tranFountain.y, tranFountain.z); 
+    
+    audioEngine.play3DSound(SFX_LOOP_FOUNTAIN, tranFountain.x, tranFountain.y, tranFountain.z); 
+    audioEngine.play3DSound(SFX_LOOP_BIRD, tranBirds.x, tranBirds.y, tranBirds.z);
     //audioEngine.play3DSound(STINGER_3,    tranHarp.x,     tranHarp.y,     tranHarp.z);
     //audioEngine.playSoundFile(MUSIC);
     
@@ -192,25 +192,26 @@ int main()
         glClearColor(COLOR_SKY.x, COLOR_SKY.y, COLOR_SKY.z, COLOR_SKY.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        
-        // Update listener position
-        audioEngine.set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
-                                          camera.Front.x, camera.Front.y, camera.Front.z, 
-                                          camera.Up.x,    camera.Up.y,    camera.Up.z
-                                          
-        );
 
-        for (int i = 0; i < animationObjects.size(); i++) {
+        // update animation objects with current frame
+        for (int i = 0; i < animationObjects.size(); i++)
             animationObjects[i]->update(currentFrame);
-        }
+
         // render Game Objects
         for (int i = 0; i < gameObjects.size(); i++) 
             renderGameObject(*gameObjects[i], &ourShader);
 
-        
-        //birds->update(currentFrame);
-        // audioEngine->update3DPosition(newTrans.x, newtransy., z)
-        //renderGameObject(birds, &ourShader);
+
+        // update audio engine with player position
+        audioEngine.set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
+            camera.Front.x, camera.Front.y, camera.Front.z,
+            camera.Up.x, camera.Up.y, camera.Up.z
+
+        );
+
+        // Update location of 3D sounds
+        glm::vec3 newBirdTran = birds->getTranslation();
+        audioEngine.update3DSoundPosition(SFX_LOOP_BIRD, newBirdTran.x, newBirdTran.y, newBirdTran.z);
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
