@@ -139,19 +139,24 @@ int main()
     animationObjects.push_back(harp);
 
 
-   
-    //gameObjects.push_back(birds);
+    // load FMOD soundbanks
+    audioEngine.loadFMODStudioBank(SOUNDBANK_MASTER);
+    audioEngine.loadFMODStudioBank(SOUNDBANK_MASTER_STRINGS);
+    audioEngine.loadFMODStudioBank(SOUNDBANK_SFX);
     
+    // load FMOD event and its parameters
+    audioEngine.loadFMODStudioEvent(EVENT_CHARACTER_FOOTSTEPS, PARAM_CHARACTER_FOOTSTEPS_SURFACE  );
+
 
 
     // load non-looping sound effects
     //Sound stinger1(STINGER_1);
     //Sound stinger2(STINGER_2);
-    //audioEngine.loadSoundFile(STINGER_1,  true);
-    //audioEngine.loadSoundFile(STINGER_2,  true);
+    //audioEngine.load2DSoundFile(STINGER_1,  true);
+    //audioEngine.load2DSoundFile(STINGER_2,  true);
     // load looping sfx and main music
-    //audioEngine.loadSoundFile(STINGER_3, true);
-    //audioEngine.loadSoundFile(MUSIC,        false, true); 
+    //audioEngine.load2DSoundFile(STINGER_3, true);
+    //audioEngine.load2DSoundFile(MUSIC,        false, true); 
     audioEngine.load3DSoundFile(SFX_LOOP_FOUNTAIN, true);
     audioEngine.load3DSoundFile(SFX_LOOP_BIRD, true);
     
@@ -164,10 +169,10 @@ int main()
 
     // play inital soundscape
     
-    audioEngine.play3DSound(SFX_LOOP_FOUNTAIN, tranFountain.x, tranFountain.y, tranFountain.z); 
-    audioEngine.play3DSound(SFX_LOOP_BIRD, tranBirds.x, tranBirds.y, tranBirds.z);
+    //audioEngine.play3DSound(SFX_LOOP_FOUNTAIN, tranFountain.x, tranFountain.y, tranFountain.z); 
+    //audioEngine.play3DSound(SFX_LOOP_BIRD, tranBirds.x, tranBirds.y, tranBirds.z);
     //audioEngine.play3DSound(STINGER_3,    tranHarp.x,     tranHarp.y,     tranHarp.z);
-    //audioEngine.playSoundFile(MUSIC);
+    //audioEngine.play2DSoundFile(MUSIC);
     
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -246,17 +251,18 @@ void ProcessInput(GLFWwindow* window)
    
     // Audio Processing
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && currentFrame - stinger1LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        //audioEngine.playSoundFile(STINGER_1);
-        audioEngine.play3DSound(STINGER_1, tranBackpack.x, tranBackpack.y, tranBackpack.z);
+        //audioEngine.play2DSoundFile(STINGER_1);
+        //audioEngine.play3DSound(STINGER_1, tranBackpack.x, tranBackpack.y, tranBackpack.z);
+        audioEngine.playEvent(EVENT_CHARACTER_FOOTSTEPS);
         stinger1LastTime = currentFrame;
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS  && currentFrame - stinger2LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        //audioEngine.playSoundFile(STINGER_2);
+        //audioEngine.play2DSoundFile(STINGER_2);
         audioEngine.play3DSound(STINGER_2, tranBackpack.x, tranBackpack.y, tranBackpack.z);
         stinger2LastTime = currentFrame;
     }
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS  && currentFrame - stinger3LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        audioEngine.playSoundFile(STINGER_3);
+        audioEngine.play2DSoundFile(STINGER_3);
         //audioEngine.play3DSound(STINGER_3, tranBackpack.x, tranBackpack.y, tranBackpack.z);
         stinger3LastTime = currentFrame;
     }

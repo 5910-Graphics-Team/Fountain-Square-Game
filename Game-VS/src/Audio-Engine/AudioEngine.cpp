@@ -1,27 +1,22 @@
 #include "AudioEngine.h"
 #include <iostream>
 
+// Public definitions 
+
 AudioEngine::AudioEngine() : soundCache(), channelMap() {
-    FMOD::Studio::System::create(&system);
-    system->getCoreSystem(&coreSystem);
-    coreSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_STEREO, 0);
-    coreSystem->set3DSettings(1.0, DISTANCEFACTOR, 1.0f);
-    system->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0);
+    FMOD::Studio::System::create(&studioSystem);
+    studioSystem->getCoreSystem(&lowLevelSystem);
+    lowLevelSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_STEREO, 0);
+    lowLevelSystem->set3DSettings(1.0, DISTANCEFACTOR, 1.0f);
+    studioSystem->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0);
 }
 
-void AudioEngine::set3DListenerPosition(float posX, float posY, float posZ, float forwardX, float forwardY, float forwardZ, float upX, float upY, float upZ) {
-    listenerpos = { posX,     posY,     posZ };
-    forward =     { forwardY, forwardX, forwardZ };
-    up =          { upY,      upX,      upZ      };
-    coreSystem->set3DListenerAttributes(0, &listenerpos, 0, &forward, &up);
-}
-
-void AudioEngine::loadSoundFile(const char* filepath, bool loop) {
+void AudioEngine::load2DSoundFile(const char* filepath, bool loop) {
     if (!soundIsCached(filepath)) {
         std::cout << "Loading Sound File " << filepath << "\n";
 
         FMOD::Sound* sound;
-        coreSystem->createSound(filepath, FMOD_2D, 0, &sound);
+        lowLevelSystem->createSound(filepath, FMOD_2D, 0, &sound);
         
         sound->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
 
@@ -31,11 +26,12 @@ void AudioEngine::loadSoundFile(const char* filepath, bool loop) {
     else 
         std::cout << "Sound File was already loaded!\n";
 }
-void AudioEngine::playSoundFile(const char* filepath) {
+
+void AudioEngine::play2DSoundFile(const char* filepath) {
     if (soundIsCached(filepath)) {
         // channel for sound to play on
         FMOD::Channel* channel;
-        coreSystem->playSound(getSound(filepath), 0, false, &channel);
+        lowLevelSystem->playSound(getSound(filepath), 0, false, &channel);
     }
     else
         std::cout << "AudioEngine: Trying to play a sound that wasn't loaded!\n";
@@ -45,7 +41,7 @@ void AudioEngine::load3DSoundFile(const char* filepath, bool loop) {
     if (!soundIsCached(filepath)) {
         std::cout << "Loading 3D Sound File " << filepath << "\n";
         FMOD::Sound* sound;
-        coreSystem->createSound(filepath, FMOD_3D, 0, &sound);
+        lowLevelSystem->createSound(filepath, FMOD_3D, 0, &sound);
         
         // TODO allow user to set custom 3D Min Max Distance
         sound->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR);
@@ -66,7 +62,7 @@ void AudioEngine::play3DSound(const char* filepath, float x, float y, float z) {
         FMOD_VECTOR position = { x * DISTANCEFACTOR, y, z };
         FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
         FMOD::Channel* channel;
-        coreSystem->playSound(getSound(filepath), 0, true, &channel);
+        lowLevelSystem->playSound(getSound(filepath), 0, true, &channel);
         channel->set3DAttributes(&position, &velocity);
         channel->setPaused(false);
     }
@@ -83,6 +79,14 @@ void AudioEngine::update3DSoundPosition(const char* filename, float x, float y, 
     }
 }
 
+void AudioEngine::set3DListenerPosition(float posX, float posY, float posZ, float forwardX, float forwardY, float forwardZ, float upX, float upY, float upZ) {
+    listenerpos = { posX,     posY,     posZ };
+    forward = { forwardY, forwardX, forwardZ };
+    up = { upY,      upX,      upZ };
+    lowLevelSystem->set3DListenerAttributes(0, &listenerpos, 0, &forward, &up);
+}
+
+// Private definitions 
 
 bool AudioEngine::soundIsCached(const char* filepath) {
     return soundCache.count(filepath) > 0;
