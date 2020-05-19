@@ -13,25 +13,30 @@ glm::vec4 COLOR_SKY(0.31f , 0.0f, 0.95f, 1.0f);
 glm::vec3 STARTING_PLAYER_LOCATION(-2.0f, -6.0f, 5.0f);
 
 // raw audio assets
-const char* MUSIC             = "res/sound/Medieval Village Full Theme Demo_2.5.1.3.wav";
-const char* STINGER_1         = "res/sound/Medieval Village_Stinger1 Guitar_2.5.1.3.wav";
-const char* STINGER_2         = "res/sound/Medieval Village_Stinger2 Guitar_2.5.1.3.wav";
-const char* STINGER_3         = "res/sound/Medieval Village_Stinger3 Harp_2.5.1.3.wav";
-const char* SFX_LOOP_FOUNTAIN = "res/sound/Fountain_Loop.wav";
-const char* SFX_LOOP_BIRD     = "res/sound/animals/birds/SFX_LOOP_BIRDS.wav";
-
+const char* MUSIC               = "res/sound/music/Medieval Village Full Theme Demo_2.5.1.3.wav";
+const char* STINGER_1           = "res/sound/music/Medieval Village_Stinger1 Guitar_2.5.1.3.wav";
+const char* STINGER_2           = "res/sound/music/Medieval Village_Stinger2 Guitar_2.5.1.3.wav";
+const char* STINGER_3           = "res/sound/music/Medieval Village_Stinger3 Harp_2.5.1.3.wav";
+const char* SFX_LOOP_FOUNTAIN   = "res/sound/fountain/Fountain_Loop2.wav";
+const char* SFX_LOOP_BIRD       = "res/sound/animals/birds/SFX_LOOP_BIRDS.wav";
+const char* SFX_LOOP_TREE_BIRDS = "res/sound/animals/birds/SFX_LOOP_TREE_BIRDS.wav";
 // FMOD Studio sound banks
-const char* SOUNDBANK_MASTER         = "res/sound/Master.bank";
-const char* SOUNDBANK_MASTER_STRINGS = "res/sound/Master.strings.bank";
-const char* SOUNDBANK_SFX            = "res/sound/SFX.bank";
+const char* FMOD_SOUNDBANK_MASTER         = "res/sound/Master.bank";
+const char* FMOD_SOUNDBANK_MASTER_STRINGS = "res/sound/Master.strings.bank";
+const char* FMOD_SOUNDBANK_SFX            = "res/sound/SFX.bank";
 
 // FMOD Studio Events
-const char* EVENT_CHARACTER_FOOTSTEPS = "event:/Character/Player Footsteps";
-
-// FMOD Studio Event Parameters
+const char* FMOD_EVENT_CHARACTER_FOOTSTEPS = "event:/Character/Player Footsteps";
 static const std::vector<std::pair<const char*, float>> PARAM_CHARACTER_FOOTSTEPS_SURFACE{ 
 	{ "Surface", 1.0f } 
 };
+
+const char* FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE = "event:/Ambience/Country";
+
+const char* FMOD_EVENT_2D_ONESHOT_EXPLOSION = "event:/Weapons/Explosion";
+
+//cosnt char* FMOD_EVENT_2D_UI_
+
 
 // obj file locations
 const char* OBJ_FOUNTAIN   = "res/objects/fountains/fountainOBJ/fountainOBJ.obj";

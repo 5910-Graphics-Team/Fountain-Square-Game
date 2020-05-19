@@ -93,6 +93,9 @@
     <ClInclude Include="src\Game-Engine\Harp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Game-Engine\AABB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="res\sound\Medieval Village2.5_Loop1_ImplementationDemo.wav">

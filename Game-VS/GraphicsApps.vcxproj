@@ -183,6 +183,7 @@
     <Image Include="res\objects\environment\grass.tga" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Game-Engine\AABB.h" />
     <ClInclude Include="src\Game-Engine\Animation.h" />
     <ClInclude Include="src\Game-Engine\Bird.h" />
     <ClInclude Include="src\Game-Engine\Fountain.h" />
