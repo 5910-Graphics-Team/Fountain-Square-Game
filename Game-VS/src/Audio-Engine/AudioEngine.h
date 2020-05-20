@@ -27,8 +27,6 @@ public:
     */
     AudioEngine();
 
-    
-
     /**
     * Method which should be called every frame of the game loop
     */

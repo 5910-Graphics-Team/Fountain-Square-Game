@@ -43,16 +43,13 @@ static glm::mat4 getProjection() {
 static void renderGameObject(GameObject &gameObject, Shader* shader) {
     // enable shader before setting uniforms
     shader->use();
-
     // view/projection transformations
     glm::mat4 projection = getProjection();
     glm::mat4 view = camera.GetViewMatrix();
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
-    
     // render the loaded model
-    shader->setMat4("model", gameObject.getModel());
-           
+    shader->setMat4("model", gameObject.getModel());       
     gameObject.draw(shader);
 }
 
@@ -105,7 +102,6 @@ int main()
     /*
         Initialize game objects and add to list
     */
-
     GameObject* fountain = new GameObject(OBJ_FOUNTAIN, tranFountain, scaleFountain, rotFountain);
     //GameObject* backpack = new GameObject(OBJ_BACKPACK, tranBackpack, scaleBackpack, rotBackpack);
     GameObject* house    = new GameObject(OBJ_HOUSE,    tranHouse,    scaleHouse,    rotHouse);
@@ -138,43 +134,44 @@ int main()
     animationObjects.push_back(birds);
     animationObjects.push_back(harp);
 
-
-    // load FMOD soundbanks
-    audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_MASTER);
-    audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_MASTER_STRINGS);
-    audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_SFX);
     
-    // load FMOD event and its parameters
-    audioEngine.loadFMODStudioEvent(FMOD_EVENT_CHARACTER_FOOTSTEPS, PARAM_CHARACTER_FOOTSTEPS_SURFACE);
-    audioEngine.loadFMODStudioEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
-    audioEngine.loadFMODStudioEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
+    /*
+        Load sounds
+    */
+
+    //// load FMOD soundbanks
+    //audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_MASTER);
+    //audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_MASTER_STRINGS);
+    //audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_SFX);
+    //// load FMOD event and its parameters
+    //audioEngine.loadFMODStudioEvent(FMOD_EVENT_CHARACTER_FOOTSTEPS, PARAM_CHARACTER_FOOTSTEPS_SURFACE);
+    //audioEngine.loadFMODStudioEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
+    //audioEngine.loadFMODStudioEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
 
 
     // load non-looping sound effects
-    //audioEngine.loadSoundFile(STINGER_1,  true);
-    //audioEngine.loadSoundFile(STINGER_2,  true);
+    //audioEngine.loadSoundFile(STINGER_1,  false);
+    //audioEngine.loadSoundFile(STINGER_2,  false);
+    audioEngine.load3DSoundFile(STINGER_3, false); // harp sound
     
     // load looping sfx and main music
-    audioEngine.loadSoundFile(STINGER_3, true);
-    audioEngine.loadSoundFile(MUSIC, true); 
+    audioEngine.loadSoundFile(MUSIC_2, true); 
     audioEngine.load3DSoundFile(SFX_LOOP_FOUNTAIN, true);
     audioEngine.load3DSoundFile(SFX_LOOP_TREE_BIRDS, true);
-    audioEngine.load3DSoundFile(SFX_LOOP_BIRD, true);
-    
-      
+    //audioEngine.load3DSoundFile(SFX_LOOP_BIRD, true);
 
-    // play inital soundscape
-    
+
+    /*
+        play inital soundscape
+    */
     audioEngine.play3DSoundFile(SFX_LOOP_FOUNTAIN, tranFountain.x, tranFountain.y, tranFountain.z); 
     audioEngine.play3DSoundFile(SFX_LOOP_TREE_BIRDS, tranTreeFir.x, tranTreeFir.y, tranTreeFir.z);
-    //audioEngine.play3DSoundFile(SFX_LOOP_BIRD, tranBirds.x, tranBirds.y, tranBirds.z);
-    //audioEngine.play3DSoundFile(STINGER_3,    tranHarp.x,     tranHarp.y,     tranHarp.z);
-    //audioEngine.playSoundFile(MUSIC);
+    
     
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
-    // render loop
+    /* render loop */ 
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -204,16 +201,16 @@ int main()
             renderGameObject(*gameObjects[i], &ourShader);
 
 
-        // update audio engine with player position
+        // set current player position
         audioEngine.set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
             camera.Front.x, camera.Front.y, camera.Front.z,
             camera.Up.x, camera.Up.y, camera.Up.z
-
         );
+        audioEngine.update();
 
         // Update location of 3D sounds
         //glm::vec3 newBirdTran = birds->getTranslation();
-       // audioEngine.update3DSoundPosition(SFX_LOOP_BIRD, newBirdTran.x, newBirdTran.y, newBirdTran.z);
+        //audioEngine.update3DSoundPosition(SFX_LOOP_BIRD, newBirdTran.x, newBirdTran.y, newBirdTran.z);
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -227,7 +224,6 @@ int main()
     glfwTerminate();
     return 0;
 }
-
 
 
 
@@ -248,19 +244,17 @@ void ProcessInput(GLFWwindow* window)
    
     // Audio Processing
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && currentFrame - stinger1LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        //audioEngine.play2DSoundFile(STINGER_1);
-        //audioEngine.play3DSound(STINGER_1, tranBackpack.x, tranBackpack.y, tranBackpack.z);
-        audioEngine.playEvent(FMOD_EVENT_CHARACTER_FOOTSTEPS);
+        audioEngine.play3DSoundFile(STINGER_3, tranHarp.x, tranHarp.y, tranHarp.z);
         stinger1LastTime = currentFrame;
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS  && currentFrame - stinger2LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        //audioEngine.play2DSoundFile(STINGER_2);
+        audioEngine.playSoundFile(MUSIC_2);
         //audioEngine.play3DSound(STINGER_2, tranBackpack.x, tranBackpack.y, tranBackpack.z);
-        audioEngine.playEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
+        //audioEngine.playEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
         stinger2LastTime = currentFrame;
     }
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS  && currentFrame - stinger3LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        audioEngine.playSoundFile(STINGER_3);
+        //audioEngine.playSoundFile(STINGER_3);
         //audioEngine.play3DSound(STINGER_3, tranBackpack.x, tranBackpack.y, tranBackpack.z);
         stinger3LastTime = currentFrame;
     }
