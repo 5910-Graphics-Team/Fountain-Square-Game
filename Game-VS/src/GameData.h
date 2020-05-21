@@ -13,16 +13,16 @@ glm::vec4 COLOR_SKY(0.31f , 0.0f, 0.95f, 1.0f);
 glm::vec3 STARTING_PLAYER_LOCATION(-2.0f, -6.0f, 5.0f);
 
 // obj file locations
-const char* OBJ_FOUNTAIN = "res/objects/fountains/fountainOBJ/fountainOBJ.obj";
-const char* OBJ_BACKPACK = "res/LearnOpenGL/objects/backpack/backpack.obj";
-const char* OBJ_HOUSE = "res/objects/Monster House/Monster House.obj";
-const char* OBJ_ROCK = "res/objects/ground/rock/rock.obj";
-const char* OBJ_GROUND = "res/objects/greenground/ground.obj";
-const char* OBJ_TREE = "res/objects/flora/trees/fir/fir.obj";
-const char* OBJ_HARP = "res/objects/instruments/harp/3d-model.obj";
+const char* OBJ_FOUNTAIN   = "res/objects/fountains/fountainOBJ/fountainOBJ.obj";
+const char* OBJ_BACKPACK   = "res/LearnOpenGL/objects/backpack/backpack.obj";
+const char* OBJ_HOUSE      = "res/objects/Monster House/Monster House.obj";
+const char* OBJ_ROCK       = "res/objects/ground/rock/rock.obj";
+const char* OBJ_GROUND     = "res/objects/greenground/ground.obj";
+const char* OBJ_TREE       = "res/objects/flora/trees/fir/fir.obj";
+const char* OBJ_HARP       = "res/objects/instruments/harp/3d-model.obj";
 const char* OBJ_STONEFLOOR = "res/objects/ground/stone-ground/test/StoneFloor_Sample.obj";
-const char* OBJ_BIRDS = "res/objects/animals/birds/two-songbirds/lowpoly_bird.obj";
-const char* OBJ_PINE = "res/objects/flora/trees/Pine/Tree2.obj";
+const char* OBJ_BIRDS      = "res/objects/animals/birds/two-songbirds/lowpoly_bird.obj";
+const char* OBJ_PINE       = "res/objects/flora/trees/Pine/Tree2.obj";
 
 // game object starting positions
 glm::vec3 tranBackpack(0.5f, -1.2f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
@@ -39,9 +39,9 @@ glm::vec3 tranHarp(tranFountain.x, tranFountain.y + 4.0f, tranFountain.z), scale
 // raw audio assets
 const char* MUSIC               = "res/sound/music/Medieval Village Full Theme Demo_2.5.1.3.wav";
 const char* MUSIC_2             = "res/sound/music/Medieval Village3.0 DEMO 2 Loop.wav";
-const char* STINGER_1           = "res/sound/music/Medieval Village_Stinger1 Guitar_2.5.1.3.wav";
-const char* STINGER_2           = "res/sound/music/Medieval Village_Stinger2 Guitar_2.5.1.3.wav";
-const char* STINGER_3           = "res/sound/music/Medieval Village_Stinger3 Harp_2.5.1.3.wav";
+const char* STINGER_1_GUITAR    = "res/sound/music/Medieval Village_Stinger1 Guitar_2.5.1.3.wav";
+const char* STINGER_2_GUITAR_2  = "res/sound/music/Medieval Village_Stinger2 Guitar_2.5.1.3.wav";
+const char* STINGER_3_HARP      = "res/sound/music/Medieval Village_Stinger3 Harp_2.5.1.3.wav";
 const char* SFX_LOOP_FOUNTAIN   = "res/sound/fountain/Fountain_Loop2.wav";
 const char* SFX_LOOP_BIRD       = "res/sound/animals/birds/SFX_LOOP_BIRDS.wav";
 const char* SFX_LOOP_TREE_BIRDS = "res/sound/animals/birds/SFX_LOOP_TREE_BIRDS.wav";

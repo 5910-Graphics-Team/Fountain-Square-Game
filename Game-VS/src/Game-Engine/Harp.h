@@ -15,4 +15,6 @@ public:
 			newRot.y = 0.0f;
 		setRotation(newRot);
 	}
+
+
 };

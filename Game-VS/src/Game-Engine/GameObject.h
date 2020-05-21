@@ -1,9 +1,8 @@
 #pragma once
 #include "Model.h"
-#include "Mesh.h"
-#include "Shader.h"
-//#include "../Audio-Engine/AudioEngine.h"
-//#include "../Audio-Engine/Sound.h"
+//#include "Mesh.h"
+//#include "Shader.h"
+
 
 // Container for a Model and its default translation,scale, and rotation values. 
 class GameObject {
@@ -30,15 +29,6 @@ public:
     } */
     GameObject(const char* filepath, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) : filepath(filepath), model(filepath), trans(defTrans), scale(defScale), rotAngs(defRot) { 
     }
-
-    //void setAudioEngine(AudioEngine* audioEngine) {
-    //    this->audioEngine = audioEngine;
-    //}
-    //void updateSoundPosition(float x, float y, float z) {
-    //}
-    //bool is3DAudioSource() {
-    //    return is3DAudioSource;
-    //}
 
     void draw(Shader* shader) {
         model.Draw(*shader);

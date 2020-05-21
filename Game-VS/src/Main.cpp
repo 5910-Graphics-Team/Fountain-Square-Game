@@ -29,11 +29,17 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // audio timing
-float stinger1LastTime = 0.0f, stinger2LastTime = 0.0f, stinger3LastTime = 0.0f;
-float MIN_STINGER_RETRIGGER_TIME = 0.5f;
+float key1LastTime = 0.0f, key2LastTime = 0.0f, key3LastTime = 0.0f, key4LastTime = 0.0f, key5LastTime = 0.0f;
+float MIN_SOUND_KEY_RETRIGGER_TIME = 0.5f;
 
 // audio engine
 AudioEngine audioEngine;
+SoundInfo soundOneShot(STINGER_1_GUITAR);
+SoundInfo soundOneShot3D(STINGER_3_HARP, false, true, tranHarp.x, tranHarp.y, tranHarp.z);
+SoundInfo soundLoop2D(MUSIC_2, true);
+SoundInfo soundLoop3D(SFX_LOOP_FOUNTAIN, true, tranFountain.x, tranFountain.y, tranFountain.z);
+SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD, true, true, tranBirds.x, tranBirds.y, tranBirds.z);
+
 
 static glm::mat4 getProjection() {
     return glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -114,11 +120,13 @@ int main()
     std::vector<GameObject*> gameObjects;
     gameObjects.push_back(fountain);
     //gameObjects.push_back(backpack);
+
     gameObjects.push_back(house);   
     gameObjects.push_back(ground);
     gameObjects.push_back(treeFir);
     gameObjects.push_back(rock);
-	gameObjects.push_back(pine);
+	
+    gameObjects.push_back(pine);
 
     /*
         Initialize animatable game objects and add to list of game objects, and to another animation objects list
@@ -136,9 +144,16 @@ int main()
 
     
     /*
+
         Load sounds
     */
-
+    audioEngine.loadSound(soundOneShot);
+    audioEngine.loadSound(soundLoop2D);
+    audioEngine.loadSound(soundOneShot3D);
+    audioEngine.loadSound(soundLoop3D);
+    audioEngine.loadSound(soundLoop3DMoving);
+    
+    
     //// load FMOD soundbanks
     //audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_MASTER);
     //audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_MASTER_STRINGS);
@@ -148,24 +163,13 @@ int main()
     //audioEngine.loadFMODStudioEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
     //audioEngine.loadFMODStudioEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
 
-
-    // load non-looping sound effects
-    //audioEngine.loadSoundFile(STINGER_1,  false);
-    //audioEngine.loadSoundFile(STINGER_2,  false);
-    audioEngine.load3DSoundFile(STINGER_3, false); // harp sound
-    
-    // load looping sfx and main music
-    audioEngine.loadSoundFile(MUSIC_2, true); 
-    audioEngine.load3DSoundFile(SFX_LOOP_FOUNTAIN, true);
-    audioEngine.load3DSoundFile(SFX_LOOP_TREE_BIRDS, true);
-    //audioEngine.load3DSoundFile(SFX_LOOP_BIRD, true);
+  
 
 
     /*
         play inital soundscape
     */
-    audioEngine.play3DSoundFile(SFX_LOOP_FOUNTAIN, tranFountain.x, tranFountain.y, tranFountain.z); 
-    audioEngine.play3DSoundFile(SFX_LOOP_TREE_BIRDS, tranTreeFir.x, tranTreeFir.y, tranTreeFir.z);
+    //audioEngine.playSound(soundLoop3DMoving);
     
     
     // draw in wireframe
@@ -206,6 +210,7 @@ int main()
             camera.Front.x, camera.Front.y, camera.Front.z,
             camera.Up.x, camera.Up.y, camera.Up.z
         );
+        //audioEngine.update3DSoundPosition();
         audioEngine.update();
 
         // Update location of 3D sounds
@@ -226,6 +231,9 @@ int main()
 }
 
 
+bool keyCanRetrigger(float currFrame, float lastTriggerFrame) {
+    return currFrame - lastTriggerFrame >= MIN_SOUND_KEY_RETRIGGER_TIME;
+}
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
@@ -243,20 +251,26 @@ void ProcessInput(GLFWwindow* window)
         camera.ProcessKeyboard(RIGHT, deltaTime);
    
     // Audio Processing
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && currentFrame - stinger1LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        audioEngine.play3DSoundFile(STINGER_3, tranHarp.x, tranHarp.y, tranHarp.z);
-        stinger1LastTime = currentFrame;
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+        audioEngine.playSound(soundOneShot);
+        key1LastTime = currentFrame;
     }
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS  && currentFrame - stinger2LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        audioEngine.playSoundFile(MUSIC_2);
-        //audioEngine.play3DSound(STINGER_2, tranBackpack.x, tranBackpack.y, tranBackpack.z);
-        //audioEngine.playEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
-        stinger2LastTime = currentFrame;
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS  && keyCanRetrigger(currentFrame, key2LastTime)) {
+        audioEngine.soundIsPlaying(soundLoop2D) ?  audioEngine.stopSoundLoop(soundLoop2D) : audioEngine.playSound(soundLoop2D);
+
+        key2LastTime = currentFrame;
     }
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS  && currentFrame - stinger3LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        //audioEngine.playSoundFile(STINGER_3);
-        //audioEngine.play3DSound(STINGER_3, tranBackpack.x, tranBackpack.y, tranBackpack.z);
-        stinger3LastTime = currentFrame;
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS  && keyCanRetrigger(currentFrame, key3LastTime)) {
+        audioEngine.playSound(soundOneShot3D);
+        key3LastTime = currentFrame;
+    }
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && keyCanRetrigger(currentFrame, key4LastTime)) {
+        audioEngine.soundIsPlaying(soundLoop3D) ? audioEngine.stopSoundLoop(soundLoop3D) : audioEngine.playSound(soundLoop3D);
+        key4LastTime = currentFrame;
+    }
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && keyCanRetrigger(currentFrame, key5LastTime)) {
+        
+        key5LastTime = currentFrame;
     }
 
 }

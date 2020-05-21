@@ -13,33 +13,93 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <list>
 #include <map>
 
-// FMOD Error Handling
+// FMOD Error Handling Function
 void ERRCHECK_fn(FMOD_RESULT result, const char* file, int line);
 #define ERRCHECK(_result) ERRCHECK_fn(_result, __FILE__, __LINE__)
 
+struct PositionalSource {
+    float x, y, z;
+};
+
+enum SoundAssetType {
+    RAW_SOUND,
+    FMOD_EVENT_INSTANCE
+};
+
+struct SoundInfo {
+    
+
+    std::string uniqueID; 
+
+    const char* filePath;
+
+    int instanceID = -1;
+    
+    bool isLoop;
+    
+    bool is3D;
+    
+    bool isLoaded;
+    
+    float x, y, z;
+
+
+
+    SoundInfo(const char* filePath = "", bool isLoop = false, bool is3D = false,
+        float x = 0.0f, float y = 0.0f, float z = 0.0f) 
+        
+        : filePath(filePath), isLoop(isLoop), is3D(is3D), x(x), y(y), z(z)
+    
+    {
+        uniqueID = filePath;
+    }
+    /*struct SoundInfoComparator {
+        bool operator() (const SoundInfo& lhs, const SoundInfo& rhs) const
+        {
+            return lhs.id < rhs.id;
+        }
+    };*/
+    //std::string uniqueKey;
+private:
+    // TODO if want to track raw sound instances with this.
+    // Needs input validation -> currently assuming RAW_SOUND and proper data passed in
+    /*void setUniqueKey() {
+        
+    }*/
+};
+struct EventInstanceInfo {
+
+    // todo encapsulate event
+    EventInstanceInfo() {
+
+    }
+};
 class AudioEngine {
 public:
+
     /**
     * Initializes Audio Engine Studio and Core systems
     * FMOD's Distance factor is set to 1.0f by default (1 meter/ 3D game unit)
     */
     AudioEngine();
 
+    void init(); // TODO
     /**
     * Method which should be called every frame of the game loop
     */
     void update();
-
+    
     /**
-    * Loads a 2D sound which will playback in tradidional stereo mode (IE, not positional audio)
+    * Loads a mono or stereo audio file,  which will playback in tradidional stereo mode (IE, not positional audio)
     * The file is read into the cache to prepare for later playback.
     * Only reads file and creates the sound if it has not already been added to the cache.
-    * To play the sound later, use method playSoundFile()
+    * To play the sound later, use method playSound()
     */
-    void loadSoundFile(const char* filepath,bool loop);
-    
+    void loadSound(SoundInfo soundInfo);
+
     /**
     * Plays a sound file using FMOD's low level audio system. If the sound file has not been
     * previously loaded using loadSoundFile(), a console message is displayed
@@ -47,29 +107,25 @@ public:
     * @var filename - relative path to file from project directory. (Can be .OGG, .WAV, .MP3,
     *                 or any other FMOD-supported audio format)
     */
-    void playSoundFile(const char* filepath);
-
-    /**
-    * Loads a 3D sound. The position of the sound is set while calling method play3DSoundFile().
-    * The file is read into the cache to prepare for later playback.
-    * Only reads file and creates the sound if it has not already been added to the cache.
-    * To play the sound later, use method play3DSoundFile()
-    */
-    void load3DSoundFile(const char* filepath, bool loop);
-
-    /**
-    * Plays a 3D sound file using FMOD's low level audio system. If the sound file has not been
-    * previously loaded using load3DSoundFile(), a console message is displayed
-    *
-    * @var filename - relative path to file from project directory. (Can be .OGG, .WAV, .MP3,
-    *                 or any other FMOD-supported audio format)
-    */
-    void play3DSoundFile(const char* filepath, float x, float y, float z);
-   
+    void playSound(SoundInfo soundInfo);
+    
     /**
     * Sets the posision of a looping 3D sound that has already been loaded and is playing back.
     */
-    void update3DSoundPosition(const char* filepath, float x, float y, float z);
+    void update3DSoundPosition(SoundInfo soundInfo); 
+    
+    void stopSoundLoop(SoundInfo soundInfo);
+
+    bool soundIsPlaying(SoundInfo soundInfo); 
+   
+
+    
+
+    //bool debug = true; // TODO whether to print debug messages
+
+    
+   
+   
 
     /**
     * Sets the position of the listener in the 3D scene.
@@ -82,13 +138,14 @@ public:
                                float upX,      float upY,      float upZ);
 
     /**
-    * Loads an FMOD Studio soundbank
+    * Loads an FMOD Studio soundbank TODO Fix
     */
-    void loadFMODStudioBank(const char* filepath);
+    void loadFMODStudioBank(const char* filePath);
     
     /**
     * Loads an FMOD Studio Event. The Soundbank that this event is in must have been loaded before
     * calling this method.
+    * TODO Fix
     */
     void loadFMODStudioEvent(const char* eventName, std::vector<std::pair<const char*, float>> paramsValues = { });
     
@@ -106,21 +163,44 @@ public:
     
     /**
     * Stops the specified instance of an event, if it is playing.
+    * TODO Fix
     */
     void stopEvent(const char* eventName, int instanceIndex = 0);
  
-private:    
+private:  
+
+    std::map<std::string, FMOD::Sound*> sounds;
+
+    std::map<std::string, FMOD::Channel*> loopsPlaying;
+
+    bool soundLoaded(SoundInfo soundInfo) {
+        return sounds.count(soundInfo.uniqueID) > 0;
+    }
+
+   
+
+    void set3dChannelPosition(SoundInfo soundInfo, FMOD::Channel* channel) {
+        FMOD_VECTOR position = { soundInfo.x * DISTANCEFACTOR, soundInfo.y * DISTANCEFACTOR, soundInfo.z * DISTANCEFACTOR };
+        FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // TODO Add dopplar (velocity) support
+        ERRCHECK(channel->set3DAttributes(&position, &velocity));
+    }
+
+    
+
+
+
+
     /**
     * Checks if a sound file is in the soundCache
     */
-    bool soundIsCached(const char* filepath);
+    bool soundIsCached(const char* filePath);
 
     /**
     * Gets a sound from the cache without checking if it has been added.
-    * Only use if certain sound is in cache, as one will be created at provided filepath
+    * Only use if certain sound is in cache, as one will be created at provided filePath
     * key value (but it won't be initialized or work)
     */
-    FMOD::Sound* getSound(const char* filepath);
+    FMOD::Sound* getSound(const char* filePath);
 
     /**
     * Prints debug info about an FMOD event description
@@ -155,7 +235,12 @@ private:
     * Value is the FMOD::Sound* to be played back.
     * TODO Refactor to use numeric UID as key
     */
-    std::map<std::string, FMOD::Sound*> soundCache;   
+    std::map<std::string, FMOD::Sound*> soundCache;
+
+
+    
+
+
     
     /*
     * Map which stores the current playback channels of any looping sound that is created with 
