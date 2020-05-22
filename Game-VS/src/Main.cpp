@@ -194,7 +194,9 @@ int main()
         glClearColor(COLOR_SKY.x, COLOR_SKY.y, COLOR_SKY.z, COLOR_SKY.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+        // enable blended overwrite of color buffer
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         // update animation objects with current frame
         for (int i = 0; i < animationObjects.size(); i++)
             animationObjects[i]->update(currentFrame);
