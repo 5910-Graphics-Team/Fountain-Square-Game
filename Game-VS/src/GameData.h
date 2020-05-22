@@ -23,6 +23,9 @@ const char* OBJ_HARP       = "res/objects/instruments/harp/3d-model.obj";
 const char* OBJ_STONEFLOOR = "res/objects/ground/stone-ground/test/StoneFloor_Sample.obj";
 const char* OBJ_BIRDS      = "res/objects/animals/birds/two-songbirds/lowpoly_bird.obj";
 const char* OBJ_PINE       = "res/objects/flora/trees/Pine/Tree2.obj";
+const char* OBJ_OAK		   = "res/objects/flora/trees/Autumn_Tree/Autumn Tree.obj";
+const char* OBJ_GRASS      = "res/objects/ground/grass/Grass.obj";
+const char* OBJ_COOLTREE   = "res/objects/flora/trees/Cool_Tree/Cool Tree.obj";
 
 // game object starting positions
 glm::vec3 tranBackpack(0.5f, -1.2f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
@@ -32,8 +35,10 @@ glm::vec3 tranTreeFir(0.0f, -8.0f, -10.0f), scaleTreeFir(0.008f), rotTreeFir(0.0
 glm::vec3 tranRock(-8.0f, -8.0f, -15.0f), scaleRock(0.38f), rotRock(0.0f);
 glm::vec3 tranFountain(-10.0f, -7.9f, -5.0f), scaleFountain(0.06f), rotFountain(0.0f);
 glm::vec3 tranBirds(tranBackpack), scaleBirds(0.05f), rotBirds(0.0f, 180.0f, 0.0f);
-glm::vec3 tranPine(-28.0f, -9.0f, -10.0f), scalePine(0.70f), rotPine(0.0f);
 glm::vec3 tranHarp(tranFountain.x, tranFountain.y + 4.0f, tranFountain.z), scaleHarp(0.0022f), rotHarp(0.0f, 120.0f, 0.0f);
+glm::vec3 tranPine(-32.0f, -9.0f, -10.0f), scalePine(0.11f), rotPine(0.0f);
+glm::vec3 tranGrass(-32.0f, -8.5f, -9.0f), scaleGrass(0.80f), rotGrass(0.0f);
+glm::vec3 tranCooltree(-37.0f, -9.0f, -10.0f), scaleCooltree(0.70f), rotCooltree(0.0f);
 
 
 // raw audio assets
