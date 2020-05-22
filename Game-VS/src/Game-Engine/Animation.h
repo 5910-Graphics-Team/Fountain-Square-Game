@@ -4,5 +4,5 @@
 class Animation {
 
 public:
-	virtual	void updateLocation(float time) = 0;
+	virtual	void update(float time) = 0;
 };

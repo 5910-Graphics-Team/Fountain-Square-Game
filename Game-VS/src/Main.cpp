@@ -11,6 +11,7 @@
 #include "GameData.h"
 // custom game objects
 #include "Game-Engine/Bird.h"
+#include "Game-Engine/Harp.h"
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 void MouseCallback(GLFWwindow* window, double xpos, double ypos);
@@ -28,31 +29,35 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // audio timing
-float stinger1LastTime = 0.0f, stinger2LastTime = 0.0f, stinger3LastTime = 0.0f;
-float MIN_STINGER_RETRIGGER_TIME = 0.5f;
+float key1LastTime = 0.0f, key2LastTime = 0.0f, key3LastTime = 0.0f, key4LastTime = 0.0f, key5LastTime = 0.0f;
+float MIN_SOUND_KEY_RETRIGGER_TIME = 0.5f;
 
 // audio engine
 AudioEngine audioEngine;
+
+SoundInfo soundOneShot     (STINGER_1_GUITAR);
+SoundInfo soundOneShot3D   (STINGER_3_HARP,    false, true, tranHarp.x,    tranHarp.y,     tranHarp.z);
+SoundInfo soundLoop2D      (MUSIC_2,           true);
+SoundInfo soundLoop3D      (SFX_LOOP_FOUNTAIN, true, true, tranFountain.x, tranFountain.y, tranFountain.z);
+SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,     true, true, tranBirds.x,    tranBirds.y,    tranBirds.z);
+
 
 static glm::mat4 getProjection() {
     return glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 }
 
 // Performs the OpenGL calls to render a GameObject with a provided shader.
-static void renderGameObject(GameObject* gameObject, Shader* shader) {
+static void renderGameObject(GameObject &gameObject, Shader* shader) {
     // enable shader before setting uniforms
     shader->use();
-
     // view/projection transformations
     glm::mat4 projection = getProjection();
     glm::mat4 view = camera.GetViewMatrix();
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
-
     // render the loaded model
-    shader->setMat4("model", gameObject->getModel());
-           
-    gameObject->draw(shader);
+    shader->setMat4("model", gameObject.getModel());       
+    gameObject.draw(shader);
 }
 
 float currentFrame = 0.0f;
@@ -100,65 +105,77 @@ int main()
     // build and compile shaders
     Shader ourShader("res/shaders/1.model_loading.vs", "res/shaders/1.model_loading.fs");
     
-    std::vector<GameObject> gameObjects;
+
+    /*
+        Initialize game objects and add to list
+    */
+    GameObject* fountain = new GameObject(OBJ_FOUNTAIN, tranFountain, scaleFountain, rotFountain);
+    //GameObject* backpack = new GameObject(OBJ_BACKPACK, tranBackpack, scaleBackpack, rotBackpack);
+    GameObject* house    = new GameObject(OBJ_HOUSE,    tranHouse,    scaleHouse,    rotHouse);
+    GameObject* rock     = new GameObject(OBJ_ROCK,     tranRock,     scaleRock,     rotRock);
+    GameObject* ground   = new GameObject(OBJ_GROUND,   tranGround,   scaleGround,   rotGround);
+    GameObject* treeFir  = new GameObject(OBJ_TREE,     tranTreeFir,  scaleTreeFir,  rotTreeFir);
+	GameObject* pine     = new GameObject(OBJ_PINE,     tranPine,     scalePine,     rotPine);
     
-
-    GameObject fountain(OBJ_FOUNTAIN, tranFountain, scaleFountain, rotFountain);
-    //GameObject backpack(OBJ_BACKPACK, tranBackpack, scaleBackpack, rotBackpack);
-    GameObject house   (OBJ_HOUSE,    tranHouse,    scaleHouse,    rotHouse);
-    GameObject rock    (OBJ_ROCK,     tranRock,     scaleRock,     rotRock);
-    GameObject ground  (OBJ_GROUND,   tranGround,   scaleGround,   rotGround);
-    GameObject treeFir (OBJ_TREE,     tranTreeFir,  scaleTreeFir,  rotTreeFir);
-    GameObject harp    (OBJ_HARP,     tranHarp,     scaleHarp,     rotHarp);
-	GameObject pine    (OBJ_PINE,     tranPine,     scalePine,     rotPine);
-    //GameObject stoneFloor(OBJ_STONEFLOOR, dtranHouse, glm::vec3(0.05f), rotHouse);
-
-
-    Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds, &audioEngine, SFX_LO0P_BIRD);
-
-	
+    // List for all game obejcts
+    std::vector<GameObject*> gameObjects;
     gameObjects.push_back(fountain);
     //gameObjects.push_back(backpack);
+
     gameObjects.push_back(house);   
-    //gameObjects.push_back(stoneFloor);
     gameObjects.push_back(ground);
     gameObjects.push_back(treeFir);
-    gameObjects.push_back(harp);
     gameObjects.push_back(rock);
-	gameObjects.push_back(pine);
+	
+    gameObjects.push_back(pine);
 
-    //gameObjects.push_back(birds);
+    /*
+        Initialize animatable game objects and add to list of game objects, and to another animation objects list
+    */
+    Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds);
+    Harp* harp  = new Harp(OBJ_HARP, tranHarp, scaleHarp, rotHarp);
     
+    gameObjects.push_back(birds);
+    gameObjects.push_back(harp);
 
+    // list for all animation objects which need to be updated each frame
+    std::vector<Animation*> animationObjects;
+    animationObjects.push_back(birds);
+    animationObjects.push_back(harp);
 
-    // load non-looping sound effects
-    //Sound stinger1(STINGER_1);
-    //Sound stinger2(STINGER_2);
-    audioEngine.loadSoundFile(STINGER_1,    true, true);
-    audioEngine.loadSoundFile(STINGER_2,    true, true);
-    // load looping sfx and main music
-    audioEngine.loadSoundFile(STINGER_3,    true, true);
-    //audioEngine.loadSoundFile(MUSIC,        false, true); 
-    audioEngine.loadSoundFile(FOUNTAIN_SFX, true,  true);
     
-    
-    //Sound mainScore(MUSIC), stinger1(STINGER_1), stinger2(STINGER_2);
-    //audioEngine.initSound(mainScore);    
-    //audioEngine.initSound(stinger1);
-    //audioEngine.initSound(stinger2);
-    //audioEngine.playSound(mainScore);
-    
+    /*
+        Initialize Audio Engine and Load sounds
+    */
+    audioEngine.init();
 
-    // play inital soundscape
-    birds->startSound();
-    audioEngine.play3DSound(FOUNTAIN_SFX, tranFountain.x, tranFountain.y, tranFountain.z); 
-    //audioEngine.play3DSound(STINGER_3,    tranHarp.x,     tranHarp.y,     tranHarp.z);
-    //audioEngine.playSoundFile(MUSIC);
+    audioEngine.loadSound(soundOneShot);
+    audioEngine.loadSound(soundLoop2D);
+    audioEngine.loadSound(soundOneShot3D);
+    audioEngine.loadSound(soundLoop3D);
+    audioEngine.loadSound(soundLoop3DMoving);
+    
+    // Load FMOD Soundbanks (TODO)
+    //// load FMOD soundbanks
+    //audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_MASTER);
+    //audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_MASTER_STRINGS);
+    //audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_SFX);
+    //// load FMOD event and its parameters
+    //audioEngine.loadFMODStudioEvent(FMOD_EVENT_CHARACTER_FOOTSTEPS, PARAM_CHARACTER_FOOTSTEPS_SURFACE);
+    //audioEngine.loadFMODStudioEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
+    //audioEngine.loadFMODStudioEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
+
+    /*
+        play inital soundscape
+    */
+    //audioEngine.playSound(soundLoop3DMoving);
+    audioEngine.playSound(soundLoop2D);
+    
     
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
-    // render loop
+    /* render loop */ 
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -167,7 +184,6 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        //std::cout << "current frame: " << currentFrame << "\n";
         
         // input
         // -----
@@ -178,21 +194,32 @@ int main()
         glClearColor(COLOR_SKY.x, COLOR_SKY.y, COLOR_SKY.z, COLOR_SKY.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        
-        // Update listener position
-        audioEngine.set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
-                                          camera.Front.x, camera.Front.y, camera.Front.z, 
-                                          camera.Up.x,    camera.Up.y,    camera.Up.z
-                                          
-        );
+        // enable blended overwrite of color buffer
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        // update animation objects with current frame
+        for (int i = 0; i < animationObjects.size(); i++)
+            animationObjects[i]->update(currentFrame);
 
         // render Game Objects
         for (int i = 0; i < gameObjects.size(); i++) 
-            renderGameObject(&gameObjects[i], &ourShader);
+            renderGameObject(*gameObjects[i], &ourShader);
 
-        birds->updateLocation(currentFrame);
-        // audioEngine->update3DPosition(newTrans.x, newtransy., z)
-        renderGameObject(birds, &ourShader);
+
+        // set current player position
+        audioEngine.set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
+                                          camera.Front.y,    camera.Front.x,    camera.Front.z,
+                                          camera.Up.y,       camera.Up.x,       camera.Up.z );
+        
+
+        //soundLoop3DMoving.set3DCoords(birds->getTranslation().x, birds->getTranslation().y, birds->getTranslation().z);
+        //audioEngine.update3DSoundPosition(soundLoop3DMoving);
+
+        audioEngine.update(); // per-frame FMOD update
+
+        // Update location of 3D sounds
+        //glm::vec3 newBirdTran = birds->getTranslation();
+        //audioEngine.update3DSoundPosition(SFX_LOOP_BIRD, newBirdTran.x, newBirdTran.y, newBirdTran.z);
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -208,7 +235,9 @@ int main()
 }
 
 
-
+bool keyCanRetrigger(float currFrame, float lastTriggerFrame) {
+    return currFrame - lastTriggerFrame >= MIN_SOUND_KEY_RETRIGGER_TIME;
+}
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
@@ -226,20 +255,26 @@ void ProcessInput(GLFWwindow* window)
         camera.ProcessKeyboard(RIGHT, deltaTime);
    
     // Audio Processing
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && currentFrame - stinger1LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        //audioEngine.playSoundFile(STINGER_1);
-        audioEngine.play3DSound(STINGER_1, tranBackpack.x, tranBackpack.y, tranBackpack.z);
-        stinger1LastTime = currentFrame;
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+        audioEngine.playSound(soundOneShot);
+        key1LastTime = currentFrame;
     }
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS  && currentFrame - stinger2LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        //audioEngine.playSoundFile(STINGER_2);
-        audioEngine.play3DSound(STINGER_2, tranBackpack.x, tranBackpack.y, tranBackpack.z);
-        stinger2LastTime = currentFrame;
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS  && keyCanRetrigger(currentFrame, key2LastTime)) {
+        audioEngine.soundIsPlaying(soundLoop2D) ?  audioEngine.stopSound(soundLoop2D) : audioEngine.playSound(soundLoop2D);
+
+        key2LastTime = currentFrame;
     }
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS  && currentFrame - stinger3LastTime >= MIN_STINGER_RETRIGGER_TIME) {
-        audioEngine.playSoundFile(STINGER_3);
-        //audioEngine.play3DSound(STINGER_3, tranBackpack.x, tranBackpack.y, tranBackpack.z);
-        stinger3LastTime = currentFrame;
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS  && keyCanRetrigger(currentFrame, key3LastTime)) {
+        audioEngine.playSound(soundOneShot3D);
+        key3LastTime = currentFrame;
+    }
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && keyCanRetrigger(currentFrame, key4LastTime)) {
+        audioEngine.soundIsPlaying(soundLoop3D) ? audioEngine.stopSound(soundLoop3D) : audioEngine.playSound(soundLoop3D);
+        key4LastTime = currentFrame;
+    }
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && keyCanRetrigger(currentFrame, key5LastTime)) {
+        
+        key5LastTime = currentFrame;
     }
 
 }

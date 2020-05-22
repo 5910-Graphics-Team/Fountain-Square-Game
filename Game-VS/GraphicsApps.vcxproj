@@ -183,16 +183,15 @@
     <Image Include="res\objects\environment\grass.tga" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Audio-Engine\LoopingSound.h" />
-    <ClInclude Include="src\Audio-Engine\SoundEmitter.h" />
+    <ClInclude Include="src\Game-Engine\AABB.h" />
     <ClInclude Include="src\Game-Engine\Animation.h" />
     <ClInclude Include="src\Game-Engine\Bird.h" />
     <ClInclude Include="src\Game-Engine\Fountain.h" />
+    <ClInclude Include="src\Game-Engine\Harp.h" />
     <ClInclude Include="src\Game-Engine\Player.h" />
     <ClInclude Include="src\GameData.h" />
     <ClInclude Include="src\Game-Engine\GameObject.h" />
     <ClInclude Include="src\Audio-Engine\AudioEngine.h" />
-    <ClInclude Include="src\Audio-Engine\Sound.h" />
     <ClInclude Include="src\Game-Engine\LOGL_Camera.h" />
     <ClInclude Include="src\Game-Engine\Mesh.h" />
     <ClInclude Include="src\Game-Engine\Model.h" />
