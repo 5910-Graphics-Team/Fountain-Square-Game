@@ -118,6 +118,8 @@ int main()
 	GameObject* grass    = new GameObject(OBJ_GRASS, tranGrass, scaleGrass, rotGrass);
 	GameObject* cooltree = new GameObject(OBJ_COOLTREE, tranCooltree, scaleCooltree, rotCooltree);
 	GameObject* oak		 = new GameObject(OBJ_OAK, tranPine, scalePine, rotPine);
+	GameObject* azalea   = new GameObject(OBJ_AZALEA, tranAzalea, scaleAzalea, rotAzalea);
+	GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
     
     // List for all game obejcts
     std::vector<GameObject*> gameObjects;
@@ -131,8 +133,9 @@ int main()
 	gameObjects.push_back(grass);
 	gameObjects.push_back(cooltree);
 	gameObjects.push_back(oak);
-	
-    
+	gameObjects.push_back(azalea);
+	gameObjects.push_back(japaneseTree);
+
 
     /*
         Initialize animatable game objects and add to list of game objects, and to another animation objects list

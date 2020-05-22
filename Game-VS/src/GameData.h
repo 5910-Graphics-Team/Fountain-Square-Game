@@ -26,6 +26,12 @@ const char* OBJ_PINE       = "res/objects/flora/trees/Pine/Tree2.obj";
 const char* OBJ_OAK		   = "res/objects/flora/trees/Autumn_Tree/Autumn Tree.obj";
 const char* OBJ_GRASS      = "res/objects/ground/grass/Grass.obj";
 const char* OBJ_COOLTREE   = "res/objects/flora/trees/Cool_Tree/Cool Tree.obj";
+const char* OBJ_AZALEA	   = "res/objects/flora/Pink_Azalea_Flowers/Pink Azalea Flowers.obj";
+//const char* OBJ_JAPANESE_TREE     = "res/objects/flora/trees/Japanese_Tree/Japanese Tree 1.obj";
+
+const char* OBJ_JAPANESE_TREE = "res/objects/flora/trees/Oak_Tree/oakTree.obj";
+
+
 
 // game object starting positions
 glm::vec3 tranBackpack(0.5f, -1.2f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
@@ -39,6 +45,8 @@ glm::vec3 tranHarp(tranFountain.x, tranFountain.y + 4.0f, tranFountain.z), scale
 glm::vec3 tranPine(-32.0f, -9.0f, -10.0f), scalePine(0.11f), rotPine(0.0f);
 glm::vec3 tranGrass(-32.0f, -8.5f, -9.0f), scaleGrass(0.80f), rotGrass(0.0f);
 glm::vec3 tranCooltree(-37.0f, -9.0f, -10.0f), scaleCooltree(0.70f), rotCooltree(0.0f);
+glm::vec3 tranAzalea(-31.0f, -7.5f, -8.0f), scaleAzalea(0.28f), rotAzalea(0.0f);
+glm::vec3 tranJapaneseTree(10.0f, -8.5f, -9.0f), scaleJapaneseTree(0.11f), rotJapaneseTree(0.0f);
 
 
 // raw audio assets
