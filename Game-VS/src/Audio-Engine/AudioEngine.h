@@ -20,72 +20,45 @@
 void ERRCHECK_fn(FMOD_RESULT result, const char* file, int line);
 #define ERRCHECK(_result) ERRCHECK_fn(_result, __FILE__, __LINE__)
 
-struct PositionalSource {
-    float x, y, z;
-};
-
-enum SoundAssetType {
-    RAW_SOUND,
-    FMOD_EVENT_INSTANCE
-};
 
 struct SoundInfo {
     
-
     std::string uniqueID; 
 
     const char* filePath;
-
-    int instanceID = -1;
     
-    bool isLoop;
-    
-    bool is3D;
-    
-    bool isLoaded;
+    bool isLoop, is3D, isLoaded;
     
     float x, y, z;
 
+    // convienience method to set the 3D coordinates of the sound.
+    void set3DCoords(float x, float y, float z) {
+        this->x = x, this->y = y, this->z = z;
+    }
 
-
-    SoundInfo(const char* filePath = "", bool isLoop = false, bool is3D = false,
-        float x = 0.0f, float y = 0.0f, float z = 0.0f) 
-        
-        : filePath(filePath), isLoop(isLoop), is3D(is3D), x(x), y(y), z(z)
-    
+    SoundInfo(const char* filePath = "", bool isLoop = false, bool is3D = false, float x = 0.0f, float y = 0.0f, float z = 0.0f) 
+        : filePath(filePath), isLoop(isLoop), is3D(is3D), x(x), y(y), z(z) 
     {
         uniqueID = filePath;
     }
-    /*struct SoundInfoComparator {
-        bool operator() (const SoundInfo& lhs, const SoundInfo& rhs) const
-        {
-            return lhs.id < rhs.id;
-        }
-    };*/
-    //std::string uniqueKey;
-private:
-    // TODO if want to track raw sound instances with this.
-    // Needs input validation -> currently assuming RAW_SOUND and proper data passed in
-    /*void setUniqueKey() {
-        
-    }*/
-};
-struct EventInstanceInfo {
 
-    // todo encapsulate event
-    EventInstanceInfo() {
+    // TODO  implement sound instancing
+    // int instanceID = -1; 
 
-    }
 };
+
 class AudioEngine {
 public:
+
+    /**
+    * Audio Engine constructor. method init() must be called before use of the Audio Engine.
+    */
+    AudioEngine();
 
     /**
     * Initializes Audio Engine Studio and Core systems
     * FMOD's Distance factor is set to 1.0f by default (1 meter/ 3D game unit)
     */
-    AudioEngine();
-
     void init(); // TODO
     /**
     * Method which should be called every frame of the game loop
@@ -109,22 +82,18 @@ public:
     */
     void playSound(SoundInfo soundInfo);
     
+    void stopSound(SoundInfo soundInfo);
+
     /**
-    * Sets the posision of a looping 3D sound that has already been loaded and is playing back.
+    * Updates the position of a looping 3D sound that has already been loaded and is playing back.
+    * The SoundInfo object's position coordinates will be used for the new sound position, so
+    * SoundInfo::set3DCoords(x,y,z) should be called before this method to set the new desired location.
     */
     void update3DSoundPosition(SoundInfo soundInfo); 
     
-    void stopSoundLoop(SoundInfo soundInfo);
+    
 
     bool soundIsPlaying(SoundInfo soundInfo); 
-   
-
-    
-
-    //bool debug = true; // TODO whether to print debug messages
-
-    
-   
    
 
     /**
@@ -138,7 +107,8 @@ public:
                                float upX,      float upY,      float upZ);
 
     /**
-    * Loads an FMOD Studio soundbank TODO Fix
+    * Loads an FMOD Studio soundbank 
+    * TODO Fix
     */
     void loadFMODStudioBank(const char* filePath);
     
@@ -169,38 +139,32 @@ public:
  
 private:  
 
+    /*
+   * Map which caches FMOD Low-Level sounds
+   * Key is the SoundInfo's uniqueKey field.
+   * Value is the FMOD::Sound* to be played back.
+   * TODO Refactor to use numeric UID as key
+   */
     std::map<std::string, FMOD::Sound*> sounds;
 
+    /*
+    * Map which stores the current playback channels of any playing sound loop
+    * Key is the SoundInfo's uniqueKey field.
+    * Value is the FMOD::Channel* the FMOD::Sound* is playing back on.
+    */
     std::map<std::string, FMOD::Channel*> loopsPlaying;
-
-    bool soundLoaded(SoundInfo soundInfo) {
-        return sounds.count(soundInfo.uniqueID) > 0;
-    }
-
-   
-
-    void set3dChannelPosition(SoundInfo soundInfo, FMOD::Channel* channel) {
-        FMOD_VECTOR position = { soundInfo.x * DISTANCEFACTOR, soundInfo.y * DISTANCEFACTOR, soundInfo.z * DISTANCEFACTOR };
-        FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // TODO Add dopplar (velocity) support
-        ERRCHECK(channel->set3DAttributes(&position, &velocity));
-    }
-
     
-
-
-
-
     /**
     * Checks if a sound file is in the soundCache
     */
-    bool soundIsCached(const char* filePath);
+    bool soundLoaded(SoundInfo soundInfo); 
+
 
     /**
-    * Gets a sound from the cache without checking if it has been added.
-    * Only use if certain sound is in cache, as one will be created at provided filePath
-    * key value (but it won't be initialized or work)
+    * Sets the 3D position of a sound 
     */
-    FMOD::Sound* getSound(const char* filePath);
+    void set3dChannelPosition(SoundInfo soundInfo, FMOD::Channel* channel);
+    
 
     /**
     * Prints debug info about an FMOD event description
@@ -211,7 +175,7 @@ private:
     // FMOD Studio API system, which can play FMOD sound banks (*.bank)
     FMOD::Studio::System* studioSystem = nullptr;       
     
-    // FMOD's low-level audio system which plays audio files and is obtained from Studio System)
+    // FMOD's low-level audio system which plays audio files and is obtained from Studio System
     FMOD::System* lowLevelSystem = nullptr;          
     
     // Max FMOD::Channels for the audio engine 
@@ -229,26 +193,7 @@ private:
     // Listener upwards vector, initialized to default value
     FMOD_VECTOR up          = { 0.0f, 1.0f, 0.0f };
 
-    /*
-    * Map which caches FMOD Low-Level sounds, created with loadSoundFile() and load3DSoundFile(). 
-    * Key is the relative file path of each unique sound asset. 
-    * Value is the FMOD::Sound* to be played back.
-    * TODO Refactor to use numeric UID as key
-    */
-    std::map<std::string, FMOD::Sound*> soundCache;
-
-
-    
-
-
-    
-    /*
-    * Map which stores the current playback channels of any looping sound that is created with 
-    * loadSoundFile() and load3DSoundFile().
-    * Key is the relative file path of each the sound asset.
-    * Value is the FMOD::Channel* the FMOD::Sound* is playing back on.
-    */
-    std::map<std::string, FMOD::Channel*> channelMap;
+   
 
     /*
     * Map which stores the soundbanks loaded with loadFMODStudioBank()

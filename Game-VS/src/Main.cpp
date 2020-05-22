@@ -34,11 +34,12 @@ float MIN_SOUND_KEY_RETRIGGER_TIME = 0.5f;
 
 // audio engine
 AudioEngine audioEngine;
-SoundInfo soundOneShot(STINGER_1_GUITAR);
-SoundInfo soundOneShot3D(STINGER_3_HARP, false, true, tranHarp.x, tranHarp.y, tranHarp.z);
-SoundInfo soundLoop2D(MUSIC_2, true);
-SoundInfo soundLoop3D(SFX_LOOP_FOUNTAIN, true, tranFountain.x, tranFountain.y, tranFountain.z);
-SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD, true, true, tranBirds.x, tranBirds.y, tranBirds.z);
+
+SoundInfo soundOneShot     (STINGER_1_GUITAR);
+SoundInfo soundOneShot3D   (STINGER_3_HARP,    false, true, tranHarp.x,    tranHarp.y,     tranHarp.z);
+SoundInfo soundLoop2D      (MUSIC_2,           true);
+SoundInfo soundLoop3D      (SFX_LOOP_FOUNTAIN, true, true, tranFountain.x, tranFountain.y, tranFountain.z);
+SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,     true, true, tranBirds.x,    tranBirds.y,    tranBirds.z);
 
 
 static glm::mat4 getProjection() {
@@ -144,16 +145,17 @@ int main()
 
     
     /*
-
-        Load sounds
+        Initialize Audio Engine and Load sounds
     */
+    audioEngine.init();
+
     audioEngine.loadSound(soundOneShot);
     audioEngine.loadSound(soundLoop2D);
     audioEngine.loadSound(soundOneShot3D);
     audioEngine.loadSound(soundLoop3D);
     audioEngine.loadSound(soundLoop3DMoving);
     
-    
+    // Load FMOD Soundbanks (TODO)
     //// load FMOD soundbanks
     //audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_MASTER);
     //audioEngine.loadFMODStudioBank(FMOD_SOUNDBANK_MASTER_STRINGS);
@@ -163,13 +165,11 @@ int main()
     //audioEngine.loadFMODStudioEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
     //audioEngine.loadFMODStudioEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
 
-  
-
-
     /*
         play inital soundscape
     */
     //audioEngine.playSound(soundLoop3DMoving);
+    audioEngine.playSound(soundLoop2D);
     
     
     // draw in wireframe
@@ -184,7 +184,6 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        //std::cout << "current frame: " << currentFrame << "\n";
         
         // input
         // -----
@@ -207,11 +206,14 @@ int main()
 
         // set current player position
         audioEngine.set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
-            camera.Front.x, camera.Front.y, camera.Front.z,
-            camera.Up.x, camera.Up.y, camera.Up.z
-        );
-        //audioEngine.update3DSoundPosition();
-        audioEngine.update();
+                                          camera.Front.y,    camera.Front.x,    camera.Front.z,
+                                          camera.Up.y,       camera.Up.x,       camera.Up.z );
+        
+
+        //soundLoop3DMoving.set3DCoords(birds->getTranslation().x, birds->getTranslation().y, birds->getTranslation().z);
+        //audioEngine.update3DSoundPosition(soundLoop3DMoving);
+
+        audioEngine.update(); // per-frame FMOD update
 
         // Update location of 3D sounds
         //glm::vec3 newBirdTran = birds->getTranslation();
@@ -256,7 +258,7 @@ void ProcessInput(GLFWwindow* window)
         key1LastTime = currentFrame;
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS  && keyCanRetrigger(currentFrame, key2LastTime)) {
-        audioEngine.soundIsPlaying(soundLoop2D) ?  audioEngine.stopSoundLoop(soundLoop2D) : audioEngine.playSound(soundLoop2D);
+        audioEngine.soundIsPlaying(soundLoop2D) ?  audioEngine.stopSound(soundLoop2D) : audioEngine.playSound(soundLoop2D);
 
         key2LastTime = currentFrame;
     }
@@ -265,7 +267,7 @@ void ProcessInput(GLFWwindow* window)
         key3LastTime = currentFrame;
     }
     if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && keyCanRetrigger(currentFrame, key4LastTime)) {
-        audioEngine.soundIsPlaying(soundLoop3D) ? audioEngine.stopSoundLoop(soundLoop3D) : audioEngine.playSound(soundLoop3D);
+        audioEngine.soundIsPlaying(soundLoop3D) ? audioEngine.stopSound(soundLoop3D) : audioEngine.playSound(soundLoop3D);
         key4LastTime = currentFrame;
     }
     if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && keyCanRetrigger(currentFrame, key5LastTime)) {

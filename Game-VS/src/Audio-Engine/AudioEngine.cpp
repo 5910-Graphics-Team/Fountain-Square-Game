@@ -5,12 +5,15 @@
 #include <FMOD/fmod_errors.h>
 #include <iostream>
 
-AudioEngine::AudioEngine() : sounds(), soundCache(), channelMap(), soundBanks(), eventDescriptions(), eventInstances() {
+AudioEngine::AudioEngine() : sounds(), loopsPlaying(), soundBanks(), eventDescriptions(), eventInstances() {}
+
+void AudioEngine::init() {
     ERRCHECK(FMOD::Studio::System::create(&studioSystem));
     ERRCHECK(studioSystem->getCoreSystem(&lowLevelSystem));
     ERRCHECK(lowLevelSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_STEREO, 0));
     ERRCHECK(lowLevelSystem->set3DSettings(1.0, DISTANCEFACTOR, 1.0f));
     ERRCHECK(studioSystem->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0));
+
 }
 
 void AudioEngine::update() {
@@ -23,6 +26,7 @@ void AudioEngine::loadSound(SoundInfo soundInfo) {
         FMOD::Sound* sound;
         ERRCHECK(lowLevelSystem->createSound(soundInfo.filePath, soundInfo.is3D ? FMOD_3D : FMOD_2D, 0, &sound));
         ERRCHECK(sound->setMode(soundInfo.isLoop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF));
+        ERRCHECK(sound->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR));
         sounds.insert({ soundInfo.uniqueID, sound });
     }
     else
@@ -50,7 +54,7 @@ void AudioEngine::playSound(SoundInfo soundInfo) {
 
 }
 
-void AudioEngine::stopSoundLoop(SoundInfo soundInfo) {
+void AudioEngine::stopSound(SoundInfo soundInfo) {
     if (soundIsPlaying(soundInfo)) {
         loopsPlaying[soundInfo.uniqueID]->stop();
         loopsPlaying.erase(soundInfo.uniqueID);
@@ -67,16 +71,16 @@ bool AudioEngine::soundIsPlaying(SoundInfo soundInfo) {
 void AudioEngine::update3DSoundPosition(SoundInfo soundInfo) {
     if (soundIsPlaying(soundInfo)) 
         set3dChannelPosition(soundInfo, loopsPlaying[soundInfo.uniqueID]);
-
+    else
+        std::cout << "Audio Engine: Can't update sound position!\n";
 
 }
 
 
-
 void AudioEngine::set3DListenerPosition(float posX, float posY, float posZ, float forwardX, float forwardY, float forwardZ, float upX, float upY, float upZ) {
     listenerpos = { posX,     posY,     posZ };
-    forward = { forwardY, forwardX, forwardZ };
-    up = { upY,      upX,      upZ };
+    forward =     { forwardX, forwardY, forwardZ };
+    up =          { upX,      upY,      upZ };
     ERRCHECK(lowLevelSystem->set3DListenerAttributes(0, &listenerpos, 0, &forward, &up));
 }
 
@@ -136,14 +140,16 @@ void AudioEngine::stopEvent(const char* eventName, int instanceIndex) {
 
 
 // Private definitions 
-
-bool AudioEngine::soundIsCached(const char* filepath) {
-    return soundCache.count(filepath) > 0;
+bool AudioEngine::soundLoaded(SoundInfo soundInfo) {
+    return sounds.count(soundInfo.uniqueID) > 0;
 }
 
-FMOD::Sound* AudioEngine::getSound(const char* filepath) {
-    return soundCache[filepath];
+void AudioEngine::set3dChannelPosition(SoundInfo soundInfo, FMOD::Channel* channel) {
+    FMOD_VECTOR position = { soundInfo.x * DISTANCEFACTOR, soundInfo.y * DISTANCEFACTOR, soundInfo.z * DISTANCEFACTOR };
+    FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // TODO Add dopplar (velocity) support
+    ERRCHECK(channel->set3DAttributes(&position, &velocity));
 }
+
 
 // Error checking/debugging function defintions
 

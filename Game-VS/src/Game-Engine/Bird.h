@@ -9,7 +9,9 @@ private:
 	//SoundEmitter soundEmitter;
 protected:
 	float lastFrameTime = 0.0f;
-	float speed = 1.0f;
+	float speed = 2.0f;
+
+	//float MAX_Z = -200.0f;// , MIN_Z = 1.0f;
 
 
 public:
@@ -19,11 +21,15 @@ public:
 	}
 
 	void update(float time) override {
+
 		float timePassed = time - lastFrameTime;
+
+		//if (trans.z < MAX_Z) speed = -speed;
 
 
 		setTranslation({ trans.x, trans.y, trans.z - speed * timePassed });
 		
+
 		lastFrameTime = time;
 
 	
