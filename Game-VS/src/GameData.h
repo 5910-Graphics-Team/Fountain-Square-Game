@@ -7,7 +7,7 @@ const unsigned int SCR_HEIGHT = 1080;
 
 // background colors
 glm::vec4 COLOR_BLACK(0.05f, 0.05f, 0.05f, 1.0f);
-glm::vec4 COLOR_SKY(0.31f , 0.0f, 0.95f, 1.0f);
+glm::vec4 COLOR_SKY(0.53f , 0.81f, 0.92f, 1.0f);
 
 // player data
 glm::vec3 STARTING_PLAYER_LOCATION(-2.0f, -6.0f, 5.0f);
