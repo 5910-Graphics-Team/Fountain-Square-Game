@@ -1,0 +1,340 @@
+# Blender MTL File: 'None'
+# Material Count: 26
+
+newmtl black_no_light_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd base_pure_white.png
+map_Bump base_empty_normal_map.png
+map_Ka base_pure_white.png
+
+newmtl blockhouse_Inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd blockhouse_dif.png
+map_Bump blockhouse_norm.png
+map_Ka blockhouse_dif.png
+
+newmtl brick_4_Inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd brick_1_dif.png
+map_Bump brick_2_norm.png
+map_Ka brick_1_dif.png
+
+newmtl brick_6_Inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd brick_1_dif.png
+map_Bump brick_2_norm.png
+map_Ka brick_1_dif.png
+
+newmtl brown_wood_Inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd red_wood_dif.png
+map_Bump red_wood_norm.png
+map_Ka red_wood_dif.png
+
+newmtl ceiling_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd base_pure_white.png
+map_Bump blue_noise_norrm.png
+map_Ka base_pure_white.png
+
+newmtl concrete_Inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd concrete_dif.png
+map_Bump concrete_norm.png
+map_Ka concrete_dif.png
+
+newmtl red_wood_gloss_2_Inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd red_wood_dif.png
+map_Bump red_wood_norm.png
+map_Ka red_wood_dif.png
+
+newmtl roof_3_Inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd roof_1_dif.png
+map_Bump roof_1_norm.png
+map_Ka roof_1_dif.png
+
+newmtl tile_7_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wallpaper_22_dif.png
+map_Bump wallpaper_22_norm.png
+map_Ka wallpaper_22_dif.png
+
+newmtl tile_8_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wallpaper_22_dif.png
+map_Bump wallpaper_22_norm.png
+map_Ka wallpaper_22_dif.png
+
+newmtl wallpaper_13_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wallpaper_6_dif.png
+map_Bump wallpaper_norm.png
+map_Ka wallpaper_6_dif.png
+
+newmtl wallpaper_1_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wallpaper_1_dif.png
+map_Bump wallpaper_norm.png
+map_Ka wallpaper_1_dif.png
+
+newmtl wallpaper_32_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wallpaper_32_dif.png
+map_Bump wallpaper_norm.png
+map_Ka wallpaper_32_dif.png
+
+newmtl wallpaper_36_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wallpaper_36_dif.png
+map_Bump wallpaper_norm.png
+map_Ka wallpaper_36_dif.png
+
+newmtl wallpaper_40_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wallpaper_40_dif.png
+map_Bump wallpaper_norm.png
+map_Ka wallpaper_40_dif.png
+
+newmtl wallpaper_44_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wallpaper_44_dif.png
+map_Bump wallpaper_norm.png
+map_Ka wallpaper_44_dif.png
+
+newmtl wallpaper_4_2_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wallpaper_4-2_dif.png
+map_Bump wallpaper_norm.png
+map_Ka wallpaper_4-2_dif.png
+
+newmtl wallpaper_50_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wallpaper_50.png
+map_Bump wallpaper_norm.png
+map_Ka wallpaper_50.png
+
+newmtl wallpaper_9_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wallpaper_9_dif.png
+map_Bump wallpaper_norm.png
+map_Ka wallpaper_9_dif.png
+
+newmtl wallpaper_guestroom_floor_Inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd apartments_guestroom_floor_dif.png
+map_Bump apartments_guestroom_floor_norm.png
+map_Ka apartments_guestroom_floor_dif.png
+
+newmtl white_wood_Inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd white_wood_dif.png
+map_Bump white_wood_norm.png
+map_Ka white_wood_dif.png
+
+newmtl wood_23_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wood_23_dif.png
+map_Bump wood_23_norm.png
+map_Ka wood_23_dif.png
+
+newmtl wood_33_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wood_23_dif.png
+map_Bump wood_23_norm.png
+map_Ka wood_23_dif.png
+
+newmtl wood_34_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wood_23_dif.png
+map_Bump wood_23_norm.png
+map_Ka wood_23_dif.png
+
+newmtl wood_41_inst
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd wood_35_dif.png
+map_Bump wood_35_norm.png
+map_Ka wood_35_dif.png

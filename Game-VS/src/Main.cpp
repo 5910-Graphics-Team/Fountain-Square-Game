@@ -118,9 +118,12 @@ int main()
 	GameObject* grass    = new GameObject(OBJ_GRASS, tranGrass, scaleGrass, rotGrass);
 	GameObject* cooltree = new GameObject(OBJ_COOLTREE, tranCooltree, scaleCooltree, rotCooltree);
 	GameObject* oak		 = new GameObject(OBJ_OAK, tranPine, scalePine, rotPine);
-	GameObject* azalea   = new GameObject(OBJ_AZALEA, tranAzalea, scaleAzalea, rotAzalea);
+	GameObject* house2   = new GameObject(OBJ_HOUSE2, tranHouse2, scaleHouse2, rotHouse2);
 	GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
-    
+	GameObject* cottage = new GameObject(OBJ_COTTAGE, tranCottage, scaleCottage, rotCottage);
+	GameObject* willowtree = new GameObject(OBJ_WILLOWTREE, tranWillowtree, scaleWillowtree, rotWillowtree);
+	GameObject* well       = new GameObject(OBJ_WELL, tranWell, scaleWell, rotWell);
+
     // List for all game obejcts
     std::vector<GameObject*> gameObjects;
     gameObjects.push_back(fountain);
@@ -133,8 +136,11 @@ int main()
 	gameObjects.push_back(grass);
 	gameObjects.push_back(cooltree);
 	gameObjects.push_back(oak);
-	gameObjects.push_back(azalea);
+	gameObjects.push_back(house2);
 	gameObjects.push_back(japaneseTree);
+	gameObjects.push_back(cottage);
+	gameObjects.push_back(willowtree);
+	gameObjects.push_back(well);
 
 
     /*
