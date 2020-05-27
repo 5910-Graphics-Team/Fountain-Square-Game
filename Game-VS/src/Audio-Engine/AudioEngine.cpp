@@ -8,12 +8,11 @@
 AudioEngine::AudioEngine() : sounds(), loopsPlaying(), soundBanks(), eventDescriptions(), eventInstances() {}
 
 void AudioEngine::init() {
-    ERRCHECK(FMOD::Studio::System::create(&studioSystem));
-    ERRCHECK(studioSystem->getCoreSystem(&lowLevelSystem));
-    ERRCHECK(lowLevelSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_STEREO, 0));
-    ERRCHECK(lowLevelSystem->set3DSettings(1.0, DISTANCEFACTOR, 1.0f));
-    ERRCHECK(studioSystem->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0));
-
+    ERRCHECK( FMOD::Studio::System::create(&studioSystem) );
+    ERRCHECK( studioSystem->getCoreSystem(&lowLevelSystem) );
+    ERRCHECK( lowLevelSystem->setSoftwareFormat(44100, FMOD_SPEAKERMODE_STEREO, 0) );
+    ERRCHECK( lowLevelSystem->set3DSettings(1.0, DISTANCEFACTOR, 1.0f) );
+    ERRCHECK( studioSystem->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0) );
 }
 
 void AudioEngine::update() {
@@ -60,7 +59,7 @@ void AudioEngine::stopSound(SoundInfo soundInfo) {
         loopsPlaying.erase(soundInfo.uniqueID);
     }
     else
-        std::cout << "Audio Engine: Can't stop a sound that's not playing!\n";
+        std::cout << "Audio Engine: Can't stop a looping sound that's not playing!\n";
 }
 
 bool AudioEngine::soundIsPlaying(SoundInfo soundInfo) {
@@ -99,7 +98,7 @@ void AudioEngine::loadFMODStudioEvent(const char* eventName, std::vector<std::pa
     FMOD::Studio::EventInstance* eventInstance = NULL;
     ERRCHECK(eventDescription->createInstance(&eventInstance));
     // DEBUG TODO remove
-    printEventInfo(eventDescription);
+    //printEventInfo(eventDescription);
     for (const auto& parVal : paramsValues) {
         std::cout << "Setting Event Instance Parameter " << parVal.first << "to value: " << parVal.second << '\n';
         // Set the parameter values of the event instance
@@ -119,13 +118,12 @@ void AudioEngine::setFMODEventParamValue(const char* eventName, const char* para
 }
 
 void AudioEngine::playEvent(const char* eventName, int instanceIndex) {
-    std::cout << "Before Playing Event, checking state of Event Description " << eventName << '\n';
-    printEventInfo(eventDescriptions[eventName]);
+    //std::cout << "Before Playing Event, checking state of Event Description " << eventName << '\n';
+    // printEventInfo(eventDescriptions[eventName]);
     auto eventInstance = eventInstances[eventName];
     if (eventInstances.count(eventName) > 0) {
-        std::cout << "Playing Event " << eventName << '\n';
-        auto eventInstance = eventInstances[eventName];
-        ERRCHECK(eventInstance->start());
+        //std::cout << "Playing Event " << eventName << '\n';
+        ERRCHECK(eventInstances[eventName]->start());
     }
     else
         std::cout << "Event " << eventName << " was not in event instance cache, cannot play \n";
@@ -133,11 +131,17 @@ void AudioEngine::playEvent(const char* eventName, int instanceIndex) {
 
 void AudioEngine::stopEvent(const char* eventName, int instanceIndex) {
     if(eventInstances.count(eventName) > 0)
-        ERRCHECK(eventInstances[eventName]->stop(FMOD_STUDIO_STOP_ALLOWFADEOUT));
+        ERRCHECK( eventInstances[eventName]->stop(FMOD_STUDIO_STOP_ALLOWFADEOUT) );
     else
         std::cout << "Event " << eventName << " was not in event instance cache, cannot stop \n";
 }
 
+
+bool AudioEngine::eventIsPlaying(const char* eventName, int instance /*= 0*/){
+    FMOD_STUDIO_PLAYBACK_STATE playbackState = FMOD_STUDIO_PLAYBACK_STOPPED;
+    ERRCHECK( eventInstances[eventName]->getPlaybackState(&playbackState) );
+    return playbackState == FMOD_STUDIO_PLAYBACK_PLAYING;
+}
 
 // Private definitions 
 bool AudioEngine::soundLoaded(SoundInfo soundInfo) {
