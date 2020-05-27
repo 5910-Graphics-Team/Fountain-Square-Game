@@ -37,7 +37,7 @@ FootstepController* footstepController;
 
 SoundInfo soundOneShot     (STINGER_1_GUITAR);
 SoundInfo soundOneShot3D   (STINGER_3_HARP,    false, true, tranHarp.x,    tranHarp.y,     tranHarp.z);
-SoundInfo soundLoop2D      (MUSIC_2,           true);
+SoundInfo musicLoop2d      (MUSIC_2,           true);
 SoundInfo soundLoop3D      (SFX_LOOP_FOUNTAIN, true, true, tranFountain.x, tranFountain.y, tranFountain.z);
 
 SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, true, true, tranTreeFir.x, tranTreeFir.y, tranTreeFir.z);
@@ -144,7 +144,6 @@ int main()
 	gameObjects.push_back(willowtree);
 	gameObjects.push_back(well);
 
-
     /*
         Initialize animatable game objects and add to list of game objects, and to another animation objects list
     */
@@ -167,7 +166,7 @@ int main()
     audioEngine->init();
 
     audioEngine->loadSound(soundOneShot);
-    audioEngine->loadSound(soundLoop2D);
+    audioEngine->loadSound(musicLoop2d);
     audioEngine->loadSound(soundOneShot3D);
     audioEngine->loadSound(soundLoop3D);
     audioEngine->loadSound(soundLoop3DMoving);
@@ -186,14 +185,13 @@ int main()
 
     // setup sound event controllers
     footstepController = new FootstepController(audioEngine);
-
-
+    
 
     /*
         play inital soundscape
     */
     audioEngine->playSound(soundLoop3D);
-    audioEngine->playSound(soundLoop2D);
+    //audioEngine->playSound(musicLoop2d);
     audioEngine->playSound(soundTree);
 	audioEngine->playSound(soundJapaneseTree);
     
@@ -293,14 +291,23 @@ void ProcessInput(GLFWwindow* window)
         camera.ProcessKeyboard(RIGHT, deltaTime);
         footstepController->processFootstepKey(currentFrame);
     }
-   
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+        camera.ProcessKeyboard(RUNNING_START, deltaTime);
+        footstepController->setRunning(true);
+    }
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
+		camera.ProcessKeyboard(RUNNING_STOP, deltaTime);
+        footstepController->setRunning(false);
+    }
+
+
     // Numbers 1-5 : Audio Processing Tests
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
         audioEngine->playSound(soundOneShot);
         key1LastTime = currentFrame;
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS  && keyCanRetrigger(currentFrame, key2LastTime)) {
-        audioEngine->soundIsPlaying(soundLoop2D) ?  audioEngine->stopSound(soundLoop2D) : audioEngine->playSound(soundLoop2D);
+        audioEngine->soundIsPlaying(musicLoop2d) ?  audioEngine->stopSound(musicLoop2d) : audioEngine->playSound(musicLoop2d);
         key2LastTime = currentFrame;
     }
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS  && keyCanRetrigger(currentFrame, key3LastTime)) {
@@ -315,7 +322,6 @@ void ProcessInput(GLFWwindow* window)
         audioEngine->eventIsPlaying(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE) ?
 			audioEngine->stopEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE) :
             audioEngine->playEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
-        //audioEngine->playEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
         key5LastTime = currentFrame;
     }
 

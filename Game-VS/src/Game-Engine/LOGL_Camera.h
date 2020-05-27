@@ -9,13 +9,17 @@ enum Camera_Movement {
     FORWARD,
     BACKWARD,
     LEFT,
-    RIGHT
+    RIGHT,
+    JUMPING,
+    RUNNING_START,
+    RUNNING_STOP,
 };
+
 
 // Default camera values
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 2.5f;
+const float SPEED_WALKING = 3.0f, SPEED_RUNNING = 6.0f;
 const float SENSITIVITY = 0.10f;
 const float ZOOM = 45.0f;
 
@@ -35,13 +39,16 @@ public:
     // Euler Angles
     float Yaw;
     float Pitch;
+
     // CharacterCamera options
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
 
+    bool running = false, jumping = false;
+
     // Constructor with vectors
-    CharacterCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    CharacterCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
         Position = position;
         WorldUp = up;
@@ -50,7 +57,7 @@ public:
         updateCameraVectors();
     }
     // Constructor with scalar values
-    CharacterCamera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    CharacterCamera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
         Position = glm::vec3(posX, posY, posZ);
         WorldUp = glm::vec3(upX, upY, upZ);
@@ -66,29 +73,30 @@ public:
     }
 
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime)
-    {
+    void ProcessKeyboard(Camera_Movement direction, float deltaTime) {
         float velocity = MovementSpeed * deltaTime;
+
         if (direction == FORWARD) {
             glm::vec3 temp = Front * velocity;
             Position.x += temp.x;
             Position.z += temp.z;
         }
-        if (direction == BACKWARD) {
+        else if (direction == BACKWARD) {
             glm::vec3 temp = Front * velocity;
             Position.x -= temp.x;
-            Position.z -= temp.z;  
+            Position.z -= temp.z;
         }
-        if (direction == LEFT)
+        else if (direction == LEFT)
             Position -= Right * velocity;
-        if (direction == RIGHT)
+        else if (direction == RIGHT)
             Position += Right * velocity;
+        else if (direction == RUNNING_START)
+            MovementSpeed = SPEED_RUNNING;
+        else if (direction == RUNNING_STOP)
+            MovementSpeed = SPEED_WALKING;
+
+
     }
-
-    void ProcessMousePosition(float x, float y) {
-
-    }
-
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
     void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)

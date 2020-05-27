@@ -4,8 +4,7 @@
 
 class Loader {
 private:
-	
-	
+
 	void loadGameObjectSubList(std::vector<GameObject*> gameObjects) {
 		for (GameObject* object : gameObjects) {
 			//std::cout << "Loading object " << object->getObjFilePath() << "\n";
@@ -15,8 +14,7 @@ private:
 
 public:
 	Loader() {}
-		
-		
+				
 	void loadGameObjects(std::vector<GameObject*> gameObjects, int nThreads = 1) {
 		std::cout << "Loading " << gameObjects.size() << " game objects\n";
 		
