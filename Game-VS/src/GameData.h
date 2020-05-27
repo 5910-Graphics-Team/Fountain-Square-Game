@@ -74,7 +74,7 @@ const char* FMOD_SOUNDBANK_SFX            = "res/sound/SFX.bank";
 // FMOD Studio Events
 const char* FMOD_EVENT_CHARACTER_FOOTSTEPS = "event:/Character/Player Footsteps";
 static const std::vector<std::pair<const char*, float>> PARAM_CHARACTER_FOOTSTEPS_SURFACE{ 
-	{ "Surface", 1.0f } 
+	{ "Surface", 2.0f } 
 };
 
 const char* FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE = "event:/Ambience/Country";

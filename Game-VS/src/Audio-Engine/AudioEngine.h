@@ -137,6 +137,9 @@ public:
     */
     void stopEvent(const char* eventName, int instanceIndex = 0);
  
+
+    bool eventIsPlaying(const char* eventName, int instance = 0);
+
 private:  
 
     /*
