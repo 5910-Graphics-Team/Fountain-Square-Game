@@ -9,26 +9,19 @@ class GameObject {
 
 protected:
     Model model;
+    
     glm::vec3 trans, scale, rotAngs;
     const char* filepath;
-    /*
-    bool is3DAudioSource = false;
+    
+    bool destroyed = false;
 
-   AudioEngine* audioEngine = nullptr;
-
-    const char* soundfile;
-
-    */
 
 public:
-    //GameObject(const char* filepath, bool is3DAudioSource) : GameObject(filepath, glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(0.0f)) {}
     
-    /*GameObject(const char* filepath, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot, bool is3DAudioSource) 
-        : model(filepath), trans(defTrans), scale(defScale), rotAngs(defRot), is3DAudioSource(is3DAudioSource) {
+    GameObject(const char* filepath) : GameObject(filepath,glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f)) {}
 
-    } */
-    GameObject(const char* filepath, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) : filepath(filepath), model(filepath), trans(defTrans), scale(defScale), rotAngs(defRot) { 
-    }
+
+    GameObject(const char* filepath, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) : filepath(filepath), model(filepath), trans(defTrans), scale(defScale), rotAngs(defRot) {}
 
     void draw(Shader* shader) {
         model.Draw(*shader);
@@ -45,12 +38,15 @@ public:
     glm::vec3 getTranslation() {
         return trans;
     }
+
     glm::vec3 getScale() {
         return scale;
     }
+
     glm::vec3 getRotationAngles() {
         return rotAngs;
     }
+
     glm::mat4 getModel() {
         glm::mat4 m = glm::mat4(1.0f);
         m = glm::translate(m, trans);
@@ -60,7 +56,16 @@ public:
         m = glm::scale(m, scale);	  // scale object
         return m;
     }
+
     const char* getObjFilePath() {
         return filepath;
     }
+
+	bool isDestroyed() {
+		return destroyed;
+	}
+
+	void setDestroyed(bool destroyed) {
+		this->destroyed = destroyed;
+	}
 };

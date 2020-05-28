@@ -14,6 +14,7 @@
 // custom game objects
 #include "Game-Engine/Bird.h"
 #include "Game-Engine/Harp.h"
+#include "Game-Engine/Coins.h"
 
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
@@ -21,15 +22,20 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 void ProcessInput(GLFWwindow* window);
 
+
 // camera
 CharacterCamera camera(STARTING_PLAYER_LOCATION);
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-// timing
+// List for all game objects
+std::vector<GameObject*> gameObjects;
+
+// timing globals
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+float currentFrame = 0.0f;
 
 // audio engine
 AudioEngine* audioEngine;
@@ -50,6 +56,12 @@ static glm::mat4 getProjection() {
     return glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 }
 
+
+
+//static void renderInstancedGameObject(InstancedObject& instancedObject, Shader* shader) {
+//
+//}
+
 // Performs the OpenGL calls to render a GameObject with a provided shader.
 static void renderGameObject(GameObject &gameObject, Shader* shader) {
     // enable shader before setting uniforms
@@ -64,7 +76,22 @@ static void renderGameObject(GameObject &gameObject, Shader* shader) {
     gameObject.draw(shader);
 }
 
-float currentFrame = 0.0f;
+//
+//static void renderInstancedObject(InstancedObject &instancedObject, Shader* shader) {
+//	shader->use();
+//	
+//}
+
+//static void processCollisions(){
+//	for (GameObject* object : gameObjects) {
+//		if (!object->isDestroyed()) {
+//			if (checkCollision(*Ball, box)) {
+//				if (!box.IsSolid)
+//					box.Destroyed = true;
+//			}
+//		}
+//	}
+//}
 
 int main()
 {
@@ -107,56 +134,62 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     // build and compile shaders
-    Shader ourShader("res/shaders/1.model_loading.vs", "res/shaders/1.model_loading.fs");
-    
+    Shader gameObjectShader("res/shaders/1.model_loading.vs", "res/shaders/1.model_loading.fs");
+    Shader* instancedObjectShader = new Shader("res/shaders/instanced_model_loading.vs", "res/shaders/instanced_model_loading.fs");
 
     /*
         Initialize game objects and add to list
     */
+ //   //GameObject* player       = new GameObject(OBJ_CHARACTER,     tran)
     GameObject* fountain     = new GameObject(OBJ_FOUNTAIN,      tranFountain,     scaleFountain,     rotFountain);
-    //GameObject* backpack   = new GameObject(OBJ_BACKPACK,      tranBackpack,     scaleBackpack,     rotBackpack);
-    GameObject* house        = new GameObject(OBJ_HOUSE,         tranHouse,        scaleHouse,        rotHouse);
-    GameObject* rock         = new GameObject(OBJ_ROCK,          tranRock,         scaleRock,         rotRock);
-    GameObject* ground       = new GameObject(OBJ_GROUND,        tranGround,       scaleGround,       rotGround);
-    GameObject* treeFir      = new GameObject(OBJ_TREE,          tranTreeFir,      scaleTreeFir,      rotTreeFir);
-	GameObject* grass        = new GameObject(OBJ_GRASS,         tranGrass,        scaleGrass,        rotGrass);
-	GameObject* cooltree     = new GameObject(OBJ_COOLTREE,      tranCooltree,     scaleCooltree,     rotCooltree);
-	GameObject* oak		     = new GameObject(OBJ_OAK,           tranPine,         scalePine,         rotPine);
-	GameObject* house2       = new GameObject(OBJ_HOUSE2,        tranHouse2,       scaleHouse2,       rotHouse2);
-	GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
-	GameObject* cottage      = new GameObject(OBJ_COTTAGE,       tranCottage,      scaleCottage,      rotCottage);
-	GameObject* willowtree   = new GameObject(OBJ_WILLOWTREE,    tranWillowtree,   scaleWillowtree,   rotWillowtree);
-	GameObject* well         = new GameObject(OBJ_WELL,          tranWell,         scaleWell,         rotWell);
-    
-    // List for all game objects
-    std::vector<GameObject*> gameObjects;
+ //   GameObject* house        = new GameObject(OBJ_HOUSE,         tranHouse,        scaleHouse,        rotHouse);
+ //   GameObject* rock         = new GameObject(OBJ_ROCK,          tranRock,         scaleRock,         rotRock);
+ //   //GameObject* ground       = new GameObject(OBJ_GROUND,        tranGround,       scaleGround,       rotGround);
+ //   GameObject* treeFir      = new GameObject(OBJ_TREE,          tranTreeFir,      scaleTreeFir,      rotTreeFir);
+	//GameObject* grass        = new GameObject(OBJ_GRASS,         tranGrass,        scaleGrass,        rotGrass);
+	//GameObject* cooltree     = new GameObject(OBJ_COOLTREE,      tranCooltree,     scaleCooltree,     rotCooltree);
+	//GameObject* oak		     = new GameObject(OBJ_OAK,           tranPine,         scalePine,         rotPine);
+	////GameObject* house2       = new GameObject(OBJ_HOUSE2,        tranHouse2,       scaleHouse2,       rotHouse2);
+	//GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
+	//GameObject* cottage      = new GameObject(OBJ_COTTAGE,       tranCottage,      scaleCottage,      rotCottage);
+	//GameObject* willowtree   = new GameObject(OBJ_WILLOWTREE,    tranWillowtree,   scaleWillowtree,   rotWillowtree);
+	//GameObject* well         = new GameObject(OBJ_WELL,          tranWell,         scaleWell,         rotWell);
+ //   
+ //   // Add game objects to game object list
     gameObjects.push_back(fountain);
-    gameObjects.push_back(house);   
-    gameObjects.push_back(ground);
-    gameObjects.push_back(treeFir);
-    gameObjects.push_back(rock);
-	gameObjects.push_back(grass);
-	gameObjects.push_back(cooltree);
-	gameObjects.push_back(oak);
-	gameObjects.push_back(house2);
-	gameObjects.push_back(japaneseTree);
-	gameObjects.push_back(cottage);
-	gameObjects.push_back(willowtree);
-	gameObjects.push_back(well);
+ //   gameObjects.push_back(house);   
+ //   //gameObjects.push_back(ground);
+ //   gameObjects.push_back(treeFir);
+ //   gameObjects.push_back(rock);
+	//gameObjects.push_back(grass);
+	//gameObjects.push_back(cooltree);
+	//gameObjects.push_back(oak);
+	////gameObjects.push_back(house2);
+	//gameObjects.push_back(japaneseTree);
+	//gameObjects.push_back(cottage);
+	//gameObjects.push_back(willowtree);
+	//gameObjects.push_back(well);
 
     /*
         Initialize animatable game objects and add to list of game objects, and to another animation objects list
     */
-    Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds);
-    Harp* harp  = new Harp(OBJ_HARP, tranHarp, scaleHarp, rotHarp);
-    
-    gameObjects.push_back(birds);
-    gameObjects.push_back(harp);
-
-    // list for all animation objects which need to be updated each frame
     std::vector<Animation*> animationObjects;
-    animationObjects.push_back(birds);
-    animationObjects.push_back(harp);
+
+    //Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds);
+    //Harp* harp  = new Harp(OBJ_HARP, tranHarp, scaleHarp, rotHarp);
+    //
+    //gameObjects.push_back(birds);
+    //gameObjects.push_back(harp);
+
+    //// list for all animation objects which need to be updated each frame
+    //animationObjects.push_back(birds);
+    //animationObjects.push_back(harp);
+
+    /*
+        Initialize instanced game objects
+    */
+    Coins coins(OBJ_ROCK, instancedObjectShader);
+
 
     
     /*
@@ -227,7 +260,10 @@ int main()
 
         // render Game Objects
         for (int i = 0; i < gameObjects.size(); i++) 
-            renderGameObject(*gameObjects[i], &ourShader);
+            renderGameObject(*gameObjects[i], &gameObjectShader);
+        
+        // render instanced objects
+        coins.drawInstances(getProjection(), camera.GetViewMatrix());
 
 
         // set current player position
@@ -299,7 +335,6 @@ void ProcessInput(GLFWwindow* window)
 		camera.ProcessKeyboard(RUNNING_STOP, deltaTime);
         footstepController->setRunning(false);
     }
-
 
     // Numbers 1-5 : Audio Processing Tests
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
