@@ -15,6 +15,7 @@
 #include "Game-Engine/Bird.h"
 #include "Game-Engine/Harp.h"
 #include "Game-Engine/Coins.h"
+#include "Game-Engine/AsteroidRing.h"
 
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
@@ -31,6 +32,7 @@ bool firstMouse = true;
 
 // List for all game objects
 std::vector<GameObject*> gameObjects;
+std::vector<InstancedObject*> instancedObjects;
 
 // timing globals
 float deltaTime = 0.0f;
@@ -142,33 +144,33 @@ int main()
     */
  //   //GameObject* player       = new GameObject(OBJ_CHARACTER,     tran)
     GameObject* fountain     = new GameObject(OBJ_FOUNTAIN,      tranFountain,     scaleFountain,     rotFountain);
- //   GameObject* house        = new GameObject(OBJ_HOUSE,         tranHouse,        scaleHouse,        rotHouse);
- //   GameObject* rock         = new GameObject(OBJ_ROCK,          tranRock,         scaleRock,         rotRock);
- //   //GameObject* ground       = new GameObject(OBJ_GROUND,        tranGround,       scaleGround,       rotGround);
- //   GameObject* treeFir      = new GameObject(OBJ_TREE,          tranTreeFir,      scaleTreeFir,      rotTreeFir);
-	//GameObject* grass        = new GameObject(OBJ_GRASS,         tranGrass,        scaleGrass,        rotGrass);
-	//GameObject* cooltree     = new GameObject(OBJ_COOLTREE,      tranCooltree,     scaleCooltree,     rotCooltree);
-	//GameObject* oak		     = new GameObject(OBJ_OAK,           tranPine,         scalePine,         rotPine);
-	////GameObject* house2       = new GameObject(OBJ_HOUSE2,        tranHouse2,       scaleHouse2,       rotHouse2);
-	//GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
-	//GameObject* cottage      = new GameObject(OBJ_COTTAGE,       tranCottage,      scaleCottage,      rotCottage);
-	//GameObject* willowtree   = new GameObject(OBJ_WILLOWTREE,    tranWillowtree,   scaleWillowtree,   rotWillowtree);
-	//GameObject* well         = new GameObject(OBJ_WELL,          tranWell,         scaleWell,         rotWell);
- //   
- //   // Add game objects to game object list
+    GameObject* house        = new GameObject(OBJ_HOUSE,         tranHouse,        scaleHouse,        rotHouse);
+    GameObject* rock         = new GameObject(OBJ_ROCK,          tranRock,         scaleRock,         rotRock);
+    GameObject* ground       = new GameObject(OBJ_GROUND,        tranGround,       scaleGround,       rotGround);
+    GameObject* treeFir      = new GameObject(OBJ_TREE,          tranTreeFir,      scaleTreeFir,      rotTreeFir);
+	GameObject* grass        = new GameObject(OBJ_GRASS,         tranGrass,        scaleGrass,        rotGrass);
+	GameObject* cooltree     = new GameObject(OBJ_COOLTREE,      tranCooltree,     scaleCooltree,     rotCooltree);
+	GameObject* oak		     = new GameObject(OBJ_OAK,           tranPine,         scalePine,         rotPine);
+	GameObject* house2       = new GameObject(OBJ_HOUSE2,        tranHouse2,       scaleHouse2,       rotHouse2);
+	GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
+	GameObject* cottage      = new GameObject(OBJ_COTTAGE,       tranCottage,      scaleCottage,      rotCottage);
+	GameObject* willowtree   = new GameObject(OBJ_WILLOWTREE,    tranWillowtree,   scaleWillowtree,   rotWillowtree);
+	GameObject* well         = new GameObject(OBJ_WELL,          tranWell,         scaleWell,         rotWell);
+    
+    // Add game objects to game object list
     gameObjects.push_back(fountain);
- //   gameObjects.push_back(house);   
- //   //gameObjects.push_back(ground);
- //   gameObjects.push_back(treeFir);
- //   gameObjects.push_back(rock);
-	//gameObjects.push_back(grass);
-	//gameObjects.push_back(cooltree);
-	//gameObjects.push_back(oak);
-	////gameObjects.push_back(house2);
-	//gameObjects.push_back(japaneseTree);
-	//gameObjects.push_back(cottage);
-	//gameObjects.push_back(willowtree);
-	//gameObjects.push_back(well);
+    gameObjects.push_back(house);   
+    gameObjects.push_back(ground);
+    gameObjects.push_back(treeFir);
+    gameObjects.push_back(rock);
+	gameObjects.push_back(grass);
+	gameObjects.push_back(cooltree);
+	gameObjects.push_back(oak);
+	gameObjects.push_back(house2);
+	gameObjects.push_back(japaneseTree);
+	gameObjects.push_back(cottage);
+	gameObjects.push_back(willowtree);
+	gameObjects.push_back(well);
 
     /*
         Initialize animatable game objects and add to list of game objects, and to another animation objects list
@@ -188,8 +190,10 @@ int main()
     /*
         Initialize instanced game objects
     */
-    Coins coins(OBJ_ROCK, instancedObjectShader);
-
+    
+    AsteroidRing* asteroidRing = new AsteroidRing(OBJ_ROCK, instancedObjectShader);
+    instancedObjects.push_back(asteroidRing);
+    animationObjects.push_back(asteroidRing);
 
     
     /*
@@ -257,21 +261,26 @@ int main()
         // update animation objects with current frame
         for (int i = 0; i < animationObjects.size(); i++)
             animationObjects[i]->update(currentFrame);
+        
+        //glDisable(GL_DEPTH_TEST);
 
         // render Game Objects
         for (int i = 0; i < gameObjects.size(); i++) 
             renderGameObject(*gameObjects[i], &gameObjectShader);
         
         // render instanced objects
-        coins.drawInstances(getProjection(), camera.GetViewMatrix());
+        for(InstancedObject *instancedObject : instancedObjects)
+            instancedObject->drawInstances(getProjection(), camera.GetViewMatrix());
 
 
+        /*
+            Audio Engine per-frame updates
+        */
         // set current player position
         audioEngine->set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
                                           camera.Front.y,    camera.Front.x,    camera.Front.z,
                                           camera.Up.y,       camera.Up.x,       camera.Up.z );
         
-
         //soundLoop3DMoving.set3DCoords(birds->getTranslation().x, birds->getTranslation().y, birds->getTranslation().z);
         //audioEngine->update3DSoundPosition(soundLoop3DMoving);
 

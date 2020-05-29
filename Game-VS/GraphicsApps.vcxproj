@@ -186,6 +186,7 @@
     <ClInclude Include="src\Audio-Engine\FootstepController.h" />
     <ClInclude Include="src\Game-Engine\AABB.h" />
     <ClInclude Include="src\Game-Engine\Animation.h" />
+    <ClInclude Include="src\Game-Engine\AsteroidRing.h" />
     <ClInclude Include="src\Game-Engine\Bird.h" />
     <ClInclude Include="src\Game-Engine\Coins.h" />
     <ClInclude Include="src\Game-Engine\Fountain.h" />
