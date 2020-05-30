@@ -8,13 +8,10 @@
 class GameObject {
 
 protected:
-    Model model;
-    
+    Model model;    
     glm::vec3 trans, scale, rotAngs;
     const char* filepath;
-    
     bool destroyed = false;
-
 
 public:
     
@@ -24,7 +21,9 @@ public:
     GameObject(const char* filepath, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) : filepath(filepath), model(filepath), trans(defTrans), scale(defScale), rotAngs(defRot) {}
 
     void draw(Shader* shader) {
-        model.Draw(*shader);
+        if (!destroyed) {
+            model.Draw(*shader);
+        }
     }
 
     void setTranslation(glm::vec3 trans) {

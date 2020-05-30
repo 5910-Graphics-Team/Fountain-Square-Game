@@ -16,7 +16,7 @@
 #include "Game-Engine/Harp.h"
 #include "Game-Engine/Coins.h"
 #include "Game-Engine/AsteroidRing.h"
-
+#include "Game-Engine/Coin.h"
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 void MouseCallback(GLFWwindow* window, double xpos, double ypos);
@@ -32,7 +32,10 @@ bool firstMouse = true;
 
 // List for all game objects
 std::vector<GameObject*> gameObjects;
+std::vector<Animation*> animationObjects;
 std::vector<InstancedObject*> instancedObjects;
+//std::vector<AABB*> aabbObjects;
+std::vector<Coin*> coins;
 
 // timing globals
 float deltaTime = 0.0f;
@@ -43,20 +46,21 @@ float currentFrame = 0.0f;
 AudioEngine* audioEngine;
 FootstepController* footstepController;
 
-SoundInfo soundOneShot(STINGER_1_GUITAR);
-SoundInfo soundOneShot3D(STINGER_3_HARP, false, true, tranHarp.x, tranHarp.y, tranHarp.z);
-SoundInfo musicLoop2d(MUSIC_2, true);
-SoundInfo soundLoop3D(SFX_LOOP_FOUNTAIN, true, true, tranFountain.x, tranFountain.y, tranFountain.z);
 
+SoundInfo soundOneShot     (STINGER_1_GUITAR);
+SoundInfo soundOneShot3D   (STINGER_3_HARP,    false, true, tranHarp.x,    tranHarp.y,     tranHarp.z);
+SoundInfo musicLoop2d      (MUSIC_2,           true);
+SoundInfo soundLoop3D      (SFX_LOOP_FOUNTAIN, true, true, tranFountain.x, tranFountain.y, tranFountain.z);
 SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, true, true, tranTreeFir.x, tranTreeFir.y, tranTreeFir.z);
-SoundInfo soundTree(SFX_LOOP_TREE_BIRDS, true, true, tranWillowtree.x, tranWillowtree.y, tranWillowtree.z);
+SoundInfo soundTree        (SFX_LOOP_TREE_BIRDS, true, true, tranWillowtree.x, tranWillowtree.y, tranWillowtree.z);
+SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,     true, true, tranBirds.x,    tranBirds.y,    tranBirds.z);
 
-SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD, true, true, tranBirds.x, tranBirds.y, tranBirds.z);
 
 
 static glm::mat4 getProjection() {
 	return glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 }
+
 
 
 
@@ -154,6 +158,7 @@ int main()
 	GameObject* oak = new GameObject(OBJ_OAK, tranPine, scalePine, rotPine);
 	GameObject* house2 = new GameObject(OBJ_HOUSE2, tranHouse2, scaleHouse2, rotHouse2);
 	GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
+//<<<<<<< Updated upstream
 	GameObject* cottage = new GameObject(OBJ_COTTAGE, tranCottage, scaleCottage, rotCottage);
 	GameObject* willowtree = new GameObject(OBJ_WILLOWTREE, tranWillowtree, scaleWillowtree, rotWillowtree);
 	GameObject* well = new GameObject(OBJ_WELL, tranWell, scaleWell, rotWell);
@@ -173,6 +178,8 @@ int main()
 	gameObjects.push_back(ground);
 	gameObjects.push_back(treeFir);
 	gameObjects.push_back(rock);
+//=======
+
 	gameObjects.push_back(grass);
 	gameObjects.push_back(cooltree);
 	gameObjects.push_back(oak);
@@ -181,6 +188,12 @@ int main()
 	gameObjects.push_back(cottage);
 	gameObjects.push_back(willowtree);
 	gameObjects.push_back(well);
+
+
+
+
+
+//<<<<<<< Updated upstream
 	gameObjects.push_back(townhouse);
 	gameObjects.push_back(japaneseTree2);
 	gameObjects.push_back(fir1);
@@ -192,16 +205,30 @@ int main()
 	*/
 	std::vector<Animation*> animationObjects;
 
-	//Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds);
-	//Harp* harp  = new Harp(OBJ_HARP, tranHarp, scaleHarp, rotHarp);
-	//
-	//gameObjects.push_back(birds);
-	//gameObjects.push_back(harp);
+	
+    /*
+        Initialize animatable game objects and add to list of game objects, and to another animation objects list
+    */
 
-	//// list for all animation objects which need to be updated each frame
-	//animationObjects.push_back(birds);
-	//animationObjects.push_back(harp);
+    Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds);
+    Harp* harp  = new Harp(OBJ_HARP, tranHarp, scaleHarp, rotHarp);
 
+    gameObjects.push_back(birds);
+    gameObjects.push_back(harp);
+
+    // add to list of animation objects which need to be updated each frame
+    animationObjects.push_back(birds);
+    animationObjects.push_back(harp);
+	
+    // Load all animated coins and add to game objects and animation objects vectors
+	for (auto trans : coinTranslations) {
+		Coin* coin = new Coin(OBJ_COIN, trans, scaleCoins, rotCoins);
+        gameObjects.push_back(coin);
+        animationObjects.push_back(coin);
+        coins.push_back(coin);
+	}
+
+	
 	/*
 		Initialize instanced game objects
 	*/
@@ -209,7 +236,6 @@ int main()
 	AsteroidRing* asteroidRing = new AsteroidRing(OBJ_ROCK, instancedObjectShader);
 	instancedObjects.push_back(asteroidRing);
 	animationObjects.push_back(asteroidRing);
-
 
 	/*
 		Initialize Audio Engine and Load sounds
@@ -246,76 +272,91 @@ int main()
 	//audioEngine->playSound(musicLoop2d);
 	audioEngine->playSound(soundTree);
 	audioEngine->playSound(soundJapaneseTree);
+//<<<<<<< Updated upstream
+
+//=======
+    
+    
+    // draw in wireframe
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    
+    /* render loop */ 
+    while (!glfwWindowShouldClose(window))
+    {
+        // per-frame time logic
+        // --------------------
+        currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        
+        // input
+        // -----
+        ProcessInput(window);
+
+        // render
+        // ------
+        glClearColor(COLOR_SKY.x, COLOR_SKY.y, COLOR_SKY.z, COLOR_SKY.w);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // enable blended overwrite of color buffer
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+        // do collision detection
+        for (auto coin : coins) {
+            if (!coin->isDestroyed()) {
+                if (coin->collides(camera)) {
+                    coin->setDestroyed(true);
+                    std::cout << "Coin destroyed\n";
+                }
+            }
+        }
+
+        // update animation objects with current frame
+        for (int i = 0; i < animationObjects.size(); i++)
+            animationObjects[i]->update(currentFrame);
+        
+        //glDisable(GL_DEPTH_TEST);
+
+        // render Game Objects
+        for (int i = 0; i < gameObjects.size(); i++) 
+            renderGameObject(*gameObjects[i], &gameObjectShader);
+        
+        // render instanced objects
+        for(InstancedObject *instancedObject : instancedObjects)
+            instancedObject->drawInstances(getProjection(), camera.GetViewMatrix());
 
 
-	// draw in wireframe
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        /*
+            Audio Engine per-frame updates
+        */
+        // set current player position
+        audioEngine->set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
+                                          camera.Front.y,    camera.Front.x,    camera.Front.z,
+                                          camera.Up.y,       camera.Up.x,       camera.Up.z );
+        
+        //soundLoop3DMoving.set3DCoords(birds->getTranslation().x, birds->getTranslation().y, birds->getTranslation().z);
+        //audioEngine->update3DSoundPosition(soundLoop3DMoving);
 
-	/* render loop */
-	while (!glfwWindowShouldClose(window))
-	{
-		// per-frame time logic
-		// --------------------
-		currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
+        audioEngine->update(); // per-frame FMOD update
 
-
-		// input
-		// -----
-		ProcessInput(window);
-
-		// render
-		// ------
-		glClearColor(COLOR_SKY.x, COLOR_SKY.y, COLOR_SKY.z, COLOR_SKY.w);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// enable blended overwrite of color buffer
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		// update animation objects with current frame
-		for (int i = 0; i < animationObjects.size(); i++)
-			animationObjects[i]->update(currentFrame);
-
-		//glDisable(GL_DEPTH_TEST);
-
-		// render Game Objects
-		for (int i = 0; i < gameObjects.size(); i++)
-			renderGameObject(*gameObjects[i], &gameObjectShader);
-
-		// render instanced objects
-		for (InstancedObject *instancedObject : instancedObjects)
-			instancedObject->drawInstances(getProjection(), camera.GetViewMatrix());
+        // Update location of 3D sounds
+        //glm::vec3 newBirdTran = birds->getTranslation();
+        //audioEngine->update3DSoundPosition(SFX_LOOP_BIRD, newBirdTran.x, newBirdTran.y, newBirdTran.z);
 
 
-		/*
-			Audio Engine per-frame updates
-		*/
-		// set current player position
-		audioEngine->set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
-			camera.Front.y, camera.Front.x, camera.Front.z,
-			camera.Up.y, camera.Up.x, camera.Up.z);
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
 
-		//soundLoop3DMoving.set3DCoords(birds->getTranslation().x, birds->getTranslation().y, birds->getTranslation().z);
-		//audioEngine->update3DSoundPosition(soundLoop3DMoving);
-
-		audioEngine->update(); // per-frame FMOD update
-
-		// Update location of 3D sounds
-		//glm::vec3 newBirdTran = birds->getTranslation();
-		//audioEngine->update3DSoundPosition(SFX_LOOP_BIRD, newBirdTran.x, newBirdTran.y, newBirdTran.z);
-
-
-		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-		// -------------------------------------------------------------------------------
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
-
-	// glfw: terminate, clearing all previously allocated GLFW resources.
-	// ------------------------------------------------------------------
-	glfwTerminate();
-	return 0;
+    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // ------------------------------------------------------------------
+    glfwTerminate();
+    return 0;
+//>>>>>>> Stashed changes
 }
 
 // audio timing

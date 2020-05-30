@@ -72,13 +72,7 @@
     <ClInclude Include="src\Game-Engine\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game-Engine\LOGL_Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game-Engine\Fountain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Game-Engine\Bird.h">
@@ -106,6 +100,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Game-Engine\AsteroidRing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game-Engine\Coin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game-Engine\LOGL_Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
