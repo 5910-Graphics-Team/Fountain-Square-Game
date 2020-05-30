@@ -25,7 +25,7 @@ public:
 	std::vector<glm::vec3> displacements;
 
 	// animation data
-	float rotSpeed;// = 1.0f;
+	float rotSpeed; // = 1.0f;
 	float lastFrame = 0.0f;
 
 	
@@ -61,7 +61,6 @@ public:
 	
 	//void calculateRotation()
 
-	// todo rename to 'initModelTransforms'
 	void initModelTransformations() override {
 		// generating list of semi-random model transformation matrices
 		//glm::mat4* modelMatrices;
@@ -79,7 +78,7 @@ public:
 			float displacementZ = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
 			float z = cos(angle) * radius + displacementZ;
 			modelMat = glm::translate(modelMat, glm::vec3(x, y, z));
-			std::cout << "ModelMat[" << i << "] x = " << x << " y = " << y << " z = " << z << "\n";
+			//std::cout << "ModelMat[" << i << "] x = " << x << " y = " << y << " z = " << z << "\n";
 			// Scale between 0.05 and 0.25f
 			float scale = (rand() % 20) / 100.0f + 0.05;
 			modelMat = glm::scale(modelMat, glm::vec3(scale));

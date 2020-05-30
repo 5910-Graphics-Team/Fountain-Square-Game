@@ -1,8 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
-
 #include <vector>
+#include "AABB.h"
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 enum Camera_Movement {
@@ -24,8 +24,8 @@ const float SENSITIVITY = 0.10f;
 const float ZOOM = 45.0f;
 
 
-// An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
-class CharacterCamera
+// A camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
+class CharacterCamera : public AABB
 {
 public:
     //bool debugCamera = false; TODO add ability to change between cameras for debugging
@@ -48,23 +48,25 @@ public:
     bool running = false, jumping = false;
 
     // Constructor with vectors
-    CharacterCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    CharacterCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) 
+        : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), AABB(position, 10.0f, 10.0f, 10.0f)
     {
         Position = position;
         WorldUp = up;
         Yaw = yaw;
         Pitch = pitch;
         updateCameraVectors();
+        
     }
     // Constructor with scalar values
-    CharacterCamera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+   /* CharacterCamera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
         Position = glm::vec3(posX, posY, posZ);
         WorldUp = glm::vec3(upX, upY, upZ);
         Yaw = yaw;
         Pitch = pitch;
         updateCameraVectors();
-    }
+    }*/
 
     // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
     glm::mat4 GetViewMatrix()
@@ -75,7 +77,6 @@ public:
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void ProcessKeyboard(Camera_Movement direction, float deltaTime) {
         float velocity = MovementSpeed * deltaTime;
-
         if (direction == FORWARD) {
             glm::vec3 temp = Front * velocity;
             Position.x += temp.x;
@@ -94,8 +95,9 @@ public:
             MovementSpeed = SPEED_RUNNING;
         else if (direction == RUNNING_STOP)
             MovementSpeed = SPEED_WALKING;
-
-
+        
+        // update AABB with new location
+        generateAABBoxAroundPoint(Position);
     }
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
