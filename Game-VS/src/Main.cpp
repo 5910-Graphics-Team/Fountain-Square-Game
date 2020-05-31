@@ -144,7 +144,6 @@ int main()
 	GameObject* house = new GameObject(OBJ_HOUSE, tranHouse, scaleHouse, rotHouse);
 	GameObject* rock = new GameObject(OBJ_ROCK, tranRock, scaleRock, rotRock);
 	GameObject* ground = new GameObject(OBJ_GROUND, tranGround, scaleGround, rotGround);
-	GameObject* treeFir = new GameObject(OBJ_TREE, tranTreeFir, scaleTreeFir, rotTreeFir);
 	GameObject* grass = new GameObject(OBJ_GRASS, tranGrass, scaleGrass, rotGrass);
 	GameObject* cooltree = new GameObject(OBJ_COOLTREE, tranCooltree, scaleCooltree, rotCooltree);
 	GameObject* oak = new GameObject(OBJ_OAK, tranPine, scalePine, rotPine);
@@ -154,17 +153,19 @@ int main()
 	GameObject* willowtree = new GameObject(OBJ_WILLOWTREE, tranWillowtree, scaleWillowtree, rotWillowtree);
 	GameObject* well = new GameObject(OBJ_WELL, tranWell, scaleWell, rotWell);
 	GameObject* townhouse = new GameObject(OBJ_TOWNHOUSE, tranGreenPine, scaleGreenPine, rotGreenPine);
-	GameObject* japaneseTree2 = new GameObject(OBJ_JAPANESE_TREE2, tranJapaneseTree2, scaleJapaneseTree2, rotJapaneseTree2);
 	GameObject* fir1 = new GameObject(OBJ_OAK, tranfir1, scalefir1, rotfir1);
 	GameObject* fir2 = new GameObject(OBJ_OAK, tranfir2, scalefir2, rotfir2);
 	GameObject* fir3 = new GameObject(OBJ_OAK, tranfir3, scalefir3, rotfir3);
 	GameObject* house3 = new GameObject(OBJ_HOUSE3, tranHouse, scaleHouse, rotHouse);
+	GameObject* house4 = new GameObject(OBJ_HOUSE4, tranHouse4, scaleHouse4, rotHouse4);
+	GameObject* japaneseTree2 = new GameObject(OBJ_JAPANESE_TREE2, tranJapaneseTree2, scaleJapaneseTree2, rotJapaneseTree2);
+	GameObject* fir4 = new GameObject(OBJ_BUSH, tranfir4, scalefir4, rotfir4);
 
 	// List for all game objects
 	gameObjects.push_back(fountain);
 	gameObjects.push_back(house3);
+	gameObjects.push_back(house4);
 	gameObjects.push_back(ground);
-	gameObjects.push_back(treeFir);
 	gameObjects.push_back(rock);
 	gameObjects.push_back(grass);
 	gameObjects.push_back(cooltree);
@@ -179,6 +180,7 @@ int main()
 	gameObjects.push_back(fir1);
 	gameObjects.push_back(fir2);
 	gameObjects.push_back(fir3);
+	gameObjects.push_back(fir4);
 
 		
     /*

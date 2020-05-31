@@ -35,7 +35,9 @@ const char* OBJ_TOWNHOUSE  = "res/objects/Houses/Cool Town Hall/Cool Town Hall.o
 const char* OBJ_COIN = "res/objects/coins/coin1/coin.obj";
 const char* OBJ_JAPANESE_TREE  = "res/objects/flora/trees/Oak_Tree/oakTree.obj";
 const char* OBJ_JAPANESE_TREE2 = "res/objects/flora/trees/GreenTree/Tree.obj";
-const char* OBJ_HOUSE3		   = "res/objects/Houses/MedievalHouse/casa.obj";
+const char* OBJ_HOUSE4 = "res/objects/Houses/MedievalHouse/casa.obj";
+const char* OBJ_HOUSE3 = "res/objects/Houses/abandoned_cottage/abandoned_cottage.obj";
+const char* OBJ_BUSH = "res/objects/flora/trees/hazelnutbush/Hazelnut.obj";
 
 
 
@@ -43,7 +45,6 @@ const char* OBJ_HOUSE3		   = "res/objects/Houses/MedievalHouse/casa.obj";
 
 // game object starting positions
 glm::vec3 tranBackpack(0.5f, -1.2f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
-glm::vec3 tranHouse(-10.0f, -8.0f, -23.0f), scaleHouse(0.15f), rotHouse(0.0f, 130.0f, 0.0f);
 glm::vec3 tranGround(50.0f, -8.0f, -200.0f), scaleGround(40.0f), rotGround(0.0f, 180.0f, 180.0f);
 glm::vec3 tranTreeFir(0.0f, -8.0f, -10.0f), scaleTreeFir(0.008f), rotTreeFir(0.0f);
 glm::vec3 tranRock(-8.0f, -8.0f, -15.0f), scaleRock(0.38f), rotRock(0.0f);
@@ -63,6 +64,9 @@ glm::vec3 tranJapaneseTree2(-15.0f, -7.5f, 30.0f), scaleJapaneseTree2(0.60f), ro
 glm::vec3 tranfir1(-40.0f, -8.5f, 38.0f), scalefir1(0.65f), rotfir1(0.0f);
 glm::vec3 tranfir2(-40.0f, -8.5f, 60.0f), scalefir2(0.65f), rotfir2(0.0f);
 glm::vec3 tranfir3(-40.0f, -8.5f, 75.0f), scalefir3(0.65f), rotfir3(0.0f);
+glm::vec3 tranfir4(-23.0f, -9.5f, -38.0f), scalefir4(0.65f), rotfir4(0.0f);
+glm::vec3 tranHouse(-32.0f, -8.0f, -38.0f), scaleHouse(0.018f), rotHouse(0.0f, 30.0f, 0.0f);
+glm::vec3 tranHouse4(-5.0f, -8.0f, -23.0f), scaleHouse4(0.15f), rotHouse4(0.0f, 220.0f, 0.0f);
 
 // AABB box sizes
 glm::vec3 AABB_DIMS_CHARACTER(5.0f);
