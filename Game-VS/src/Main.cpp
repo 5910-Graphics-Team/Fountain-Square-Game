@@ -61,7 +61,7 @@ FootstepController* footstepController;
 CoinSoundController* coinSoundController;
 
 
-
+// TODO rename sounds for clarity
 SoundInfo soundOneShot     (STINGER_1_GUITAR);
 SoundInfo soundOneShot3D   (STINGER_3_HARP,    false, true, tranHarp.x,    tranHarp.y,     tranHarp.z);
 SoundInfo musicLoop2d      (MUSIC_2,           true);
@@ -139,7 +139,7 @@ int main()
 	/*
 		Initialize game objects and add to list
 	*/
-	//   //GameObject* player       = new GameObject(OBJ_CHARACTER,     tran)
+	//   //GameObject* player       = new GameObject(OBJ_CHARACTER,     tran) 
 	GameObject* fountain = new GameObject(OBJ_FOUNTAIN, tranFountain, scaleFountain, rotFountain);
 	GameObject* house = new GameObject(OBJ_HOUSE, tranHouse, scaleHouse, rotHouse);
 	GameObject* rock = new GameObject(OBJ_ROCK, tranRock, scaleRock, rotRock);
@@ -184,7 +184,7 @@ int main()
 
 		
     /*
-        Initialize animatable game objects and add to list of game objects, and to another animation objects list
+        Initialize and store animatable game objects 
     */
 
     Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds);
@@ -213,12 +213,15 @@ int main()
 	instancedObjects.push_back(asteroidRing);
 	animationObjects.push_back(asteroidRing);
 
+
+
 	/*
-		Initialize Audio Engine , Load sounds
+		Initialize Audio Engine 
 	*/
 	//audioEngine = new AudioEngine();
 	audioEngine = std::make_shared<AudioEngine>();
 	audioEngine->init();
+	// load sounds
 	audioEngine->loadSound(soundOneShot);
 	audioEngine->loadSound(musicLoop2d);
 	audioEngine->loadSound(soundOneShot3D);
@@ -237,6 +240,9 @@ int main()
 	audioEngine->loadFMODStudioEvent(FMOD_EVENT_CHARACTER_FOOTSTEPS, PARAM_CHARACTER_FOOTSTEPS_SURFACE);
 	audioEngine->loadFMODStudioEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
 	audioEngine->loadFMODStudioEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
+	// set Event Parameters
+	audioEngine->setEventVolume(FMOD_EVENT_CHARACTER_FOOTSTEPS, 0.4f);
+	
 	// setup sound event controllers
 	footstepController = new FootstepController(audioEngine);
 	coinSoundController = new CoinSoundController(audioEngine, soundCoinPickup, soundCoinSuccess, coins.size());

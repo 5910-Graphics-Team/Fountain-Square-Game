@@ -49,9 +49,9 @@ struct SoundInfo {
     SoundInfo(const char* filePath = "", bool isLoop = false, bool is3D = false, float x = 0.0f, float y = 0.0f, float z = 0.0f) 
         : filePath(filePath), isLoop(isLoop), is3D(is3D), x(x), y(y), z(z) 
     {
-        uniqueID = filePath;
+        uniqueID = filePath; // for now, filepath is unique id
     }
-    // TODO  implement sound instancing
+    // TODO implement sound instancing
     // int instanceID = -1;
 };
 
@@ -157,6 +157,13 @@ public:
      */
     void stopEvent(const char* eventName, int instanceIndex = 0);
  
+    // sets event volume on.
+    void setEventVolume(const char* eventName, float volume0to1 = .75f);
+    
+    FMOD::Reverb3D* reverb3D;
+    
+    void setReverb(float amount = 0.5f); // TODO implement
+
     /**
      * TODO doc
      */
@@ -188,11 +195,21 @@ private:
      * Sets the 3D position of a sound 
      */
     void set3dChannelPosition(SoundInfo soundInfo, FMOD::Channel* channel);
+
+    void initReverb() {
+		ERRCHECK(lowLevelSystem->createReverb3D(&reverb));
+		FMOD_REVERB_PROPERTIES prop2 = FMOD_PRESET_CONCERTHALL;
+		ERRCHECK(reverb->setProperties(&prop2));
+		ERRCHECK(reverb->set3DAttributes(&revPos, revMinDist, revMaxDist));
+    }
     
     /**
      * Prints debug info about an FMOD event description
      */
     void printEventInfo(FMOD::Studio::EventDescription* eventDescription);
+
+    // Low-level system reverb
+    FMOD::Reverb3D* reverb;
 
     // FMOD Studio API system, which can play FMOD sound banks (*.bank)
     FMOD::Studio::System* studioSystem = nullptr;       
@@ -206,7 +223,13 @@ private:
     // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
     const float DISTANCEFACTOR = 1.0f;  
     
-    // Listener position, initialized to default value
+    // Reverb origin position
+    FMOD_VECTOR revPos = { 0.0f, 0.0f, 0.0f };
+
+    // reverb min, max distances
+	float revMinDist = 10.0f, revMaxDist = 50.0f;
+
+    // Listener head position, initialized to default value
     FMOD_VECTOR listenerpos = { 0.0f, 0.0f, -1.0f * DISTANCEFACTOR };
     
     // Listener forward vector, initialized to default value
@@ -229,4 +252,13 @@ private:
      * Map which stores event instances created during loadFMODStudioEvent()
      */
     std::map<std::string, FMOD::Studio::EventInstance*> eventInstances;
+    
+   /* struct FMODEventInstanceCache {
+        std::map<std::string, std::vector<FMOD::Studio::EventInstance*>> eventInstances;
+
+    };
+
+    FMODEventInstanceCache fmodEventInstanceCache;*/
+    // TODO 
+    
 };
