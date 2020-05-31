@@ -23,7 +23,7 @@
     <ProjectGuid>{BAE4C5E5-DF79-4977-8CFD-C1C3DED2F4B9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>GraphicsApps</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10</WindowsTargetPlatformVersion>
     <ProjectName>Fountain-Square-Game</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -75,6 +75,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)..\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\Lib;$(LibraryPath)</LibraryPath>
+    <SourcePath>C:\Users\glenn\source\repos\Fountain-Square-Game2\Game-VS\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -172,6 +173,8 @@
     <ClCompile Include="..\Lib\Numbers.cpp" />
     <ClCompile Include="..\Lib\Quaternion.cpp" />
     <ClCompile Include="..\Lib\Widgets.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="Pool.cpp" />
     <ClCompile Include="src\Audio-Engine\AudioEngine.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
@@ -183,12 +186,19 @@
     <Image Include="res\objects\environment\grass.tga" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="Pool.h" />
+    <ClInclude Include="PoolTexture.h" />
+    <ClInclude Include="src\Audio-Engine\CoinSoundController.h" />
     <ClInclude Include="src\Audio-Engine\FootstepController.h" />
     <ClInclude Include="src\Game-Engine\AABB.h" />
     <ClInclude Include="src\Game-Engine\Animation.h" />
+    <ClInclude Include="src\Game-Engine\AsteroidRing.h" />
     <ClInclude Include="src\Game-Engine\Bird.h" />
-    <ClInclude Include="src\Game-Engine\Fountain.h" />
+    <ClInclude Include="src\Game-Engine\Coin.h" />
+    <ClInclude Include="src\Game-Engine\Coins.h" />
     <ClInclude Include="src\Game-Engine\Harp.h" />
+    <ClInclude Include="src\Game-Engine\InstancedObject.h" />
     <ClInclude Include="src\Game-Engine\Player.h" />
     <ClInclude Include="src\GameData.h" />
     <ClInclude Include="src\Game-Engine\GameObject.h" />

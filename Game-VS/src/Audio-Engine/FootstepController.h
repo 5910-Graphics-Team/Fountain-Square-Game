@@ -1,14 +1,14 @@
 #pragma once
 #include "AudioEngine.h"
+#include <memory>
 #include "../GameData.h"
 
 
 struct FootstepController {
 	
-	FootstepController(AudioEngine* audioEngine) : audioEngine(audioEngine) {}
+	FootstepController(std::shared_ptr<AudioEngine> audioEngine) : audioEngine(audioEngine) {}
 
 	void processFootstepKey(float currFrame) {
-		//std::cout << "WASD Footstep key.. " << currFrame << "\n";
 		// check if we've already triggered this method this frame, and do nothing if so
 		if (this->currFrame != currFrame) {
 			this->currFrame = currFrame;
@@ -20,17 +20,23 @@ struct FootstepController {
 		}
 	}
 
+	void setRunning(bool isRunning) {
+		this->isRunning = isRunning;
+		setFootstepTimeRandomely();
+	}
+	
 private:
-	AudioEngine* audioEngine;
-	const float DEF_MIN_FOOTSTEP_TIME = 0.5f;
-	float footstepWaitingTIME = DEF_MIN_FOOTSTEP_TIME;
+	std::shared_ptr<AudioEngine> audioEngine;
+
+	const float MIN_FOOTSTEP_TIME_WALKING = 0.5f, MIN_FOOTSTEP_TIME_RUNNING = 0.25f;
+	float footstepWaitingTIME = MIN_FOOTSTEP_TIME_WALKING;
 	float lastFootstep = 0.0f;
 	float currFrame = 0.0f;
+	bool isRunning = false;
 
 	void setFootstepTimeRandomely() {
-		float seed((rand() % 100) / 600.f);
-		footstepWaitingTIME = DEF_MIN_FOOTSTEP_TIME + seed;
-		//std::cout << "Seed = " << seed << " waitingTime = " << footstepWaitingTIME << "\n";
+		float randomness((rand() % 100) / 600.f);
+		footstepWaitingTIME = isRunning ? MIN_FOOTSTEP_TIME_RUNNING : MIN_FOOTSTEP_TIME_WALKING + randomness;
 	}
 
 };
