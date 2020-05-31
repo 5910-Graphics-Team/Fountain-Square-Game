@@ -1,0 +1,138 @@
+newmtl blinn1SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_doorknob_BaseColor.png
+bump abandoned_cottage_doorknob_Normal.png -bm 1
+Ni 1.00
+Ks 0.50 0.50 0.50
+newmtl lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_brickwall_BaseColor.png
+bump abandoned_cottage_brickwall_Normal.png -bm -0.16129
+Ni 1.00
+newmtl lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 0.81 0.81 0.81
+map_Kd abandoned_cottage_boarded_windows_BaseColor.png
+bump abandoned_cottage_boarded_windows_Normal.png -bm 1
+Ni 1.00
+newmtl lambert4SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_doorbeams_BaseColor.png
+bump abandoned_cottage_doorbeams_Normal.png -bm 1
+Ni 1.00
+newmtl lambert5SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_window_conc_surround_BaseColor.png
+bump abandoned_cottage_window_conc_surround_Normal.png -bm 1
+Ni 1.00
+newmtl lambert6SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_main_roof_tiles_BaseColor.png
+bump abandoned_cottage_main_roof_tiles_Normal.png -bm 1
+Ni 1.00
+newmtl lambert7SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_lower_roof_tiles_BaseColor.png
+bump abandoned_cottage_lower_roof_tiles_Normal.png -bm 1
+Ni 1.00
+newmtl lambert8SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_door_BaseColor.png
+bump abandoned_cottage_door_Normal.png -bm 1
+Ni 1.00
+newmtl lambert9SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_underneathwindow_BaseColor.png
+bump abandoned_cottage_underneathwindow_Normal.png -bm 1
+Ni 1.00
+newmtl lambert10SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_hori_beams_BaseColor.png
+bump abandoned_cottage_hori_beams_Normal.png -bm 1
+Ni 1.00
+newmtl lambert11SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_window_fram_wood_BaseColor.png
+bump abandoned_cottage_window_fram_wood_Normal.png -bm 1
+Ni 1.00
+newmtl lambert12SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_chimney_box_BaseColor.png
+bump abandoned_cottage_chimney_box_Normal.png -bm 1
+Ni 1.00
+newmtl lambert13SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_chimney_pot_BaseColor.png
+Ni 1.00
+newmtl lambert14SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_underneath_lowerroof_BaseColor.png
+bump abandoned_cottage_underneath_lowerroof_Normal.png -bm 1
+Ni 1.00
+newmtl lambert15SG
+illum 4
+Kd 0.44 0.13 0.02
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl lambert16SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd abandoned_cottage_flat_parts_roof_BaseColor.png
+bump abandoned_cottage_flat_parts_roof_Normal.png -bm 1
+Ni 1.00
+newmtl lambert17SG
+illum 4
+Kd 0.01 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl lambert18SG
+illum 4
+Kd 0.44 0.13 0.02
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
