@@ -1,11 +1,12 @@
 #pragma once
 #include "AudioEngine.h"
+#include <memory>
 #include "../GameData.h"
 
 
 struct FootstepController {
 	
-	FootstepController(AudioEngine* audioEngine) : audioEngine(audioEngine) {}
+	FootstepController(std::shared_ptr<AudioEngine> audioEngine) : audioEngine(audioEngine) {}
 
 	void processFootstepKey(float currFrame) {
 		// check if we've already triggered this method this frame, and do nothing if so
@@ -25,7 +26,7 @@ struct FootstepController {
 	}
 	
 private:
-	AudioEngine* audioEngine;
+	std::shared_ptr<AudioEngine> audioEngine;
 
 	const float MIN_FOOTSTEP_TIME_WALKING = 0.5f, MIN_FOOTSTEP_TIME_RUNNING = 0.25f;
 	float footstepWaitingTIME = MIN_FOOTSTEP_TIME_WALKING;

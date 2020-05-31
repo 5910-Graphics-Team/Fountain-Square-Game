@@ -34,6 +34,7 @@ void AudioEngine::loadSound(SoundInfo soundInfo) {
 
 void AudioEngine::playSound(SoundInfo soundInfo) {
     if (soundLoaded(soundInfo)) {
+        //std::cout << "Playing Sound\n";
         FMOD::Channel* channel;
         // start play in 'paused' state
         ERRCHECK(lowLevelSystem->playSound(sounds[soundInfo.uniqueID], 0, true /* start paused */, &channel));
@@ -145,6 +146,7 @@ bool AudioEngine::eventIsPlaying(const char* eventName, int instance /*= 0*/){
 
 // Private definitions 
 bool AudioEngine::soundLoaded(SoundInfo soundInfo) {
+    //std::cout << "Checking sound " << soundInfo.uniqueID << " exists\n";
     return sounds.count(soundInfo.uniqueID) > 0;
 }
 
@@ -155,7 +157,7 @@ void AudioEngine::set3dChannelPosition(SoundInfo soundInfo, FMOD::Channel* chann
 }
 
 
-// Error checking/debugging function defintions
+// Error checking/debugging function definitions
 
 void ERRCHECK_fn(FMOD_RESULT result, const char* file, int line)
 {

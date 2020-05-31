@@ -184,6 +184,7 @@
     <Image Include="res\objects\environment\grass.tga" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Audio-Engine\CoinSoundController.h" />
     <ClInclude Include="src\Audio-Engine\FootstepController.h" />
     <ClInclude Include="src\Game-Engine\AABB.h" />
     <ClInclude Include="src\Game-Engine\Animation.h" />
