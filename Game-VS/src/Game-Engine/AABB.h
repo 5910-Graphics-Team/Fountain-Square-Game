@@ -38,6 +38,7 @@ protected:
 	//}
 
 public:
+
 	AABB(const glm::vec3 translation, const glm::vec3 lenWidthHeight) : AABB(translation, lenWidthHeight.x, lenWidthHeight.y, lenWidthHeight.z) {
 		
 	}

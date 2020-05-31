@@ -13,6 +13,7 @@ void AudioEngine::init() {
     ERRCHECK( lowLevelSystem->setSoftwareFormat(44100, FMOD_SPEAKERMODE_STEREO, 0) );
     ERRCHECK( lowLevelSystem->set3DSettings(1.0, DISTANCEFACTOR, 1.0f) );
     ERRCHECK( studioSystem->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0) );
+    initReverb();
 }
 
 void AudioEngine::update() {
@@ -137,9 +138,18 @@ void AudioEngine::stopEvent(const char* eventName, int instanceIndex) {
         std::cout << "Event " << eventName << " was not in event instance cache, cannot stop \n";
 }
 
+void AudioEngine::setEventVolume(const char* eventName, float volume0to1) {
+    std::cout << "Setting Event Volume\n";
+    ERRCHECK( eventInstances[eventName]->setVolume(volume0to1) );
+}
+
+void AudioEngine::setReverb(float amount) {
+
+}
 
 bool AudioEngine::eventIsPlaying(const char* eventName, int instance /*= 0*/){
-    FMOD_STUDIO_PLAYBACK_STATE playbackState = FMOD_STUDIO_PLAYBACK_STOPPED;
+    // initialize enum to stopped state
+    FMOD_STUDIO_PLAYBACK_STATE playbackState;// = FMOD_STUDIO_PLAYBACK_STOPPED; 
     ERRCHECK( eventInstances[eventName]->getPlaybackState(&playbackState) );
     return playbackState == FMOD_STUDIO_PLAYBACK_PLAYING;
 }

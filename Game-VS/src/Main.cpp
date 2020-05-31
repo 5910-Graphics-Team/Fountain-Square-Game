@@ -61,18 +61,6 @@ FootstepController* footstepController;
 CoinSoundController* coinSoundController;
 
 
-
-SoundInfo soundOneShot     (STINGER_1_GUITAR);
-SoundInfo soundOneShot3D   (STINGER_3_HARP,    false, true, tranHarp.x,    tranHarp.y,     tranHarp.z);
-SoundInfo musicLoop2d      (MUSIC_2,           true);
-SoundInfo soundLoop3D      (SFX_LOOP_FOUNTAIN, true, true, tranFountain.x, tranFountain.y, tranFountain.z);
-SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, true, true, tranTreeFir.x, tranTreeFir.y, tranTreeFir.z);
-SoundInfo soundTree        (SFX_LOOP_TREE_BIRDS, true, true, tranWillowtree.x, tranWillowtree.y, tranWillowtree.z);
-SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,     true, true, tranBirds.x,    tranBirds.y,    tranBirds.z);
-SoundInfo soundCoinPickup(STINGER_COIN_PICKUP);
-SoundInfo soundCoinSuccess(STINGER_COIN_SUCCESS);
-
-
 static glm::mat4 getProjection() {
 	return glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 }
@@ -184,7 +172,7 @@ int main()
 
 		
     /*
-        Initialize animatable game objects and add to list of game objects, and to another animation objects list
+        Initialize and store animatable game objects 
     */
 
     Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds);
@@ -213,12 +201,15 @@ int main()
 	instancedObjects.push_back(asteroidRing);
 	animationObjects.push_back(asteroidRing);
 
+
+
 	/*
-		Initialize Audio Engine , Load sounds
+		Initialize Audio Engine 
 	*/
 	//audioEngine = new AudioEngine();
 	audioEngine = std::make_shared<AudioEngine>();
 	audioEngine->init();
+	// load sounds
 	audioEngine->loadSound(soundOneShot);
 	audioEngine->loadSound(musicLoop2d);
 	audioEngine->loadSound(soundOneShot3D);
@@ -237,6 +228,9 @@ int main()
 	audioEngine->loadFMODStudioEvent(FMOD_EVENT_CHARACTER_FOOTSTEPS, PARAM_CHARACTER_FOOTSTEPS_SURFACE);
 	audioEngine->loadFMODStudioEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
 	audioEngine->loadFMODStudioEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
+	// set Event Parameters
+	audioEngine->setEventVolume(FMOD_EVENT_CHARACTER_FOOTSTEPS, 0.4f);
+	
 	// setup sound event controllers
 	footstepController = new FootstepController(audioEngine);
 	coinSoundController = new CoinSoundController(audioEngine, soundCoinPickup, soundCoinSuccess, coins.size());
