@@ -173,6 +173,8 @@
     <ClCompile Include="..\Lib\Numbers.cpp" />
     <ClCompile Include="..\Lib\Quaternion.cpp" />
     <ClCompile Include="..\Lib\Widgets.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="Pool.cpp" />
     <ClCompile Include="src\Audio-Engine\AudioEngine.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
@@ -184,6 +186,9 @@
     <Image Include="res\objects\environment\grass.tga" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="Pool.h" />
+    <ClInclude Include="PoolTexture.h" />
     <ClInclude Include="src\Audio-Engine\CoinSoundController.h" />
     <ClInclude Include="src\Audio-Engine\FootstepController.h" />
     <ClInclude Include="src\Game-Engine\AABB.h" />
