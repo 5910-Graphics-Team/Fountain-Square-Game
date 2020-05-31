@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdlib.h> // rand()
+#include <memory>   // shared_ptr
 #include <glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -10,6 +11,7 @@
 #include "Game-Engine/LOGL_Camera.h"
 #include "Audio-Engine/AudioEngine.h"
 #include "Audio-Engine/FootstepController.h"
+#include "Audio-Engine/CoinSoundController.h"
 #include "GameData.h"
 // custom game objects
 #include "Game-Engine/Bird.h"
@@ -24,11 +26,21 @@ void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 void ProcessInput(GLFWwindow* window);
 
 
-// camera
+// Character/camera data
+struct CharacterInventory {
+	int numCoins = 0;
+
+
+};
+
 CharacterCamera camera(STARTING_PLAYER_LOCATION);
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
+
+
+
+
 
 // List for all game objects
 std::vector<GameObject*> gameObjects;
@@ -43,8 +55,11 @@ float lastFrame = 0.0f;
 float currentFrame = 0.0f;
 
 // audio engine
-AudioEngine* audioEngine;
+// Use make_shared function when possible.
+std::shared_ptr<AudioEngine> audioEngine;// = make_shared<AudioEngine>(L"The Beatles", L"Im Happy Just to Dance With You");
 FootstepController* footstepController;
+CoinSoundController* coinSoundController;
+
 
 
 SoundInfo soundOneShot     (STINGER_1_GUITAR);
@@ -54,19 +69,13 @@ SoundInfo soundLoop3D      (SFX_LOOP_FOUNTAIN, true, true, tranFountain.x, tranF
 SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, true, true, tranTreeFir.x, tranTreeFir.y, tranTreeFir.z);
 SoundInfo soundTree        (SFX_LOOP_TREE_BIRDS, true, true, tranWillowtree.x, tranWillowtree.y, tranWillowtree.z);
 SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,     true, true, tranBirds.x,    tranBirds.y,    tranBirds.z);
-
+SoundInfo soundCoinPickup(STINGER_COIN_PICKUP);
+SoundInfo soundCoinSuccess(STINGER_COIN_SUCCESS);
 
 
 static glm::mat4 getProjection() {
 	return glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 }
-
-
-
-
-//static void renderInstancedGameObject(InstancedObject& instancedObject, Shader* shader) {
-//
-//}
 
 // Performs the OpenGL calls to render a GameObject with a provided shader.
 static void renderGameObject(GameObject &gameObject, Shader* shader) {
@@ -82,22 +91,6 @@ static void renderGameObject(GameObject &gameObject, Shader* shader) {
 	gameObject.draw(shader);
 }
 
-//
-//static void renderInstancedObject(InstancedObject &instancedObject, Shader* shader) {
-//	shader->use();
-//	
-//}
-
-//static void processCollisions(){
-//	for (GameObject* object : gameObjects) {
-//		if (!object->isDestroyed()) {
-//			if (checkCollision(*Ball, box)) {
-//				if (!box.IsSolid)
-//					box.Destroyed = true;
-//			}
-//		}
-//	}
-//}
 
 int main()
 {
@@ -148,7 +141,6 @@ int main()
 	*/
 	//   //GameObject* player       = new GameObject(OBJ_CHARACTER,     tran)
 	GameObject* fountain = new GameObject(OBJ_FOUNTAIN, tranFountain, scaleFountain, rotFountain);
-	//GameObject* backpack = new GameObject(OBJ_BACKPACK, tranBackpack, scaleBackpack, rotBackpack);
 	GameObject* house = new GameObject(OBJ_HOUSE, tranHouse, scaleHouse, rotHouse);
 	GameObject* rock = new GameObject(OBJ_ROCK, tranRock, scaleRock, rotRock);
 	GameObject* ground = new GameObject(OBJ_GROUND, tranGround, scaleGround, rotGround);
@@ -158,7 +150,6 @@ int main()
 	GameObject* oak = new GameObject(OBJ_OAK, tranPine, scalePine, rotPine);
 	GameObject* house2 = new GameObject(OBJ_HOUSE2, tranHouse2, scaleHouse2, rotHouse2);
 	GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
-//<<<<<<< Updated upstream
 	GameObject* cottage = new GameObject(OBJ_COTTAGE, tranCottage, scaleCottage, rotCottage);
 	GameObject* willowtree = new GameObject(OBJ_WILLOWTREE, tranWillowtree, scaleWillowtree, rotWillowtree);
 	GameObject* well = new GameObject(OBJ_WELL, tranWell, scaleWell, rotWell);
@@ -169,17 +160,12 @@ int main()
 	GameObject* fir3 = new GameObject(OBJ_OAK, tranfir3, scalefir3, rotfir3);
 	GameObject* house3 = new GameObject(OBJ_HOUSE3, tranHouse, scaleHouse, rotHouse);
 
-	// List for all game obejcts
-	std::vector<GameObject*> gameObjects;
+	// List for all game objects
 	gameObjects.push_back(fountain);
-	//gameObjects.push_back(backpack);
-
 	gameObjects.push_back(house3);
 	gameObjects.push_back(ground);
 	gameObjects.push_back(treeFir);
 	gameObjects.push_back(rock);
-//=======
-
 	gameObjects.push_back(grass);
 	gameObjects.push_back(cooltree);
 	gameObjects.push_back(oak);
@@ -188,24 +174,13 @@ int main()
 	gameObjects.push_back(cottage);
 	gameObjects.push_back(willowtree);
 	gameObjects.push_back(well);
-
-
-
-
-
-//<<<<<<< Updated upstream
 	gameObjects.push_back(townhouse);
 	gameObjects.push_back(japaneseTree2);
 	gameObjects.push_back(fir1);
 	gameObjects.push_back(fir2);
 	gameObjects.push_back(fir3);
 
-	/*
-		Initialize animatable game objects and add to list of game objects, and to another animation objects list
-	*/
-	std::vector<Animation*> animationObjects;
-
-	
+		
     /*
         Initialize animatable game objects and add to list of game objects, and to another animation objects list
     */
@@ -220,7 +195,7 @@ int main()
     animationObjects.push_back(birds);
     animationObjects.push_back(harp);
 	
-    // Load all animated coins and add to game objects and animation objects vectors
+    // Load all animated coins and add to game objects, animation objects, and coin list
 	for (auto trans : coinTranslations) {
 		Coin* coin = new Coin(OBJ_COIN, trans, scaleCoins, rotCoins);
         gameObjects.push_back(coin);
@@ -228,7 +203,6 @@ int main()
         coins.push_back(coin);
 	}
 
-	
 	/*
 		Initialize instanced game objects
 	*/
@@ -238,11 +212,11 @@ int main()
 	animationObjects.push_back(asteroidRing);
 
 	/*
-		Initialize Audio Engine and Load sounds
+		Initialize Audio Engine , Load sounds
 	*/
-	audioEngine = new AudioEngine();
+	//audioEngine = new AudioEngine();
+	audioEngine = std::make_shared<AudioEngine>();
 	audioEngine->init();
-
 	audioEngine->loadSound(soundOneShot);
 	audioEngine->loadSound(musicLoop2d);
 	audioEngine->loadSound(soundOneShot3D);
@@ -250,7 +224,8 @@ int main()
 	audioEngine->loadSound(soundLoop3DMoving);
 	audioEngine->loadSound(soundTree);
 	audioEngine->loadSound(soundJapaneseTree);
-
+	audioEngine->loadSound(soundCoinPickup);
+	audioEngine->loadSound(soundCoinSuccess);
 
 	// load FMOD soundbanks
 	audioEngine->loadFMODStudioBank(FMOD_SOUNDBANK_MASTER);
@@ -260,9 +235,9 @@ int main()
 	audioEngine->loadFMODStudioEvent(FMOD_EVENT_CHARACTER_FOOTSTEPS, PARAM_CHARACTER_FOOTSTEPS_SURFACE);
 	audioEngine->loadFMODStudioEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
 	audioEngine->loadFMODStudioEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
-
 	// setup sound event controllers
 	footstepController = new FootstepController(audioEngine);
+	coinSoundController = new CoinSoundController(audioEngine, soundCoinPickup, soundCoinSuccess, coins.size());
 
 
 	/*
@@ -272,12 +247,10 @@ int main()
 	//audioEngine->playSound(musicLoop2d);
 	audioEngine->playSound(soundTree);
 	audioEngine->playSound(soundJapaneseTree);
-//<<<<<<< Updated upstream
 
-//=======
     
     
-    // draw in wireframe
+    // draw in wireframe mode
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
     /* render loop */ 
@@ -303,12 +276,18 @@ int main()
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
+
         // do collision detection
         for (auto coin : coins) {
             if (!coin->isDestroyed()) {
                 if (coin->collides(camera)) {
                     coin->setDestroyed(true);
-                    std::cout << "Coin destroyed\n";
+					coinSoundController->characterPickedUpCoin();
+					// TODO move below sound-playing logic into CoinSoundController
+					if (coinSoundController->nCharacterCoins == coinSoundController->nTotalCoins)
+						audioEngine->playSound(soundCoinSuccess);
+					else
+						audioEngine->playSound(soundCoinPickup);
                 }
             }
         }
@@ -375,7 +354,7 @@ void ProcessInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
-	// WASD Handling
+	// WASD Handling (Character Movement)
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		camera.ProcessKeyboard(FORWARD, deltaTime);
 		footstepController->processFootstepKey(currentFrame);

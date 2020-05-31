@@ -31,7 +31,6 @@ const char* OBJ_COTTAGE    = "res/objects/85-cottage_obj/Japanese House 1.obj";
 const char* OBJ_HOUSE2	   = "res/objects/Houses/House2/Neighbor's House (Act 1).obj";
 const char* OBJ_WILLOWTREE = "res/objects/flora/trees/Willow Tree/treewillow_tslocator_gmdc.obj";
 const char* OBJ_WELL	   = "res/objects/Houses/Well/Well.obj";
-//<<<<<<< Updated upstream
 const char* OBJ_TOWNHOUSE  = "res/objects/Houses/Cool Town Hall/Cool Town Hall.obj";
 const char* OBJ_COIN = "res/objects/coins/coin1/coin.obj";
 const char* OBJ_JAPANESE_TREE  = "res/objects/flora/trees/Oak_Tree/oakTree.obj";
@@ -43,10 +42,8 @@ const char* OBJ_HOUSE3		   = "res/objects/Houses/MedievalHouse/casa.obj";
 
 
 // game object starting positions
-//<<<<<<< Updated upstream
 glm::vec3 tranBackpack(0.5f, -1.2f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
 glm::vec3 tranHouse(-10.0f, -8.0f, -23.0f), scaleHouse(0.15f), rotHouse(0.0f, 130.0f, 0.0f);
-//>>>>>>> Stashed changes
 glm::vec3 tranGround(50.0f, -8.0f, -200.0f), scaleGround(40.0f), rotGround(0.0f, 180.0f, 180.0f);
 glm::vec3 tranTreeFir(0.0f, -8.0f, -10.0f), scaleTreeFir(0.008f), rotTreeFir(0.0f);
 glm::vec3 tranRock(-8.0f, -8.0f, -15.0f), scaleRock(0.38f), rotRock(0.0f);
@@ -67,12 +64,21 @@ glm::vec3 tranfir1(-40.0f, -8.5f, 38.0f), scalefir1(0.65f), rotfir1(0.0f);
 glm::vec3 tranfir2(-40.0f, -8.5f, 60.0f), scalefir2(0.65f), rotfir2(0.0f);
 glm::vec3 tranfir3(-40.0f, -8.5f, 75.0f), scalefir3(0.65f), rotfir3(0.0f);
 
+// AABB box sizes
+glm::vec3 AABB_DIMS_CHARACTER(5.0f);
+glm::vec3 AABB_DIMS_COIN(5.0f);
+
 
 // Coin starting scale/rotation for all coin instances
 glm::vec3 scaleCoins(0.1f), rotCoins(0.0f);
 // Coin translations for each individual coin
 static std::vector<glm::vec3> coinTranslations {
-	glm::vec3(2.0f, -8.0f, -5.0f)
+	glm::vec3(2.0f, -8.0f, -5.0f),
+	glm::vec3(2.8f, -8.0f, -12.0f),
+	glm::vec3(4.0f, -8.0f, -15.0f),
+	glm::vec3(5.3f, -8.0f, -21.0f),
+	glm::vec3(7.0f, -8.0f, -28.0f)
+
 };
 
 // raw audio assets
@@ -84,7 +90,8 @@ const char* STINGER_3_HARP      = "res/sound/music/Medieval Village_Stinger3 Har
 const char* SFX_LOOP_FOUNTAIN   = "res/sound/fountain/Fountain_Loop2.wav";
 const char* SFX_LOOP_BIRD       = "res/sound/animals/birds/SFX_LOOP_BIRDS.wav";
 const char* SFX_LOOP_TREE_BIRDS = "res/sound/animals/birds/SFX_LOOP_TREE_BIRDS.wav";
-
+const char* STINGER_COIN_PICKUP = "res/sound/coin/SFX_ONESHOT_COIN_PICKUP.wav";
+const char* STINGER_COIN_SUCCESS = "res/sound/coin/SFX_ONESHOT_COIN_SUCCESS.wav";
 
 // FMOD Studio sound banks
 const char* FMOD_SOUNDBANK_MASTER         = "res/sound/Master.bank";

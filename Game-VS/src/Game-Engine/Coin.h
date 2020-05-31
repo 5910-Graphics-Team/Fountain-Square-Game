@@ -2,11 +2,12 @@
 #include "Animation.h"
 #include "GameObject.h"
 #include "AABB.h"
+#include "GameData.h"
 
 class Coin : public GameObject, public Animation, public AABB {
 
 public:
-	Coin(const char* objFile, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) : GameObject(objFile, defTrans, defScale, defRot), AABB(defTrans, 10.0f, 10.0f, 10.0f) {
+	Coin(const char* objFile, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) : GameObject(objFile, defTrans, defScale, defRot), AABB(defTrans,AABB_DIMS_COIN) {
 	}
 		
 	
@@ -18,9 +19,6 @@ public:
 		setRotation(newRot);
 	}
 
-	
-
-	
 	
 private:
 

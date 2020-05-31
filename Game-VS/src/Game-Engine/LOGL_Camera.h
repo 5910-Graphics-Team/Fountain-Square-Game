@@ -1,8 +1,8 @@
 #pragma once
-
 #include <glm/glm.hpp>
 #include <vector>
 #include "AABB.h"
+#include "GameData.h"
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 enum Camera_Movement {
@@ -29,7 +29,7 @@ class CharacterCamera : public AABB
 {
 public:
     //bool debugCamera = false; TODO add ability to change between cameras for debugging
-    
+     
     // CharacterCamera Attributes
     glm::vec3 Position;
     glm::vec3 Front;
@@ -49,7 +49,7 @@ public:
 
     // Constructor with vectors
     CharacterCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) 
-        : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), AABB(position, 10.0f, 10.0f, 10.0f)
+        : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), AABB(position, AABB_DIMS_CHARACTER)
     {
         Position = position;
         WorldUp = up;
@@ -122,7 +122,7 @@ public:
         }
 
         // Update Front, Right and Up Vectors using the updated Euler angles
-        updateCameraVectors();
+        updateCameraVectors(); // TODO only update if movement occured
     }
 
     // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
