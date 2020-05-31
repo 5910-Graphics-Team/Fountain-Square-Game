@@ -61,18 +61,6 @@ FootstepController* footstepController;
 CoinSoundController* coinSoundController;
 
 
-// TODO rename sounds for clarity
-SoundInfo soundOneShot     (STINGER_1_GUITAR);
-SoundInfo soundOneShot3D   (STINGER_3_HARP,    false, true, tranHarp.x,    tranHarp.y,     tranHarp.z);
-SoundInfo musicLoop2d      (MUSIC_2,           true);
-SoundInfo soundLoop3D      (SFX_LOOP_FOUNTAIN, true, true, tranFountain.x, tranFountain.y, tranFountain.z);
-SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, true, true, tranTreeFir.x, tranTreeFir.y, tranTreeFir.z);
-SoundInfo soundTree        (SFX_LOOP_TREE_BIRDS, true, true, tranWillowtree.x, tranWillowtree.y, tranWillowtree.z);
-SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,     true, true, tranBirds.x,    tranBirds.y,    tranBirds.z);
-SoundInfo soundCoinPickup(STINGER_COIN_PICKUP);
-SoundInfo soundCoinSuccess(STINGER_COIN_SUCCESS);
-
-
 static glm::mat4 getProjection() {
 	return glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 }
@@ -139,7 +127,7 @@ int main()
 	/*
 		Initialize game objects and add to list
 	*/
-	//   //GameObject* player       = new GameObject(OBJ_CHARACTER,     tran) 
+	//   //GameObject* player       = new GameObject(OBJ_CHARACTER,     tran)
 	GameObject* fountain = new GameObject(OBJ_FOUNTAIN, tranFountain, scaleFountain, rotFountain);
 	GameObject* house = new GameObject(OBJ_HOUSE, tranHouse, scaleHouse, rotHouse);
 	GameObject* rock = new GameObject(OBJ_ROCK, tranRock, scaleRock, rotRock);

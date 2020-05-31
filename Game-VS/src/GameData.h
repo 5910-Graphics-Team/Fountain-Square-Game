@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/common.hpp>
+#include "Audio-Engine/AudioEngine.h"
 
 // screen settings
 const unsigned int SCR_WIDTH = 1920;
@@ -86,16 +87,48 @@ static std::vector<glm::vec3> coinTranslations {
 };
 
 // raw audio assets
-const char* MUSIC               = "res/sound/music/Medieval Village Full Theme Demo_2.5.1.3.wav";
-const char* MUSIC_2             = "res/sound/music/Medieval Village3.0 DEMO 2 Loop.wav";
-const char* STINGER_1_GUITAR    = "res/sound/music/Medieval Village_Stinger1 Guitar_2.5.1.3.wav";
-const char* STINGER_2_GUITAR_2  = "res/sound/music/Medieval Village_Stinger2 Guitar_2.5.1.3.wav";
-const char* STINGER_3_HARP      = "res/sound/music/Medieval Village_Stinger3 Harp_2.5.1.3.wav";
-const char* SFX_LOOP_FOUNTAIN   = "res/sound/fountain/Fountain_Loop2.wav";
-const char* SFX_LOOP_BIRD       = "res/sound/animals/birds/SFX_LOOP_BIRDS.wav";
-const char* SFX_LOOP_TREE_BIRDS = "res/sound/animals/birds/SFX_LOOP_TREE_BIRDS.wav";
-const char* STINGER_COIN_PICKUP = "res/sound/coin/SFX_ONESHOT_COIN_PICKUP.wav";
+const char* MUSIC                = "res/sound/music/Medieval Village Full Theme Demo_2.5.1.3.wav";
+const char* MUSIC_2              = "res/sound/music/Medieval Village3.0 DEMO 2 Loop.wav";
+const char* STINGER_1_GUITAR     = "res/sound/music/Medieval Village_Stinger1 Guitar_2.5.1.3.wav";
+const char* STINGER_2_GUITAR_2   = "res/sound/music/Medieval Village_Stinger2 Guitar_2.5.1.3.wav";
+const char* STINGER_3_HARP       = "res/sound/music/Medieval Village_Stinger3 Harp_2.5.1.3.wav";
+const char* SFX_LOOP_FOUNTAIN    = "res/sound/fountain/Fountain_Loop2.wav";
+const char* SFX_LOOP_BIRD        = "res/sound/animals/birds/SFX_LOOP_BIRDS.wav";
+const char* SFX_LOOP_TREE_BIRDS  = "res/sound/animals/birds/SFX_LOOP_TREE_BIRDS.wav";
+const char* STINGER_COIN_PICKUP  = "res/sound/coin/SFX_ONESHOT_COIN_PICKUP.wav";
 const char* STINGER_COIN_SUCCESS = "res/sound/coin/SFX_ONESHOT_COIN_SUCCESS.wav";
+
+const char* SFX_FOOTSTEP1 = "res/sound/footsteps/SFX_FOOTSTEP1.wav";
+const char* SFX_FOOTSTEP2 = "res/sound/footsteps/SFX_FOOTSTEP2.wav";
+const char* SFX_FOOTSTEP3 = "res/sound/footsteps/SFX_FOOTSTEP3.wav";
+const char* SFX_FOOTSTEP4 = "res/sound/footsteps/SFX_FOOTSTEP4.wav";
+const char* SFX_FOOTSTEP5 = "res/sound/footsteps/SFX_FOOTSTEP5.wav";
+const char* SFX_FOOTSTEP6 = "res/sound/footsteps/SFX_FOOTSTEP6.wav";
+const char* SFX_FOOTSTEP7 = "res/sound/footsteps/SFX_FOOTSTEP7.wav";
+const char* SFX_FOOTSTEP8 = "res/sound/footsteps/SFX_FOOTSTEP8.wav";
+
+// TODO rename sounds for clarity
+SoundInfo soundOneShot(STINGER_1_GUITAR);
+SoundInfo soundOneShot3D(STINGER_3_HARP, false, true, tranHarp.x, tranHarp.y, tranHarp.z);
+SoundInfo musicLoop2d(MUSIC_2, true);
+SoundInfo soundLoop3D(SFX_LOOP_FOUNTAIN, true, true, tranFountain.x, tranFountain.y, tranFountain.z);
+SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, true, true, tranTreeFir.x, tranTreeFir.y, tranTreeFir.z);
+SoundInfo soundTree(SFX_LOOP_TREE_BIRDS, true, true, tranWillowtree.x, tranWillowtree.y, tranWillowtree.z);
+SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD, true, true, tranBirds.x, tranBirds.y, tranBirds.z);
+SoundInfo soundCoinPickup(STINGER_COIN_PICKUP);
+SoundInfo soundCoinSuccess(STINGER_COIN_SUCCESS);
+
+std::vector<SoundInfo> soundsFootsteps {
+	SoundInfo(SFX_FOOTSTEP1),
+	SoundInfo(SFX_FOOTSTEP2),
+	SoundInfo(SFX_FOOTSTEP3),
+	SoundInfo(SFX_FOOTSTEP4),
+	SoundInfo(SFX_FOOTSTEP5),
+	SoundInfo(SFX_FOOTSTEP6),
+	SoundInfo(SFX_FOOTSTEP7),
+	SoundInfo(SFX_FOOTSTEP8)
+};
+
 
 // FMOD Studio sound banks
 const char* FMOD_SOUNDBANK_MASTER         = "res/sound/Master.bank";

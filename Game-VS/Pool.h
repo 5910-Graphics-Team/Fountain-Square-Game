@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 //#include "Texture.h"
 using namespace glm;
+
 struct Oscillator {
     // NOTE: the positions of these fields can not be changed!!
     // The rendering of the pool depends on this layout!!
