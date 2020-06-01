@@ -196,7 +196,6 @@
     <ClInclude Include="src\Game-Engine\AsteroidRing.h" />
     <ClInclude Include="src\Game-Engine\Bird.h" />
     <ClInclude Include="src\Game-Engine\Coin.h" />
-    <ClInclude Include="src\Game-Engine\Coins.h" />
     <ClInclude Include="src\Game-Engine\Harp.h" />
     <ClInclude Include="src\Game-Engine\InstancedObject.h" />
     <ClInclude Include="src\Game-Engine\Player.h" />

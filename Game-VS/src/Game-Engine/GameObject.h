@@ -56,6 +56,10 @@ public:
         return m;
     }
 
+    void setScale(glm::vec3 scale) {
+        this->scale = scale;
+    }
+
     const char* getObjFilePath() {
         return filepath;
     }

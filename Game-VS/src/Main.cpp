@@ -16,7 +16,6 @@
 // custom game objects
 #include "Game-Engine/Bird.h"
 #include "Game-Engine/Harp.h"
-#include "Game-Engine/Coins.h"
 #include "Game-Engine/AsteroidRing.h"
 #include "Game-Engine/Coin.h"
 
@@ -127,7 +126,7 @@ int main()
 	/*
 		Initialize game objects and add to list
 	*/
-	//   //GameObject* player       = new GameObject(OBJ_CHARACTER,     tran)
+
 	GameObject* fountain = new GameObject(OBJ_FOUNTAIN, tranFountain, scaleFountain, rotFountain);
 	GameObject* house = new GameObject(OBJ_HOUSE, tranHouse, scaleHouse, rotHouse);
 	GameObject* rock = new GameObject(OBJ_ROCK, tranRock, scaleRock, rotRock);
@@ -136,7 +135,7 @@ int main()
 	GameObject* cooltree = new GameObject(OBJ_COOLTREE, tranCooltree, scaleCooltree, rotCooltree);
 	GameObject* oak = new GameObject(OBJ_OAK, tranPine, scalePine, rotPine);
 	GameObject* house2 = new GameObject(OBJ_HOUSE2, tranHouse2, scaleHouse2, rotHouse2);
-	GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
+	//GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
 	GameObject* cottage = new GameObject(OBJ_COTTAGE, tranCottage, scaleCottage, rotCottage);
 	GameObject* willowtree = new GameObject(OBJ_WILLOWTREE, tranWillowtree, scaleWillowtree, rotWillowtree);
 	GameObject* well = new GameObject(OBJ_WELL, tranWell, scaleWell, rotWell);
@@ -145,21 +144,21 @@ int main()
 	GameObject* fir2 = new GameObject(OBJ_OAK, tranfir2, scalefir2, rotfir2);
 	GameObject* fir3 = new GameObject(OBJ_OAK, tranfir3, scalefir3, rotfir3);
 	GameObject* house3 = new GameObject(OBJ_HOUSE3, tranHouse, scaleHouse, rotHouse);
-	GameObject* house4 = new GameObject(OBJ_HOUSE4, tranHouse4, scaleHouse4, rotHouse4);
+	//GameObject* house4 = new GameObject(OBJ_HOUSE4, tranHouse4, scaleHouse4, rotHouse4);
 	GameObject* japaneseTree2 = new GameObject(OBJ_JAPANESE_TREE2, tranJapaneseTree2, scaleJapaneseTree2, rotJapaneseTree2);
 	GameObject* fir4 = new GameObject(OBJ_BUSH, tranfir4, scalefir4, rotfir4);
 
 	// List for all game objects
 	gameObjects.push_back(fountain);
 	gameObjects.push_back(house3);
-	gameObjects.push_back(house4);
+	//gameObjects.push_back(house4);
 	gameObjects.push_back(ground);
 	gameObjects.push_back(rock);
 	gameObjects.push_back(grass);
 	gameObjects.push_back(cooltree);
 	gameObjects.push_back(oak);
 	gameObjects.push_back(house2);
-	gameObjects.push_back(japaneseTree);
+	//gameObjects.push_back(japaneseTree);
 	gameObjects.push_back(cottage);
 	gameObjects.push_back(willowtree);
 	gameObjects.push_back(well);
@@ -193,6 +192,11 @@ int main()
         coins.push_back(coin);
 	}
 
+
+	for (auto gameObject : gameObjects) {
+		gameObject->setScale(gameObject->getScale() * GLOBAL_SCALE);
+		gameObject->setTranslation(gameObject->getTranslation()* GLOBAL_POSITION_SCALE);
+	}
 	/*
 		Initialize instanced game objects
 	*/
@@ -200,7 +204,6 @@ int main()
 	AsteroidRing* asteroidRing = new AsteroidRing(OBJ_ROCK, instancedObjectShader);
 	instancedObjects.push_back(asteroidRing);
 	animationObjects.push_back(asteroidRing);
-
 
 
 	/*
@@ -331,7 +334,6 @@ int main()
     // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
-//>>>>>>> Stashed changes
 }
 
 // audio timing
