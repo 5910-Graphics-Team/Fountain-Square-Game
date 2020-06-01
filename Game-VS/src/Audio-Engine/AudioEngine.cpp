@@ -16,62 +16,70 @@ void AudioEngine::init() {
     initReverb();
 }
 
+void AudioEngine::deactivate() {
+	lowLevelSystem->close();
+	studioSystem->release();
+}
+
 void AudioEngine::update() {
     ERRCHECK(studioSystem->update()); // also updates the low level system
 }
 
 void AudioEngine::loadSound(SoundInfo soundInfo) {
-    if (!soundLoaded(soundInfo)) {
-        std::cout << "Audio Engine: Loading Sound from file " << soundInfo.filePath << '\n';
+    if (!soundInfo.isLoaded()) {
+        std::cout << "Audio Engine: Loading Sound from file " << soundInfo.getFilePath() << '\n';
         FMOD::Sound* sound;
-        ERRCHECK(lowLevelSystem->createSound(soundInfo.filePath, soundInfo.is3D ? FMOD_3D : FMOD_2D, 0, &sound));
-        ERRCHECK(sound->setMode(soundInfo.isLoop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF));
+        ERRCHECK(lowLevelSystem->createSound(soundInfo.getFilePath(), soundInfo.is3D() ? FMOD_3D : FMOD_2D, 0, &sound));
+        ERRCHECK(sound->setMode(soundInfo.isLoop() ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF));
         ERRCHECK(sound->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR));
-        sounds.insert({ soundInfo.uniqueID, sound });
+        sounds.insert({ soundInfo.getUniqueID(), sound });
+        soundInfo.setLoaded(true);
     }
     else
         std::cout << "Audio Engine: Sound File was already loaded!\n";
 }
 
 void AudioEngine::playSound(SoundInfo soundInfo) {
-    if (soundLoaded(soundInfo)) {
+    if (!soundInfo.isLoaded()) {
         //std::cout << "Playing Sound\n";
         FMOD::Channel* channel;
         // start play in 'paused' state
-        ERRCHECK(lowLevelSystem->playSound(sounds[soundInfo.uniqueID], 0, true /* start paused */, &channel));
+        ERRCHECK(lowLevelSystem->playSound(sounds[soundInfo.getUniqueID()], 0, true /* start paused */, &channel));
 
-        if (soundInfo.is3D)
+        if (soundInfo.is3D())
             set3dChannelPosition(soundInfo, channel);
-        
-        if (soundInfo.isLoop) // add to channel map of sounds currently playing, to stop later
-            loopsPlaying.insert({ soundInfo.uniqueID, channel });
+
+        if (soundInfo.isLoop()) // add to channel map of sounds currently playing, to stop later
+            loopsPlaying.insert({ soundInfo.getUniqueID(), channel });
+
+        ERRCHECK( channel->setReverbProperties(0, soundInfo.getReverbAmount()) );
 
         // start audio playback
         ERRCHECK(channel->setPaused(false));
          
     }
     else
-        std::cout << "Audio Engine: Can't play, sound was not loaded yet from " << soundInfo.filePath << '\n';
+        std::cout << "Audio Engine: Can't play, sound was not loaded yet from " << soundInfo.getFilePath() << '\n';
 
 }
 
 void AudioEngine::stopSound(SoundInfo soundInfo) {
     if (soundIsPlaying(soundInfo)) {
-        loopsPlaying[soundInfo.uniqueID]->stop();
-        loopsPlaying.erase(soundInfo.uniqueID);
+        ERRCHECK( loopsPlaying[soundInfo.getUniqueID()]->stop() );
+        loopsPlaying.erase(soundInfo.getUniqueID());
     }
     else
         std::cout << "Audio Engine: Can't stop a looping sound that's not playing!\n";
 }
 
 bool AudioEngine::soundIsPlaying(SoundInfo soundInfo) {
-    return soundInfo.isLoop && loopsPlaying.count(soundInfo.uniqueID);
+    return soundInfo.isLoop() && loopsPlaying.count(soundInfo.getUniqueID());
 }
 
 
 void AudioEngine::update3DSoundPosition(SoundInfo soundInfo) {
     if (soundIsPlaying(soundInfo)) 
-        set3dChannelPosition(soundInfo, loopsPlaying[soundInfo.uniqueID]);
+        set3dChannelPosition(soundInfo, loopsPlaying[soundInfo.getUniqueID()]);
     else
         std::cout << "Audio Engine: Can't update sound position!\n";
 
@@ -86,7 +94,7 @@ void AudioEngine::set3DListenerPosition(float posX, float posY, float posZ, floa
 }
 
 void AudioEngine::loadFMODStudioBank(const char* filepath) {
-    std::cout << "AudioEngine: Loading FMOD Studio Sound Bank " << filepath << '\n';
+    std::cout << "Audio Engine: Loading FMOD Studio Sound Bank " << filepath << '\n';
     FMOD::Studio::Bank* bank = NULL;
     ERRCHECK(studioSystem->loadBankFile(filepath, FMOD_STUDIO_LOAD_BANK_NORMAL, &bank));
     soundBanks.insert({ filepath, bank });
@@ -156,16 +164,22 @@ bool AudioEngine::eventIsPlaying(const char* eventName, int instance /*= 0*/){
 
 // Private definitions 
 bool AudioEngine::soundLoaded(SoundInfo soundInfo) {
-    //std::cout << "Checking sound " << soundInfo.uniqueID << " exists\n";
-    return sounds.count(soundInfo.uniqueID) > 0;
+    //std::cout << "Checking sound " << soundInfo.getUniqueID() << " exists\n";
+    return sounds.count(soundInfo.getUniqueID()) > 0;
 }
 
 void AudioEngine::set3dChannelPosition(SoundInfo soundInfo, FMOD::Channel* channel) {
-    FMOD_VECTOR position = { soundInfo.x * DISTANCEFACTOR, soundInfo.y * DISTANCEFACTOR, soundInfo.z * DISTANCEFACTOR };
+    FMOD_VECTOR position = { soundInfo.getX() * DISTANCEFACTOR, soundInfo.getY() * DISTANCEFACTOR, soundInfo.getZ() * DISTANCEFACTOR };
     FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // TODO Add dopplar (velocity) support
     ERRCHECK(channel->set3DAttributes(&position, &velocity));
 }
 
+void AudioEngine::initReverb() {
+	ERRCHECK(lowLevelSystem->createReverb3D(&reverb));
+	FMOD_REVERB_PROPERTIES prop2 = FMOD_PRESET_CONCERTHALL;
+	ERRCHECK(reverb->setProperties(&prop2));
+	ERRCHECK(reverb->set3DAttributes(&revPos, revMinDist, revMaxDist));
+}
 
 // Error checking/debugging function definitions
 

@@ -6,8 +6,8 @@
 class CoinSoundController {
 	
 public:
-	CoinSoundController(std::shared_ptr<AudioEngine> audioEngine, SoundInfo coinPickup, SoundInfo coinSuccess, int nTotalCoins) : nTotalCoins(nTotalCoins), nCharacterCoins(0) {
-		this->coinPickup = coinPickup, this->coinSuccess = coinSuccess;
+	CoinSoundController(std::shared_ptr<AudioEngine> audioEngine, int nTotalCoins) : nTotalCoins(nTotalCoins), nCharacterCoins(0) {
+		//this->coinPickup = coinPickup, this->coinSuccess = coinSuccess;
 	}
 	void characterPickedUpCoin() {
 		std::cout << "Character picked up coin\n";
@@ -23,7 +23,7 @@ public:
 	int nCharacterCoins;
 private:
 	std::shared_ptr<AudioEngine> audioEngine;
-	SoundInfo coinPickup, coinSuccess;
+	//SoundInfo coinPickup, coinSuccess;
 
 
 

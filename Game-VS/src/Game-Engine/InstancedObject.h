@@ -17,8 +17,6 @@ public:
 	
 	//virtual void drawInstances(glm::mat4 projection, glm::mat4 view) {}//= 0;
 
-	// TODO
-	//virtual void deactivateInstance(unsigned int instanceNumber) {}
 
 	void drawInstances(glm::mat4 projection, glm::mat4 view) {
 

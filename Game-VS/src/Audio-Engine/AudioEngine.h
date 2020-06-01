@@ -15,45 +15,13 @@
 #include <vector>
 #include <list>
 #include <map>
+#include "SoundInfo.h"
 
 // FMOD Error Handling Function
 void ERRCHECK_fn(FMOD_RESULT result, const char* file, int line);
 #define ERRCHECK(_result) ERRCHECK_fn(_result, __FILE__, __LINE__)
 
-/**
- * Holds the information about a raw audio file needed by the Audio Engine
- * to load, configure and play a sound with user-controlled settings.
- */
-struct SoundInfo {
-    std::string uniqueID; 
-    const char* filePath;
-    bool isLoop, is3D, isLoaded;
-    float x, y, z;
 
-    /**
-     * Sets the 3D coordinates of the sound
-     */
-    void set3DCoords(float x, float y, float z) {
-        this->x = x, this->y = y, this->z = z;
-    }
-    /**
-     * SoundInfo main constructor
-     * 
-     * @var filepath (default = "")    Relative location of audio file
-     * @var isLoop   (default = false) For sound to repeat when playback reaches end of file, pass in true. 
-     * @var is3D     (default = false) For sound be positioned in 3D space, pass in true.
-     * @var x        (default = 0.0f)  X coordinate - only used when @var is3D is true
-     * @var y        (default = 0.0f)  Y coordinate - only used when @var is3D is true
-     * @var z        (default = 0.0f)  Z coordinate - only used when @var is3D is true
-     */
-    SoundInfo(const char* filePath = "", bool isLoop = false, bool is3D = false, float x = 0.0f, float y = 0.0f, float z = 0.0f) 
-        : filePath(filePath), isLoop(isLoop), is3D(is3D), x(x), y(y), z(z) 
-    {
-        uniqueID = filePath; // for now, filepath is unique id
-    }
-    // TODO implement sound instancing
-    // int instanceID = -1;
-};
 
 class AudioEngine {
 public:
@@ -70,12 +38,11 @@ public:
     void init();
 
     /**
-     * TODO
+     * Method that is called when audio engine is destroyed
+     * TODO research FMOD deactivation more, 
+     * TODO possibly call this in destructor
      */
-    void deactivate() {
-        lowLevelSystem->close();
-        studioSystem->release();
-    }
+    void deactivate();
 
     /**
     * Method which should be called every frame of the game loop
@@ -102,6 +69,10 @@ public:
      * Stops a looping sound if it's currently playing.
      */
     void stopSound(SoundInfo soundInfo);
+
+    // TODO Implement (channel group for all sounds?) (How to mute Studio Events?)
+    void muteAllSounds() {}
+
 
     /**
     * Updates the position of a looping 3D sound that has already been loaded and is playing back.
@@ -157,10 +128,9 @@ public:
      */
     void stopEvent(const char* eventName, int instanceIndex = 0);
  
-    // sets event volume on.
+    // sets event volume
     void setEventVolume(const char* eventName, float volume0to1 = .75f);
     
-    FMOD::Reverb3D* reverb3D;
     
     void setReverb(float amount = 0.5f); // TODO implement
 
@@ -196,12 +166,7 @@ private:
      */
     void set3dChannelPosition(SoundInfo soundInfo, FMOD::Channel* channel);
 
-    void initReverb() {
-		ERRCHECK(lowLevelSystem->createReverb3D(&reverb));
-		FMOD_REVERB_PROPERTIES prop2 = FMOD_PRESET_CONCERTHALL;
-		ERRCHECK(reverb->setProperties(&prop2));
-		ERRCHECK(reverb->set3DAttributes(&revPos, revMinDist, revMaxDist));
-    }
+    void initReverb(); 
     
     /**
      * Prints debug info about an FMOD event description
@@ -223,6 +188,9 @@ private:
     // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
     const float DISTANCEFACTOR = 1.0f;  
     
+    // The reverb for the audio engine TODO add multi-reverb support
+	FMOD::Reverb3D* reverb3D;
+
     // Reverb origin position
     FMOD_VECTOR revPos = { 0.0f, 0.0f, 0.0f };
 

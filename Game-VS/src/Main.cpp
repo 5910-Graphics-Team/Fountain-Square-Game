@@ -37,10 +37,6 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-
-
-
-
 // List for all game objects
 std::vector<GameObject*> gameObjects;
 std::vector<Animation*> animationObjects;
@@ -206,10 +202,13 @@ int main()
 	animationObjects.push_back(asteroidRing);
 
 
+
+
 	/*
-		Initialize Audio Engine 
+		AUDIO ENGINE and SOUND LOADING
 	*/
-	//audioEngine = new AudioEngine();
+	
+	// Initialize Audio Engine
 	audioEngine = std::make_shared<AudioEngine>();
 	audioEngine->init();
 	// load sounds
@@ -222,7 +221,6 @@ int main()
 	audioEngine->loadSound(soundJapaneseTree);
 	audioEngine->loadSound(soundCoinPickup);
 	audioEngine->loadSound(soundCoinSuccess);
-
 	// load FMOD soundbanks
 	audioEngine->loadFMODStudioBank(FMOD_SOUNDBANK_MASTER);
 	audioEngine->loadFMODStudioBank(FMOD_SOUNDBANK_MASTER_STRINGS);
@@ -233,12 +231,9 @@ int main()
 	audioEngine->loadFMODStudioEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
 	// set Event Parameters
 	audioEngine->setEventVolume(FMOD_EVENT_CHARACTER_FOOTSTEPS, 0.4f);
-	
 	// setup sound event controllers
 	footstepController = new FootstepController(audioEngine);
-	coinSoundController = new CoinSoundController(audioEngine, soundCoinPickup, soundCoinSuccess, coins.size());
-
-
+	coinSoundController = new CoinSoundController(audioEngine, coins.size());
 	/*
 		play inital soundscape
 	*/
@@ -246,8 +241,6 @@ int main()
 	//audioEngine->playSound(musicLoop2d);
 	audioEngine->playSound(soundTree);
 	audioEngine->playSound(soundJapaneseTree);
-
-    
     
     // draw in wireframe mode
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -309,16 +302,13 @@ int main()
         /*
             Audio Engine per-frame updates
         */
+		audioEngine->update(); // per-frame FMOD update
+
         // set current player position
         audioEngine->set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
                                           camera.Front.y,    camera.Front.x,    camera.Front.z,
                                           camera.Up.y,       camera.Up.x,       camera.Up.z );
         
-        //soundLoop3DMoving.set3DCoords(birds->getTranslation().x, birds->getTranslation().y, birds->getTranslation().z);
-        //audioEngine->update3DSoundPosition(soundLoop3DMoving);
-
-        audioEngine->update(); // per-frame FMOD update
-
         // Update location of 3D sounds
         //glm::vec3 newBirdTran = birds->getTranslation();
         //audioEngine->update3DSoundPosition(SFX_LOOP_BIRD, newBirdTran.x, newBirdTran.y, newBirdTran.z);

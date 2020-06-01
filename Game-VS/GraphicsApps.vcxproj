@@ -191,6 +191,7 @@
     <ClInclude Include="PoolTexture.h" />
     <ClInclude Include="src\Audio-Engine\CoinSoundController.h" />
     <ClInclude Include="src\Audio-Engine\FootstepController.h" />
+    <ClInclude Include="src\Audio-Engine\SoundInfo.h" />
     <ClInclude Include="src\Game-Engine\AABB.h" />
     <ClInclude Include="src\Game-Engine\Animation.h" />
     <ClInclude Include="src\Game-Engine\AsteroidRing.h" />

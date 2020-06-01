@@ -123,6 +123,9 @@
     <ClInclude Include="Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Audio-Engine\SoundInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="res\sound\Medieval Village2.5_Loop1_ImplementationDemo.wav">

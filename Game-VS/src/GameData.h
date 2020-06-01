@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/common.hpp>
-#include "Audio-Engine/AudioEngine.h"
+#include "Audio-Engine/SoundInfo.h"
 
 // screen settings
 const unsigned int SCR_WIDTH = 1920;
@@ -69,8 +69,8 @@ glm::vec3 tranHouse(-32.0f, 0.0f, -38.0f), scaleHouse(0.018f), rotHouse(0.0f, 30
 glm::vec3 tranHouse4(-5.0f, 0.0f, -23.0f), scaleHouse4(0.15f), rotHouse4(0.0f, 220.0f, 0.0f);
 
 // AABB box sizes
-glm::vec3 AABB_DIMS_CHARACTER(5.0f);
-glm::vec3 AABB_DIMS_COIN(5.0f);
+glm::vec3 AABB_DIMS_CHARACTER(3.0f);
+glm::vec3 AABB_DIMS_COIN(3.0f);
 
 
 // Coin starting scale/rotation for all coin instances
@@ -107,26 +107,19 @@ const char* SFX_FOOTSTEP7 = "res/sound/footsteps/SFX_FOOTSTEP7.wav";
 const char* SFX_FOOTSTEP8 = "res/sound/footsteps/SFX_FOOTSTEP8.wav";
 
 // TODO rename sounds for clarity
-SoundInfo soundOneShot(STINGER_1_GUITAR);
-SoundInfo soundOneShot3D(STINGER_3_HARP, false, true, tranHarp.x, tranHarp.y, tranHarp.z);
-SoundInfo musicLoop2d(MUSIC_2, true);
-SoundInfo soundLoop3D(SFX_LOOP_FOUNTAIN, true, true, tranFountain.x, tranFountain.y, tranFountain.z);
-SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, true, true, tranTreeFir.x, tranTreeFir.y, tranTreeFir.z);
-SoundInfo soundTree(SFX_LOOP_TREE_BIRDS, true, true, tranWillowtree.x, tranWillowtree.y, tranWillowtree.z);
-SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD, true, true, tranBirds.x, tranBirds.y, tranBirds.z);
-SoundInfo soundCoinPickup(STINGER_COIN_PICKUP);
-SoundInfo soundCoinSuccess(STINGER_COIN_SUCCESS);
+float defReverb = 0.5;
+SoundInfo soundOneShot     (STINGER_1_GUITAR,     defReverb);
+SoundInfo soundOneShot3D   (STINGER_3_HARP,       defReverb, SOUND_ONE_SHOT, SOUND_3D, tranHarp.x,        tranHarp.y,       tranHarp.z);
+SoundInfo musicLoop2d      (MUSIC_2,              0.0f,      SOUND_LOOP);
+SoundInfo soundLoop3D      (SFX_LOOP_FOUNTAIN,    defReverb, SOUND_LOOP,     SOUND_3D, tranFountain.x,    tranFountain.y,   tranFountain.z);
+SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS,  defReverb, SOUND_LOOP,     SOUND_3D, tranTreeFir.x,     tranTreeFir.y,    tranTreeFir.z);
+SoundInfo soundTree        (SFX_LOOP_TREE_BIRDS,  defReverb, SOUND_LOOP,     SOUND_3D, tranWillowtree.x,  tranWillowtree.y, tranWillowtree.z);
+SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,        defReverb, SOUND_LOOP,     SOUND_3D, tranBirds.x,       tranBirds.y,      tranBirds.z);
+SoundInfo soundCoinPickup  (STINGER_COIN_PICKUP,  defReverb);
+SoundInfo soundCoinSuccess (STINGER_COIN_SUCCESS, defReverb);
 
-std::vector<SoundInfo> soundsFootsteps {
-	SoundInfo(SFX_FOOTSTEP1),
-	SoundInfo(SFX_FOOTSTEP2),
-	SoundInfo(SFX_FOOTSTEP3),
-	SoundInfo(SFX_FOOTSTEP4),
-	SoundInfo(SFX_FOOTSTEP5),
-	SoundInfo(SFX_FOOTSTEP6),
-	SoundInfo(SFX_FOOTSTEP7),
-	SoundInfo(SFX_FOOTSTEP8)
-};
+
+
 
 
 // FMOD Studio sound banks
