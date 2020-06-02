@@ -45,7 +45,7 @@ const char* OBJ_BUSH = "res/objects/flora/trees/hazelnutbush/Hazelnut.obj";
 glm::vec3 GLOBAL_SCALE(0.5f), GLOBAL_POSITION_SCALE(0.75);
 // game object starting positions
 glm::vec3 tranBackpack(0.5f, -6.8f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
-glm::vec3 tranGround(-80.0f, 0.0f, -20.0f), scaleGround(70.0f), rotGround(0.0f, 40.0f, 180.0f);
+glm::vec3 tranGround(-80.0f, 0.0f, -30.0f), scaleGround(70.0f), rotGround(0.0f, 10.0f, 180.0f);
 glm::vec3 tranTreeFir(0.0f, 0.0f, -10.0f), scaleTreeFir(0.008f), rotTreeFir(0.0f);
 glm::vec3 tranRock(-8.0f, 0.0f, -15.0f), scaleRock(0.38f), rotRock(0.0f);
 glm::vec3 tranFountain(-10.0f, 0.1f, -5.0f), scaleFountain(0.06f), rotFountain(0.0f);
@@ -54,7 +54,7 @@ glm::vec3 tranHarp(tranFountain.x, tranFountain.y + 2.0f, tranFountain.z), scale
 glm::vec3 tranPine(-32.0f, 0.0f, -10.0f), scalePine(0.60f), rotPine(0.0f);
 glm::vec3 tranGrass(-32.0f, -0.5f, -9.0f), scaleGrass(0.80f), rotGrass(0.0f);
 glm::vec3 tranCooltree(-37.0f, -1.0f, -10.0f), scaleCooltree(0.70f), rotCooltree(0.0f);
-glm::vec3 tranHouse2(-45.0f, 0.5f, 1.0f), scaleHouse2(0.60f), rotHouse2(0.0f, 70.0f, 0.0f);
+glm::vec3 tranHouse2(10.0f, 0.2f, 20.0f), scaleHouse2(0.40f), rotHouse2(0.0f, 205.0f, 0.0f);
 glm::vec3 tranJapaneseTree(12.0f, -0.5f, -15.0f), scaleJapaneseTree(0.06f), rotJapaneseTree(0.0f);
 glm::vec3 tranCottage(-30.0f, -0.5f, -5.0f), scaleCottage(0.45f), rotCottage(0.0f, 70.0f, 0.0f);
 glm::vec3 tranWillowtree(-35.0f, 0.0f, 10.0f), scaleWillowtree(0.70f), rotWillowtree(0.0f);
@@ -64,7 +64,9 @@ glm::vec3 tranJapaneseTree2(-15.0f, 0.5f, 30.0f), scaleJapaneseTree2(0.60f), rot
 glm::vec3 tranfir1(-40.0f, -0.5f, 38.0f), scalefir1(0.65f), rotfir1(0.0f);
 glm::vec3 tranfir2(-40.0f, -0.5f, 60.0f), scalefir2(0.65f), rotfir2(0.0f);
 glm::vec3 tranfir3(-40.0f, -0.5f, 75.0f), scalefir3(0.65f), rotfir3(0.0f);
-glm::vec3 tranfir4(-23.0f, -1.5f, -38.0f), scalefir4(0.65f), rotfir4(0.0f);
+glm::vec3 tranfir4(-15.0f, -1.5f, -38.0f), scalefir4(0.65f), rotfir4(0.0f);
+glm::vec3 tranfir5(5.0f, -0.5f, 45.0f), scalefir5(0.65f), rotfir5(0.0f);
+glm::vec3 tranfir6(30.0f, -0.5f, 45.0f), scalefir6(0.65f), rotfir6(0.0f);
 glm::vec3 tranHouse(-32.0f, 0.0f, -38.0f), scaleHouse(0.018f), rotHouse(0.0f, 30.0f, 0.0f);
 glm::vec3 tranHouse4(-5.0f, 0.0f, -23.0f), scaleHouse4(0.15f), rotHouse4(0.0f, 220.0f, 0.0f);
 
