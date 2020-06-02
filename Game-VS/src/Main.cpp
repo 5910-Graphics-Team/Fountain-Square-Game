@@ -327,11 +327,15 @@ int main()
 }
 
 // audio timing
-float key1LastTime = 0.0f, key2LastTime = 0.0f, key3LastTime = 0.0f, key4LastTime = 0.0f, key5LastTime = 0.0f;
+float key1LastTime = 0.0f, key2LastTime = 0.0f, key3LastTime = 0.0f, key4LastTime = 0.0f, key5LastTime = 0.0f, key0LastTime = 0.0f;
 float MIN_SOUND_KEY_RETRIGGER_TIME = 0.2f;
 
-bool keyCanRetrigger(float currFrame, float lastTriggerFrame) {
-	return currFrame - lastTriggerFrame >= MIN_SOUND_KEY_RETRIGGER_TIME;
+// Checks if a key can be triggered depending on how recently it was last triggered. 
+// If true sets the key's most recent trigger time to current frame
+bool keyCanRetrigger(float &currFrame, float &lastTriggerFrame) {
+	bool canRetrigger = currFrame - lastTriggerFrame >= MIN_SOUND_KEY_RETRIGGER_TIME;
+	if (canRetrigger) lastTriggerFrame = currFrame;
+	return canRetrigger;
 }
 
 
@@ -368,29 +372,28 @@ void ProcessInput(GLFWwindow* window)
 		footstepController->setRunning(false);
 	}
 
-	// Numbers 1-5 : Audio Processing Tests
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+	// Number Keys: Audio Controls
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime))
 		audioEngine->playSound(soundOneShot);
-		key1LastTime = currentFrame;
-	}
-	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && keyCanRetrigger(currentFrame, key2LastTime)) {
+	
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && keyCanRetrigger(currentFrame, key2LastTime))
 		audioEngine->soundIsPlaying(musicLoop2d) ? audioEngine->stopSound(musicLoop2d) : audioEngine->playSound(musicLoop2d);
-		key2LastTime = currentFrame;
-	}
-	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && keyCanRetrigger(currentFrame, key3LastTime)) {
+	
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && keyCanRetrigger(currentFrame, key3LastTime))
 		audioEngine->playSound(soundOneShot3D);
-		key3LastTime = currentFrame;
-	}
-	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && keyCanRetrigger(currentFrame, key4LastTime)) {
+	
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && keyCanRetrigger(currentFrame, key4LastTime)) 
 		audioEngine->soundIsPlaying(soundLoop3D) ? audioEngine->stopSound(soundLoop3D) : audioEngine->playSound(soundLoop3D);
-		key4LastTime = currentFrame;
-	}
-	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && keyCanRetrigger(currentFrame, key5LastTime)) {
-		audioEngine->eventIsPlaying(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE) ?
-			audioEngine->stopEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE) :
-			audioEngine->playEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
-		key5LastTime = currentFrame;
-	}
+	
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && keyCanRetrigger(currentFrame, key5LastTime))
+		audioEngine->eventIsPlaying(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE) ? 
+				audioEngine->stopEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE):
+				audioEngine->playEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
+	
+	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && keyCanRetrigger(currentFrame, key0LastTime))
+		audioEngine->isMuted() ? 
+				audioEngine->unmuteAllSound():
+				audioEngine->muteAllSounds();
 
 }
 

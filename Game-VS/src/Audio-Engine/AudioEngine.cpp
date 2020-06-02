@@ -13,6 +13,7 @@ void AudioEngine::init() {
     ERRCHECK( lowLevelSystem->setSoftwareFormat(44100, FMOD_SPEAKERMODE_STEREO, 0) );
     ERRCHECK( lowLevelSystem->set3DSettings(1.0, DISTANCEFACTOR, 1.0f) );
     ERRCHECK( studioSystem->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0) );
+    ERRCHECK( lowLevelSystem->getMasterChannelGroup(&mastergroup) );
     initReverb();
 }
 
@@ -110,7 +111,7 @@ void AudioEngine::loadFMODStudioEvent(const char* eventName, std::vector<std::pa
     // DEBUG TODO remove
     //printEventInfo(eventDescription);
     for (const auto& parVal : paramsValues) {
-        std::cout << "Setting Event Instance Parameter " << parVal.first << "to value: " << parVal.second << '\n';
+        std::cout << "AudioEngine: Setting Event Instance Parameter " << parVal.first << "to value: " << parVal.second << '\n';
         // Set the parameter values of the event instance
         ERRCHECK(eventInstance->setParameterByName(parVal.first, parVal.second));
     }
@@ -119,48 +120,55 @@ void AudioEngine::loadFMODStudioEvent(const char* eventName, std::vector<std::pa
 }
 
 void AudioEngine::setFMODEventParamValue(const char* eventName, const char* parameterName, float value) {
-    if (eventInstances.count(eventName) > 0) {
+    if (eventInstances.count(eventName) > 0) 
         ERRCHECK(eventInstances[eventName]->setParameterByName(parameterName, value));
-    }
     else
-        std::cout << "Event " << eventName << " was not in event instance cache, can't set param \n";
+        std::cout << "AudioEngine: Event " << eventName << " was not in event instance cache, can't set param \n";
 
 }
 
 void AudioEngine::playEvent(const char* eventName, int instanceIndex) {
-    //std::cout << "Before Playing Event, checking state of Event Description " << eventName << '\n';
     // printEventInfo(eventDescriptions[eventName]);
     auto eventInstance = eventInstances[eventName];
-    if (eventInstances.count(eventName) > 0) {
-        //std::cout << "Playing Event " << eventName << '\n';
+    if (eventInstances.count(eventName) > 0) 
         ERRCHECK(eventInstances[eventName]->start());
-    }
     else
-        std::cout << "Event " << eventName << " was not in event instance cache, cannot play \n";
+        std::cout << "AudioEngine: Event " << eventName << " was not in event instance cache, cannot play \n";
 }
 
 void AudioEngine::stopEvent(const char* eventName, int instanceIndex) {
     if(eventInstances.count(eventName) > 0)
         ERRCHECK( eventInstances[eventName]->stop(FMOD_STUDIO_STOP_ALLOWFADEOUT) );
     else
-        std::cout << "Event " << eventName << " was not in event instance cache, cannot stop \n";
+        std::cout << "AudioEngine: Event " << eventName << " was not in event instance cache, cannot stop \n";
 }
 
 void AudioEngine::setEventVolume(const char* eventName, float volume0to1) {
-    std::cout << "Setting Event Volume\n";
+    std::cout << "AudioEngine: Setting Event Volume\n";
     ERRCHECK( eventInstances[eventName]->setVolume(volume0to1) );
 }
 
-void AudioEngine::setReverb(float amount) {
-
+bool AudioEngine::eventIsPlaying(const char* eventName, int instance /*= 0*/) {
+	FMOD_STUDIO_PLAYBACK_STATE playbackState; 
+	ERRCHECK(eventInstances[eventName]->getPlaybackState(&playbackState));
+	return playbackState == FMOD_STUDIO_PLAYBACK_PLAYING;
 }
 
-bool AudioEngine::eventIsPlaying(const char* eventName, int instance /*= 0*/){
-    // initialize enum to stopped state
-    FMOD_STUDIO_PLAYBACK_STATE playbackState;// = FMOD_STUDIO_PLAYBACK_STOPPED; 
-    ERRCHECK( eventInstances[eventName]->getPlaybackState(&playbackState) );
-    return playbackState == FMOD_STUDIO_PLAYBACK_PLAYING;
+
+void AudioEngine::muteAllSounds() {
+	ERRCHECK(mastergroup->setMute(true));
+	muted = true;
 }
+
+void AudioEngine::unmuteAllSound() {
+	ERRCHECK(mastergroup->setMute(false));
+	muted = false;
+}
+
+bool AudioEngine::isMuted() {
+	return muted;
+}
+
 
 // Private definitions 
 bool AudioEngine::soundLoaded(SoundInfo soundInfo) {
