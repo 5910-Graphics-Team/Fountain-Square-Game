@@ -7,7 +7,8 @@
 class Coin : public GameObject, public Animation, public AABB {
 
 public:
-	Coin(const char* objFile, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) : GameObject(objFile, defTrans, defScale, defRot), AABB(defTrans, AABB_DIMS_COIN) {
+	Coin(const char* objFile, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) 
+		: GameObject(objFile, defTrans, defScale, defRot), AABB(defTrans, AABB_DIMS_COIN) {
 	}
 		
 	
@@ -18,9 +19,5 @@ public:
 			newRot.y = 0.0f;
 		setRotation(newRot);
 	}
-
-	
-private:
-
 	
 };

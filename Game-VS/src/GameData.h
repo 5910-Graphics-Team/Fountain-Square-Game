@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/common.hpp>
-#include "Audio-Engine/AudioEngine.h"
+#include "Audio-Engine/SoundInfo.h"
 
 // screen settings
 const unsigned int SCR_WIDTH = 1920;
@@ -11,7 +11,7 @@ glm::vec4 COLOR_BLACK(0.05f, 0.05f, 0.05f, 1.0f);
 glm::vec4 COLOR_SKY(0.53f , 0.81f, 0.92f, 1.0f);
 
 // player data
-glm::vec3 STARTING_PLAYER_LOCATION(-2.0f, -6.0f, 5.0f);
+glm::vec3 STARTING_PLAYER_LOCATION(-4.0f, 1.0f, -25.0f);
 
 // obj file locations
 const char* OBJ_FOUNTAIN   = "res/objects/fountains/fountainOBJ/fountainOBJ.obj";
@@ -42,47 +42,46 @@ const char* OBJ_BUSH = "res/objects/flora/trees/hazelnutbush/Hazelnut.obj";
 
 
 
-
-
+glm::vec3 GLOBAL_SCALE(0.5f), GLOBAL_POSITION_SCALE(0.75);
 // game object starting positions
-glm::vec3 tranBackpack(0.5f, -1.2f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
-glm::vec3 tranGround(50.0f, -8.0f, -200.0f), scaleGround(40.0f), rotGround(0.0f, 180.0f, 180.0f);
-glm::vec3 tranTreeFir(0.0f, -8.0f, -10.0f), scaleTreeFir(0.008f), rotTreeFir(0.0f);
-glm::vec3 tranRock(-8.0f, -8.0f, -15.0f), scaleRock(0.38f), rotRock(0.0f);
-glm::vec3 tranFountain(-10.0f, -7.9f, -5.0f), scaleFountain(0.06f), rotFountain(0.0f);
-glm::vec3 tranBirds(0.5f, -1.2f, 0.0f), scaleBirds(0.05f), rotBirds(0.0f, 180.0f, 0.0f);
-glm::vec3 tranHarp(tranFountain.x, tranFountain.y + 4.0f, tranFountain.z), scaleHarp(0.0022f), rotHarp(0.0f, 120.0f, 0.0f);
-glm::vec3 tranPine(-32.0f, -8.0f, -10.0f), scalePine(0.60f), rotPine(0.0f);
-glm::vec3 tranGrass(-32.0f, -8.5f, -9.0f), scaleGrass(0.80f), rotGrass(0.0f);
-glm::vec3 tranCooltree(-37.0f, -9.0f, -10.0f), scaleCooltree(0.70f), rotCooltree(0.0f);
-glm::vec3 tranHouse2(-45.0f, -7.5f, 1.0f), scaleHouse2(0.60f), rotHouse2(0.0f, 70.0f, 0.0f);
-glm::vec3 tranJapaneseTree(10.0f, -8.5f, -9.0f), scaleJapaneseTree(0.11f), rotJapaneseTree(0.0f);
-glm::vec3 tranCottage(-30.0f, -8.5f, -5.0f), scaleCottage(0.45f), rotCottage(0.0f, 70.0f, 0.0f);
-glm::vec3 tranWillowtree(-35.0f, -8.0f, 10.0f), scaleWillowtree(0.70f), rotWillowtree(0.0f);
-glm::vec3 tranWell(-28.0f, -8.0f, 37.0f), scaleWell(0.03f), rotWell(0.0f);
-glm::vec3 tranGreenPine(-32.0f, -8.0f, 25.0f), scaleGreenPine(0.55f), rotGreenPine(0.0f, 165.0f, 0.0f);
-glm::vec3 tranJapaneseTree2(-15.0f, -7.5f, 30.0f), scaleJapaneseTree2(0.60f), rotJapaneseTree2(0.0f, 110.0f, 0.0f);
-glm::vec3 tranfir1(-40.0f, -8.5f, 38.0f), scalefir1(0.65f), rotfir1(0.0f);
-glm::vec3 tranfir2(-40.0f, -8.5f, 60.0f), scalefir2(0.65f), rotfir2(0.0f);
-glm::vec3 tranfir3(-40.0f, -8.5f, 75.0f), scalefir3(0.65f), rotfir3(0.0f);
-glm::vec3 tranfir4(-23.0f, -9.5f, -38.0f), scalefir4(0.65f), rotfir4(0.0f);
-glm::vec3 tranHouse(-32.0f, -8.0f, -38.0f), scaleHouse(0.018f), rotHouse(0.0f, 30.0f, 0.0f);
-glm::vec3 tranHouse4(-5.0f, -8.0f, -23.0f), scaleHouse4(0.15f), rotHouse4(0.0f, 220.0f, 0.0f);
+glm::vec3 tranBackpack(0.5f, -6.8f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
+glm::vec3 tranGround(-80.0f, 0.0f, -20.0f), scaleGround(70.0f), rotGround(0.0f, 40.0f, 180.0f);
+glm::vec3 tranTreeFir(0.0f, 0.0f, -10.0f), scaleTreeFir(0.008f), rotTreeFir(0.0f);
+glm::vec3 tranRock(-8.0f, 0.0f, -15.0f), scaleRock(0.38f), rotRock(0.0f);
+glm::vec3 tranFountain(-10.0f, 0.1f, -5.0f), scaleFountain(0.06f), rotFountain(0.0f);
+glm::vec3 tranBirds(0.5f, 6.8f, 0.0f), scaleBirds(0.05f), rotBirds(0.0f, 180.0f, 0.0f);
+glm::vec3 tranHarp(tranFountain.x, tranFountain.y + 2.0f, tranFountain.z), scaleHarp(0.0022f), rotHarp(0.0f, 120.0f, 0.0f);
+glm::vec3 tranPine(-32.0f, 0.0f, -10.0f), scalePine(0.60f), rotPine(0.0f);
+glm::vec3 tranGrass(-32.0f, -0.5f, -9.0f), scaleGrass(0.80f), rotGrass(0.0f);
+glm::vec3 tranCooltree(-37.0f, -1.0f, -10.0f), scaleCooltree(0.70f), rotCooltree(0.0f);
+glm::vec3 tranHouse2(-45.0f, 0.5f, 1.0f), scaleHouse2(0.60f), rotHouse2(0.0f, 70.0f, 0.0f);
+glm::vec3 tranJapaneseTree(12.0f, -0.5f, -15.0f), scaleJapaneseTree(0.06f), rotJapaneseTree(0.0f);
+glm::vec3 tranCottage(-30.0f, -0.5f, -5.0f), scaleCottage(0.45f), rotCottage(0.0f, 70.0f, 0.0f);
+glm::vec3 tranWillowtree(-35.0f, 0.0f, 10.0f), scaleWillowtree(0.70f), rotWillowtree(0.0f);
+glm::vec3 tranWell(-28.0f, 0.0f, 37.0f), scaleWell(0.03f), rotWell(0.0f);
+glm::vec3 tranGreenPine(-32.0f, 0.0f, 25.0f), scaleGreenPine(0.55f), rotGreenPine(0.0f, 165.0f, 0.0f);
+glm::vec3 tranJapaneseTree2(-15.0f, 0.5f, 30.0f), scaleJapaneseTree2(0.60f), rotJapaneseTree2(0.0f, 110.0f, 0.0f);
+glm::vec3 tranfir1(-40.0f, -0.5f, 38.0f), scalefir1(0.65f), rotfir1(0.0f);
+glm::vec3 tranfir2(-40.0f, -0.5f, 60.0f), scalefir2(0.65f), rotfir2(0.0f);
+glm::vec3 tranfir3(-40.0f, -0.5f, 75.0f), scalefir3(0.65f), rotfir3(0.0f);
+glm::vec3 tranfir4(-23.0f, -1.5f, -38.0f), scalefir4(0.65f), rotfir4(0.0f);
+glm::vec3 tranHouse(-32.0f, 0.0f, -38.0f), scaleHouse(0.018f), rotHouse(0.0f, 30.0f, 0.0f);
+glm::vec3 tranHouse4(-5.0f, 0.0f, -23.0f), scaleHouse4(0.15f), rotHouse4(0.0f, 220.0f, 0.0f);
 
 // AABB box sizes
-glm::vec3 AABB_DIMS_CHARACTER(5.0f);
-glm::vec3 AABB_DIMS_COIN(5.0f);
+glm::vec3 AABB_DIMS_CHARACTER(3.0f);
+glm::vec3 AABB_DIMS_COIN(3.0f);
 
 
 // Coin starting scale/rotation for all coin instances
 glm::vec3 scaleCoins(0.1f), rotCoins(0.0f);
 // Coin translations for each individual coin
 static std::vector<glm::vec3> coinTranslations {
-	glm::vec3(2.0f, -8.0f, -5.0f),
-	glm::vec3(2.8f, -8.0f, -12.0f),
-	glm::vec3(4.0f, -8.0f, -15.0f),
-	glm::vec3(5.3f, -8.0f, -21.0f),
-	glm::vec3(7.0f, -8.0f, -28.0f)
+	glm::vec3(2.0f, 0.0f, -5.0f),
+	glm::vec3(2.8f, 0.0f, -12.0f),
+	glm::vec3(4.0f, 0.0f, -15.0f),
+	glm::vec3(5.3f, 0.0f, -21.0f),
+	glm::vec3(7.0f, 0.0f, -28.0f)
 
 };
 
@@ -108,26 +107,19 @@ const char* SFX_FOOTSTEP7 = "res/sound/footsteps/SFX_FOOTSTEP7.wav";
 const char* SFX_FOOTSTEP8 = "res/sound/footsteps/SFX_FOOTSTEP8.wav";
 
 // TODO rename sounds for clarity
-SoundInfo soundOneShot(STINGER_1_GUITAR);
-SoundInfo soundOneShot3D(STINGER_3_HARP, false, true, tranHarp.x, tranHarp.y, tranHarp.z);
-SoundInfo musicLoop2d(MUSIC_2, true);
-SoundInfo soundLoop3D(SFX_LOOP_FOUNTAIN, true, true, tranFountain.x, tranFountain.y, tranFountain.z);
-SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, true, true, tranTreeFir.x, tranTreeFir.y, tranTreeFir.z);
-SoundInfo soundTree(SFX_LOOP_TREE_BIRDS, true, true, tranWillowtree.x, tranWillowtree.y, tranWillowtree.z);
-SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD, true, true, tranBirds.x, tranBirds.y, tranBirds.z);
-SoundInfo soundCoinPickup(STINGER_COIN_PICKUP);
-SoundInfo soundCoinSuccess(STINGER_COIN_SUCCESS);
+float defReverb = 0.5;
+SoundInfo soundOneShot     (STINGER_1_GUITAR,     defReverb);
+SoundInfo soundOneShot3D   (STINGER_3_HARP,       defReverb, SOUND_ONE_SHOT, SOUND_3D, tranHarp.x,        tranHarp.y,       tranHarp.z);
+SoundInfo musicLoop2d      (MUSIC_2,              0.0f,      SOUND_LOOP);
+SoundInfo soundLoop3D      (SFX_LOOP_FOUNTAIN,    defReverb, SOUND_LOOP,     SOUND_3D, tranFountain.x,    tranFountain.y,   tranFountain.z);
+SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS,  defReverb, SOUND_LOOP,     SOUND_3D, tranTreeFir.x,     tranTreeFir.y,    tranTreeFir.z);
+SoundInfo soundTree        (SFX_LOOP_TREE_BIRDS,  defReverb, SOUND_LOOP,     SOUND_3D, tranWillowtree.x,  tranWillowtree.y, tranWillowtree.z);
+SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,        defReverb, SOUND_LOOP,     SOUND_3D, tranBirds.x,       tranBirds.y,      tranBirds.z);
+SoundInfo soundCoinPickup  (STINGER_COIN_PICKUP,  defReverb);
+SoundInfo soundCoinSuccess (STINGER_COIN_SUCCESS, defReverb);
 
-std::vector<SoundInfo> soundsFootsteps {
-	SoundInfo(SFX_FOOTSTEP1),
-	SoundInfo(SFX_FOOTSTEP2),
-	SoundInfo(SFX_FOOTSTEP3),
-	SoundInfo(SFX_FOOTSTEP4),
-	SoundInfo(SFX_FOOTSTEP5),
-	SoundInfo(SFX_FOOTSTEP6),
-	SoundInfo(SFX_FOOTSTEP7),
-	SoundInfo(SFX_FOOTSTEP8)
-};
+
+
 
 
 // FMOD Studio sound banks

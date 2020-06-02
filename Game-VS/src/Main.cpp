@@ -16,7 +16,6 @@
 // custom game objects
 #include "Game-Engine/Bird.h"
 #include "Game-Engine/Harp.h"
-#include "Game-Engine/Coins.h"
 #include "Game-Engine/AsteroidRing.h"
 #include "Game-Engine/Coin.h"
 
@@ -37,10 +36,6 @@ CharacterCamera camera(STARTING_PLAYER_LOCATION);
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
-
-
-
-
 
 // List for all game objects
 std::vector<GameObject*> gameObjects;
@@ -127,7 +122,7 @@ int main()
 	/*
 		Initialize game objects and add to list
 	*/
-	//   //GameObject* player       = new GameObject(OBJ_CHARACTER,     tran)
+
 	GameObject* fountain = new GameObject(OBJ_FOUNTAIN, tranFountain, scaleFountain, rotFountain);
 	GameObject* house = new GameObject(OBJ_HOUSE, tranHouse, scaleHouse, rotHouse);
 	GameObject* rock = new GameObject(OBJ_ROCK, tranRock, scaleRock, rotRock);
@@ -136,7 +131,7 @@ int main()
 	GameObject* cooltree = new GameObject(OBJ_COOLTREE, tranCooltree, scaleCooltree, rotCooltree);
 	GameObject* oak = new GameObject(OBJ_OAK, tranPine, scalePine, rotPine);
 	GameObject* house2 = new GameObject(OBJ_HOUSE2, tranHouse2, scaleHouse2, rotHouse2);
-	GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
+	//GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
 	GameObject* cottage = new GameObject(OBJ_COTTAGE, tranCottage, scaleCottage, rotCottage);
 	GameObject* willowtree = new GameObject(OBJ_WILLOWTREE, tranWillowtree, scaleWillowtree, rotWillowtree);
 	GameObject* well = new GameObject(OBJ_WELL, tranWell, scaleWell, rotWell);
@@ -145,21 +140,21 @@ int main()
 	GameObject* fir2 = new GameObject(OBJ_OAK, tranfir2, scalefir2, rotfir2);
 	GameObject* fir3 = new GameObject(OBJ_OAK, tranfir3, scalefir3, rotfir3);
 	GameObject* house3 = new GameObject(OBJ_HOUSE3, tranHouse, scaleHouse, rotHouse);
-	GameObject* house4 = new GameObject(OBJ_HOUSE4, tranHouse4, scaleHouse4, rotHouse4);
+	//GameObject* house4 = new GameObject(OBJ_HOUSE4, tranHouse4, scaleHouse4, rotHouse4);
 	GameObject* japaneseTree2 = new GameObject(OBJ_JAPANESE_TREE2, tranJapaneseTree2, scaleJapaneseTree2, rotJapaneseTree2);
 	GameObject* fir4 = new GameObject(OBJ_BUSH, tranfir4, scalefir4, rotfir4);
 
 	// List for all game objects
 	gameObjects.push_back(fountain);
 	gameObjects.push_back(house3);
-	gameObjects.push_back(house4);
+	//gameObjects.push_back(house4);
 	gameObjects.push_back(ground);
 	gameObjects.push_back(rock);
 	gameObjects.push_back(grass);
 	gameObjects.push_back(cooltree);
 	gameObjects.push_back(oak);
 	gameObjects.push_back(house2);
-	gameObjects.push_back(japaneseTree);
+	//gameObjects.push_back(japaneseTree);
 	gameObjects.push_back(cottage);
 	gameObjects.push_back(willowtree);
 	gameObjects.push_back(well);
@@ -193,6 +188,11 @@ int main()
         coins.push_back(coin);
 	}
 
+
+	for (auto gameObject : gameObjects) {
+		gameObject->setScale(gameObject->getScale() * GLOBAL_SCALE);
+		gameObject->setTranslation(gameObject->getTranslation()* GLOBAL_POSITION_SCALE);
+	}
 	/*
 		Initialize instanced game objects
 	*/
@@ -203,10 +203,12 @@ int main()
 
 
 
+
 	/*
-		Initialize Audio Engine 
+		AUDIO ENGINE and SOUND LOADING
 	*/
-	//audioEngine = new AudioEngine();
+	
+	// Initialize Audio Engine
 	audioEngine = std::make_shared<AudioEngine>();
 	audioEngine->init();
 	// load sounds
@@ -219,7 +221,6 @@ int main()
 	audioEngine->loadSound(soundJapaneseTree);
 	audioEngine->loadSound(soundCoinPickup);
 	audioEngine->loadSound(soundCoinSuccess);
-
 	// load FMOD soundbanks
 	audioEngine->loadFMODStudioBank(FMOD_SOUNDBANK_MASTER);
 	audioEngine->loadFMODStudioBank(FMOD_SOUNDBANK_MASTER_STRINGS);
@@ -230,12 +231,9 @@ int main()
 	audioEngine->loadFMODStudioEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
 	// set Event Parameters
 	audioEngine->setEventVolume(FMOD_EVENT_CHARACTER_FOOTSTEPS, 0.4f);
-	
 	// setup sound event controllers
 	footstepController = new FootstepController(audioEngine);
-	coinSoundController = new CoinSoundController(audioEngine, soundCoinPickup, soundCoinSuccess, coins.size());
-
-
+	coinSoundController = new CoinSoundController(audioEngine, coins.size());
 	/*
 		play inital soundscape
 	*/
@@ -243,8 +241,6 @@ int main()
 	//audioEngine->playSound(musicLoop2d);
 	audioEngine->playSound(soundTree);
 	audioEngine->playSound(soundJapaneseTree);
-
-    
     
     // draw in wireframe mode
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -306,16 +302,13 @@ int main()
         /*
             Audio Engine per-frame updates
         */
+		audioEngine->update(); // per-frame FMOD update
+
         // set current player position
         audioEngine->set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
                                           camera.Front.y,    camera.Front.x,    camera.Front.z,
                                           camera.Up.y,       camera.Up.x,       camera.Up.z );
         
-        //soundLoop3DMoving.set3DCoords(birds->getTranslation().x, birds->getTranslation().y, birds->getTranslation().z);
-        //audioEngine->update3DSoundPosition(soundLoop3DMoving);
-
-        audioEngine->update(); // per-frame FMOD update
-
         // Update location of 3D sounds
         //glm::vec3 newBirdTran = birds->getTranslation();
         //audioEngine->update3DSoundPosition(SFX_LOOP_BIRD, newBirdTran.x, newBirdTran.y, newBirdTran.z);
@@ -331,15 +324,18 @@ int main()
     // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
-//>>>>>>> Stashed changes
 }
 
 // audio timing
-float key1LastTime = 0.0f, key2LastTime = 0.0f, key3LastTime = 0.0f, key4LastTime = 0.0f, key5LastTime = 0.0f;
+float key1LastTime = 0.0f, key2LastTime = 0.0f, key3LastTime = 0.0f, key4LastTime = 0.0f, key5LastTime = 0.0f, key0LastTime = 0.0f;
 float MIN_SOUND_KEY_RETRIGGER_TIME = 0.2f;
 
-bool keyCanRetrigger(float currFrame, float lastTriggerFrame) {
-	return currFrame - lastTriggerFrame >= MIN_SOUND_KEY_RETRIGGER_TIME;
+// Checks if a key can be triggered depending on how recently it was last triggered. 
+// If true sets the key's most recent trigger time to current frame
+bool keyCanRetrigger(float &currFrame, float &lastTriggerFrame) {
+	bool canRetrigger = currFrame - lastTriggerFrame >= MIN_SOUND_KEY_RETRIGGER_TIME;
+	if (canRetrigger) lastTriggerFrame = currFrame;
+	return canRetrigger;
 }
 
 
@@ -376,29 +372,28 @@ void ProcessInput(GLFWwindow* window)
 		footstepController->setRunning(false);
 	}
 
-	// Numbers 1-5 : Audio Processing Tests
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+	// Number Keys: Audio Controls
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime))
 		audioEngine->playSound(soundOneShot);
-		key1LastTime = currentFrame;
-	}
-	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && keyCanRetrigger(currentFrame, key2LastTime)) {
+	
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && keyCanRetrigger(currentFrame, key2LastTime))
 		audioEngine->soundIsPlaying(musicLoop2d) ? audioEngine->stopSound(musicLoop2d) : audioEngine->playSound(musicLoop2d);
-		key2LastTime = currentFrame;
-	}
-	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && keyCanRetrigger(currentFrame, key3LastTime)) {
+	
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && keyCanRetrigger(currentFrame, key3LastTime))
 		audioEngine->playSound(soundOneShot3D);
-		key3LastTime = currentFrame;
-	}
-	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && keyCanRetrigger(currentFrame, key4LastTime)) {
+	
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && keyCanRetrigger(currentFrame, key4LastTime)) 
 		audioEngine->soundIsPlaying(soundLoop3D) ? audioEngine->stopSound(soundLoop3D) : audioEngine->playSound(soundLoop3D);
-		key4LastTime = currentFrame;
-	}
-	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && keyCanRetrigger(currentFrame, key5LastTime)) {
-		audioEngine->eventIsPlaying(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE) ?
-			audioEngine->stopEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE) :
-			audioEngine->playEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
-		key5LastTime = currentFrame;
-	}
+	
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && keyCanRetrigger(currentFrame, key5LastTime))
+		audioEngine->eventIsPlaying(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE) ? 
+				audioEngine->stopEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE):
+				audioEngine->playEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
+	
+	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && keyCanRetrigger(currentFrame, key0LastTime))
+		audioEngine->isMuted() ? 
+				audioEngine->unmuteAllSound():
+				audioEngine->muteAllSounds();
 
 }
 
