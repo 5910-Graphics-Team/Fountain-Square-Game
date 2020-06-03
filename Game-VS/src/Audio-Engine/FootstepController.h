@@ -42,21 +42,21 @@ private:
 	}
 };
 
-class FootstepController {
+class FootstepSoundController {
 public:
 	std::vector<SoundInfo> soundsFootsteps {
-		SoundInfo(SFX_FOOTSTEP1, defReverb),
-		SoundInfo(SFX_FOOTSTEP2, defReverb),
-		SoundInfo(SFX_FOOTSTEP3, defReverb),
-		SoundInfo(SFX_FOOTSTEP4, defReverb),
-		SoundInfo(SFX_FOOTSTEP5, defReverb),
-		SoundInfo(SFX_FOOTSTEP6, defReverb),
-		SoundInfo(SFX_FOOTSTEP7, defReverb),
-		SoundInfo(SFX_FOOTSTEP8, defReverb)
+		SoundInfo(SFX_FOOTSTEP1, defVolume, defReverb),
+		SoundInfo(SFX_FOOTSTEP2, defVolume, defReverb),
+		SoundInfo(SFX_FOOTSTEP3, defVolume, defReverb),
+		SoundInfo(SFX_FOOTSTEP4, defVolume, defReverb),
+		SoundInfo(SFX_FOOTSTEP5, defVolume, defReverb),
+		SoundInfo(SFX_FOOTSTEP6, defVolume, defReverb),
+		SoundInfo(SFX_FOOTSTEP7, defVolume, defReverb),
+		SoundInfo(SFX_FOOTSTEP8, defVolume, defReverb)
 	};
 
 
-	FootstepController(std::shared_ptr<AudioEngine> audioEngine) : audioEngine(audioEngine), indexRandomizer(soundsFootsteps.size(), 3) {
+	FootstepSoundController(std::shared_ptr<AudioEngine> audioEngine) : audioEngine(audioEngine), indexRandomizer(soundsFootsteps.size(), 3) {
 		init();
 	}
 

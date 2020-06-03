@@ -83,7 +83,7 @@ static std::vector<glm::vec3> coinTranslations {
 	glm::vec3(2.8f, 0.0f, -12.0f),
 	glm::vec3(4.0f, 0.0f, -15.0f),
 	glm::vec3(5.3f, 0.0f, -21.0f),
-	glm::vec3(7.0f, 0.0f, -28.0f)
+	glm::vec3(6.0f, 0.0f, -25.0f)
 
 };
 
@@ -96,8 +96,11 @@ const char* STINGER_3_HARP       = "res/sound/music/Medieval Village_Stinger3 Ha
 const char* SFX_LOOP_FOUNTAIN    = "res/sound/fountain/Fountain_Loop2.wav";
 const char* SFX_LOOP_BIRD        = "res/sound/animals/birds/SFX_LOOP_BIRDS.wav";
 const char* SFX_LOOP_TREE_BIRDS  = "res/sound/animals/birds/SFX_LOOP_TREE_BIRDS.wav";
-const char* STINGER_COIN_PICKUP  = "res/sound/coin/SFX_ONESHOT_COIN_PICKUP.wav";
-const char* STINGER_COIN_SUCCESS = "res/sound/coin/SFX_ONESHOT_COIN_SUCCESS.wav";
+
+// Coin challenge sounds/music
+//const char* STINGER_COIN_PICKUP  = "res/sound/coin/SFX_ONESHOT_COIN_PICKUP.wav";
+//const char* STINGER_COIN_SUCCESS = "res/sound/coin/SFX_ONESHOT_COIN_SUCCESS.wav";
+
 
 const char* SFX_FOOTSTEP1 = "res/sound/footsteps/SFX_FOOTSTEP1.wav";
 const char* SFX_FOOTSTEP2 = "res/sound/footsteps/SFX_FOOTSTEP2.wav";
@@ -109,20 +112,14 @@ const char* SFX_FOOTSTEP7 = "res/sound/footsteps/SFX_FOOTSTEP7.wav";
 const char* SFX_FOOTSTEP8 = "res/sound/footsteps/SFX_FOOTSTEP8.wav";
 
 // TODO rename sounds for clarity
-float defReverb = 0.5;
-SoundInfo soundOneShot     (STINGER_1_GUITAR,     defReverb);
-SoundInfo soundOneShot3D   (STINGER_3_HARP,       defReverb, SOUND_ONE_SHOT, SOUND_3D, tranHarp.x,        tranHarp.y,       tranHarp.z);
-SoundInfo musicLoop2d      (MUSIC_2,              0.0f,      SOUND_LOOP);
-SoundInfo soundLoop3D      (SFX_LOOP_FOUNTAIN,    defReverb, SOUND_LOOP,     SOUND_3D, tranFountain.x,    tranFountain.y,   tranFountain.z);
-SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS,  defReverb, SOUND_LOOP,     SOUND_3D, tranTreeFir.x,     tranTreeFir.y,    tranTreeFir.z);
-SoundInfo soundTree        (SFX_LOOP_TREE_BIRDS,  defReverb, SOUND_LOOP,     SOUND_3D, tranWillowtree.x,  tranWillowtree.y, tranWillowtree.z);
-SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,        defReverb, SOUND_LOOP,     SOUND_3D, tranBirds.x,       tranBirds.y,      tranBirds.z);
-SoundInfo soundCoinPickup  (STINGER_COIN_PICKUP,  defReverb);
-SoundInfo soundCoinSuccess (STINGER_COIN_SUCCESS, defReverb);
-
-
-
-
+float defReverb = 0.5, defVolume = 0.9;
+SoundInfo soundOneShot     (STINGER_1_GUITAR,    defVolume, defReverb);
+SoundInfo soundOneShot3D   (STINGER_3_HARP,      defVolume, defReverb, SOUND_ONE_SHOT, SOUND_3D, tranHarp.x,        tranHarp.y,       tranHarp.z);
+SoundInfo musicLoop2d      (MUSIC_2,             defVolume, 0.0f,      SOUND_LOOP);
+SoundInfo soundLoop3D      (SFX_LOOP_FOUNTAIN,   defVolume, defReverb, SOUND_LOOP,     SOUND_3D, tranFountain.x,    tranFountain.y,   tranFountain.z);
+SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, defVolume, defReverb, SOUND_LOOP,     SOUND_3D, tranTreeFir.x,     tranTreeFir.y,    tranTreeFir.z);
+SoundInfo soundTree        (SFX_LOOP_TREE_BIRDS, defVolume, defReverb, SOUND_LOOP,     SOUND_3D, tranWillowtree.x,  tranWillowtree.y, tranWillowtree.z);
+SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,       defVolume, defReverb, SOUND_LOOP,     SOUND_3D, tranBirds.x,       tranBirds.y,      tranBirds.z);
 
 // FMOD Studio sound banks
 const char* FMOD_SOUNDBANK_MASTER         = "res/sound/Master.bank";

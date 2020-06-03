@@ -25,7 +25,7 @@ class AudioEngine {
 public:
     /**
      * Default AudioEngine constructor. 
-     * AudioeEngine::init() must be called before use of the Audio Engine.
+     * AudioeEngine::init() must be called before using the Audio Engine 
      */
     AudioEngine();
 
@@ -67,6 +67,10 @@ public:
      * Stops a looping sound if it's currently playing.
      */
     void stopSound(SoundInfo soundInfo);
+
+    void updateSoundLoopVolume(SoundInfo &soundInfo, float newVolume, int fadeSampleLength = 0);
+
+    void createSubmixGroup(std::vector<SoundInfo> sounds);
 
     /**
     * Updates the position of a looping 3D sound that has already been loaded and is playing back.
@@ -147,6 +151,9 @@ public:
      */
 	bool isMuted();
 
+    // The audio sampling rate of the audio engine
+    static const int AUDIO_SAMPLE_RATE = 44100;
+
 private:  
 
     /**
@@ -171,6 +178,8 @@ private:
     
     // FMOD's low-level audio system which plays audio files and is obtained from Studio System
     FMOD::System* lowLevelSystem = nullptr;          
+
+   
 
     // Max FMOD::Channels for the audio engine 
     static const unsigned int MAX_AUDIO_CHANNELS = 1024; 

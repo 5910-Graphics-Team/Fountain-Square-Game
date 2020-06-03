@@ -10,7 +10,7 @@ AudioEngine::AudioEngine() : sounds(), loopsPlaying(), soundBanks(), eventDescri
 void AudioEngine::init() {
     ERRCHECK( FMOD::Studio::System::create(&studioSystem) );
     ERRCHECK( studioSystem->getCoreSystem(&lowLevelSystem) );
-    ERRCHECK( lowLevelSystem->setSoftwareFormat(44100, FMOD_SPEAKERMODE_STEREO, 0) );
+    ERRCHECK( lowLevelSystem->setSoftwareFormat(AUDIO_SAMPLE_RATE, FMOD_SPEAKERMODE_STEREO, 0) );
     ERRCHECK( lowLevelSystem->set3DSettings(1.0, DISTANCEFACTOR, 1.0f) );
     ERRCHECK( studioSystem->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0) );
     ERRCHECK( lowLevelSystem->getMasterChannelGroup(&mastergroup) );
@@ -34,7 +34,7 @@ void AudioEngine::loadSound(SoundInfo soundInfo) {
         ERRCHECK(sound->setMode(soundInfo.isLoop() ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF));
         ERRCHECK(sound->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR));
         sounds.insert({ soundInfo.getUniqueID(), sound });
-        soundInfo.setLoaded(true);
+        soundInfo.setLoaded(SOUND_LOADED);
     }
     else
         std::cout << "Audio Engine: Sound File was already loaded!\n";
@@ -50,13 +50,15 @@ void AudioEngine::playSound(SoundInfo soundInfo) {
         if (soundInfo.is3D())
             set3dChannelPosition(soundInfo, channel);
 
+        channel->setVolume(soundInfo.getVolume());
+
         if (soundInfo.isLoop()) // add to channel map of sounds currently playing, to stop later
             loopsPlaying.insert({ soundInfo.getUniqueID(), channel });
 
         ERRCHECK( channel->setReverbProperties(0, soundInfo.getReverbAmount()) );
 
         // start audio playback
-        ERRCHECK(channel->setPaused(false));
+        ERRCHECK( channel->setPaused(false) );
          
     }
     else
@@ -73,10 +75,29 @@ void AudioEngine::stopSound(SoundInfo soundInfo) {
         std::cout << "Audio Engine: Can't stop a looping sound that's not playing!\n";
 }
 
-bool AudioEngine::soundIsPlaying(SoundInfo soundInfo) {
-    return soundInfo.isLoop() && loopsPlaying.count(soundInfo.getUniqueID());
+void AudioEngine::updateSoundLoopVolume(SoundInfo& soundInfo, float newVolume, int fadeSampleLength) {
+    if (soundIsPlaying(soundInfo)) {
+        FMOD::Channel* channel = loopsPlaying[soundInfo.getUniqueID()];
+        if (fadeSampleLength == 0)
+            ERRCHECK( channel->setVolume(newVolume) );
+        else {
+            ERRCHECK( channel->setVolume(newVolume) );
+            unsigned long long parentclock = 0;
+            ERRCHECK( channel->getDSPClock(NULL, &parentclock) );
+            ERRCHECK( channel->addFadePoint(parentclock, 0.0f) );//soundInfo.getVolume()));
+            ERRCHECK( channel->addFadePoint(parentclock + fadeSampleLength, newVolume) );
+            //std::cout << "Current DSP Clock: " << parentclock << ", fadein time  = " << fadeSampleLength << "\n";
+        }
+
+        soundInfo.setVolume(newVolume);
+    }
+    else
+        std::cout << "AudioEngine: Can't update sound loop volume! (It isn't playing or might not be loaded)\n";
 }
 
+//void AudioEngine::createSubmixGroup(std::vector<SoundInfo> sounds) {
+//
+//}
 
 void AudioEngine::update3DSoundPosition(SoundInfo soundInfo) {
     if (soundIsPlaying(soundInfo)) 
@@ -84,6 +105,10 @@ void AudioEngine::update3DSoundPosition(SoundInfo soundInfo) {
     else
         std::cout << "Audio Engine: Can't update sound position!\n";
 
+}
+
+bool AudioEngine::soundIsPlaying(SoundInfo soundInfo) {
+	return soundInfo.isLoop() && loopsPlaying.count(soundInfo.getUniqueID());
 }
 
 

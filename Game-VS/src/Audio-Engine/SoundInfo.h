@@ -29,14 +29,15 @@ public:
      * SoundInfo main constructor
      * TODO Update Doc
      * @var filepath (default = "")    Relative location of audio file
-     * @var isLoop   (default = false) For sound to repeat when playback reaches end of file, pass in true.
-     * @var is3D     (default = false) For sound be positioned in 3D space, pass in true.
+     * @var reverbAmount
+     * @var soundPlaybackType
+     * @var soundPositionType 
      * @var x        (default = 0.0f)  X coordinate - only used when @var is3D is true
      * @var y        (default = 0.0f)  Y coordinate - only used when @var is3D is true
      * @var z        (default = 0.0f)  Z coordinate - only used when @var is3D is true
      */
-    SoundInfo(const char* filePath, float reverbAmount = 0.0f, SOUND_PLAYBACK_TYPE soundPlaybackType = SOUND_ONE_SHOT, SOUND_POSITION_TYPE soundPositionType = SOUND_2D,
-        float x = 0.0f, float y = 0.0f, float z = 0.0f) : filePath(filePath), reverbAmount(reverbAmount), x(x), y(y), z(z) {
+    SoundInfo(const char* filePath, float volume = 1.0f, float reverbAmount = 0.0f, SOUND_PLAYBACK_TYPE soundPlaybackType = SOUND_ONE_SHOT, SOUND_POSITION_TYPE soundPositionType = SOUND_2D,
+        float x = 0.0f, float y = 0.0f, float z = 0.0f) : filePath(filePath), volume(volume), reverbAmount(reverbAmount), x(x), y(y), z(z) {
         uniqueID = filePath; // for now, filepath is unique id TODO generate uid based on instance number of sound
         this->soundPlaybackType = soundPlaybackType;
         this->soundPositionType = soundPositionType;
@@ -84,12 +85,18 @@ public:
     float getReverbAmount() {
         return reverbAmount;
     }
+    
+	float getVolume() {
+		return volume;
+	}
 
-    void setLoaded(bool loaded) {
-        loaded = loaded;
+    void setLoaded(SOUND_LOAD_INFO loadInfo) {
+        this->soundLoadInfo = loadInfo;
     }
-
-
+    
+    void setVolume(float vol) {
+        this->volume = vol;
+    }
 
 private:
 
@@ -101,9 +108,10 @@ private:
     SOUND_PLAYBACK_TYPE soundPlaybackType;
     SOUND_LOAD_INFO     soundLoadInfo;
 
-
+    
+    
     float reverbAmount;
-
+    float volume; // 0 to 1
     float x, y, z;
 
 

@@ -26,12 +26,6 @@ void ProcessInput(GLFWwindow* window);
 
 
 // Character/camera data
-struct CharacterInventory {
-	int numCoins = 0;
-
-
-};
-
 CharacterCamera camera(STARTING_PLAYER_LOCATION);
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
@@ -49,11 +43,10 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 float currentFrame = 0.0f;
 
-// audio engine
-// Use make_shared function when possible.
-std::shared_ptr<AudioEngine> audioEngine;// = make_shared<AudioEngine>(L"The Beatles", L"Im Happy Just to Dance With You");
-FootstepController* footstepController;
-CoinSoundController* coinSoundController;
+// Audio engine
+std::shared_ptr<AudioEngine> audioEngine;
+FootstepSoundController* footstepController;
+CoinChallengeSoundController* coinSoundController;
 
 
 static glm::mat4 getProjection() {
@@ -222,8 +215,8 @@ int main()
 	audioEngine->loadSound(soundLoop3DMoving);
 	audioEngine->loadSound(soundTree);
 	audioEngine->loadSound(soundJapaneseTree);
-	audioEngine->loadSound(soundCoinPickup);
-	audioEngine->loadSound(soundCoinSuccess);
+	//audioEngine->loadSound(soundCoinPickup);
+	//audioEngine->loadSound(soundCoinSuccess);
 	// load FMOD soundbanks
 	audioEngine->loadFMODStudioBank(FMOD_SOUNDBANK_MASTER);
 	audioEngine->loadFMODStudioBank(FMOD_SOUNDBANK_MASTER_STRINGS);
@@ -235,16 +228,17 @@ int main()
 	// set Event Parameters
 	audioEngine->setEventVolume(FMOD_EVENT_CHARACTER_FOOTSTEPS, 0.4f);
 	// setup sound event controllers
-	footstepController = new FootstepController(audioEngine);
-	coinSoundController = new CoinSoundController(audioEngine, coins.size());
+	footstepController = new FootstepSoundController(audioEngine);
+	coinSoundController = new CoinChallengeSoundController(audioEngine, coins.size());
+
 	/*
-		play inital soundscape
+		Startlay inital soundscape
 	*/
 	audioEngine->playSound(soundLoop3D);
 	//audioEngine->playSound(musicLoop2d);
 	audioEngine->playSound(soundTree);
 	audioEngine->playSound(soundJapaneseTree);
-    
+	coinSoundController->startScore();
     // draw in wireframe mode
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
@@ -272,17 +266,14 @@ int main()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
 
-        // do collision detection
+        // Do collision detection
         for (auto coin : coins) {
             if (!coin->isDestroyed()) {
                 if (coin->collides(camera)) {
                     coin->setDestroyed(true);
 					coinSoundController->characterPickedUpCoin();
-					// TODO move below sound-playing logic into CoinSoundController
-					if (coinSoundController->nCharacterCoins == coinSoundController->nTotalCoins)
-						audioEngine->playSound(soundCoinSuccess);
-					else
-						audioEngine->playSound(soundCoinPickup);
+					// TODO move below sound-playing logic into CoinChallengeSoundController
+					
                 }
             }
         }
