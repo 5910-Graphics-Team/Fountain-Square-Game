@@ -18,6 +18,7 @@
 #include "Game-Engine/Harp.h"
 #include "Game-Engine/AsteroidRing.h"
 #include "Game-Engine/Coin.h"
+#include "Game-Engine/Grass.h"
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 void MouseCallback(GLFWwindow* window, double xpos, double ypos);
@@ -120,7 +121,7 @@ int main()
 	GameObject* house = new GameObject(OBJ_HOUSE, tranHouse, scaleHouse, rotHouse);
 	GameObject* rock = new GameObject(OBJ_ROCK, tranRock, scaleRock, rotRock);
 	GameObject* ground = new GameObject(OBJ_GROUND, tranGround, scaleGround, rotGround);
-	GameObject* grass = new GameObject(OBJ_GRASS, tranGrass, scaleGrass, rotGrass);
+	//GameObject* grass = new GameObject(OBJ_GRASS, tranGrass, scaleGrass, rotGrass);
 	GameObject* cooltree = new GameObject(OBJ_COOLTREE, tranCooltree, scaleCooltree, rotCooltree);
 	GameObject* oak = new GameObject(OBJ_OAK, tranPine, scalePine, rotPine);
 	GameObject* house2 = new GameObject(OBJ_HOUSE2, tranHouse2, scaleHouse2, rotHouse2);
@@ -145,7 +146,7 @@ int main()
 	//gameObjects.push_back(house4);
 	gameObjects.push_back(ground);
 	gameObjects.push_back(rock);
-	gameObjects.push_back(grass);
+	//gameObjects.push_back(grass);
 	gameObjects.push_back(cooltree);
 	gameObjects.push_back(oak);
 	gameObjects.push_back(house2);
@@ -184,7 +185,7 @@ int main()
         coins.push_back(coin);
 	}
 
-
+	// Scale all objects Size and Translation
 	for (auto gameObject : gameObjects) {
 		gameObject->setScale(gameObject->getScale() * GLOBAL_SCALE);
 		gameObject->setTranslation(gameObject->getTranslation()* GLOBAL_POSITION_SCALE);
@@ -197,7 +198,8 @@ int main()
 	instancedObjects.push_back(asteroidRing);
 	animationObjects.push_back(asteroidRing);
 
-
+	Grass* grass = new Grass(OBJ_GRASS, instancedObjectShader);
+	instancedObjects.push_back(grass);
 
 
 	/*

@@ -83,7 +83,7 @@ static std::vector<glm::vec3> coinTranslations {
 	glm::vec3(2.8f, 0.0f, -12.0f),
 	glm::vec3(4.0f, 0.0f, -15.0f),
 	glm::vec3(5.3f, 0.0f, -21.0f),
-	glm::vec3(6.0f, 0.0f, -25.0f)
+	glm::vec3(6.0f, 0.0f, -25.0f),
 
 };
 

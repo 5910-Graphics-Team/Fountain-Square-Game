@@ -81,7 +81,7 @@ void AudioEngine::updateSoundLoopVolume(SoundInfo& soundInfo, float newVolume, i
         if (fadeSampleLength == 0)
             ERRCHECK( channel->setVolume(newVolume) );
         else {
-            ERRCHECK( channel->setVolume(newVolume) );
+            ERRCHECK( channel->setVolume(newVolume) ); // 
             unsigned long long parentclock = 0;
             ERRCHECK( channel->getDSPClock(NULL, &parentclock) );
             ERRCHECK( channel->addFadePoint(parentclock, 0.0f) );//soundInfo.getVolume()));

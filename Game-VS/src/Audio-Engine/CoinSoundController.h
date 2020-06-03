@@ -30,14 +30,10 @@ public:
 		nCharacterCoins++;
 		
 		if (nCharacterCoins == 1) {
-			//musicLayer_StartedChallenge.setVolume(defVolume);
 			audioEngine->updateSoundLoopVolume(musicLayer_StartedChallenge, defVolume, timeSignatureNumerator * beatSampleLength);
-			//audioEngine->updateSoundLoopVolume(musicLayer_StartedChallenge, defVolume);
 			audioEngine->playSound(stinger_CoinPickup);
 		}
 		else if (nCharacterCoins == nTotalCoins) {
-
-			//musicLayer_CompletedChallenge.setVolume(defVolume);
 			audioEngine->updateSoundLoopVolume(musicLayer_CompletedChallenge, defVolume, beatSampleLength);
 			audioEngine->playSound(stinger_Success);
 
