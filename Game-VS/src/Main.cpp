@@ -278,7 +278,7 @@ int main()
         // Do collision detection
         for (auto coin : coins) {
             if (!coin->isDestroyed()) {
-                if (coin->collides(camera)) {
+                if (coin->collidesWithSphere(camera)) {
                     coin->setDestroyed(true);
 					coinSoundController->characterPickedUpCoin();
 					// TODO move below sound-playing logic into CoinChallengeSoundController
