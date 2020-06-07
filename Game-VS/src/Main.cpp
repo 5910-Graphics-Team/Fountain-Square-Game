@@ -139,6 +139,8 @@ int main()
 	GameObject* fir4 = new GameObject(OBJ_BUSH, tranfir4, scalefir4, rotfir4);
 	GameObject* fir5 = new GameObject(OBJ_OAK, tranfir5, scalefir5, rotfir5);
 	GameObject* fir6 = new GameObject(OBJ_OAK, tranfir6, scalefir6, rotfir6);
+	GameObject* house4 = new GameObject(OBJ_HOUSE4, tranHouse4, scaleHouse4, rotHouse4);
+	GameObject* tree_bush = new GameObject(OBJ_TREE_BUSH, tranbush, scalebush, rotbush);
 
 	// List for all game objects
 	gameObjects.push_back(fountain);
@@ -162,6 +164,9 @@ int main()
 	gameObjects.push_back(fir4);
 	gameObjects.push_back(fir5);
 	gameObjects.push_back(fir6);
+	gameObjects.push_back(house4);
+    gameObjects.push_back(tree_bush);
+
 
     /*
         Initialize and store animatable game objects 

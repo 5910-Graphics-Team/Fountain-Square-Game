@@ -1,0 +1,74 @@
+# Blender MTL File: 'HoiAnHouse_M2.blend'
+# Material Count: 6
+
+newmtl Base_Texture.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.100000 0.100000 0.100000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd TB_Base_Texture.002_BaseColor.jpg
+map_Ns TB_Base_Texture.002_Roughness.jpg
+
+newmtl DoorwWindow_Texture.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.100000 0.100000 0.100000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd TB_DoorwWindow_Texture.002_BaseColor.jpg
+map_Ns TB_DoorwWindow_Texture.002_Roughness.jpg
+
+newmtl RailingClumn_Texture.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.100000 0.100000 0.100000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd TB_RailingClumn_Texture.002_BaseColor.jpg
+map_Ns TB_RailingClumn_Texture.002_Roughness.jpg
+
+newmtl RoofBase_Texture.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.100000 0.100000 0.100000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd TB_RoofBase_Texture.002_BaseColor.jpg
+map_Ns TB_RoofBase_Texture.002_Roughness.jpg
+
+newmtl RoofTiles_Texture.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.100000 0.100000 0.100000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd TB_RoofTiles_Texture.002_BaseColor.jpg
+map_Ns TB_RoofTiles_Texture.002_Roughness.jpg
+
+newmtl Walls_Texture.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.100000 0.100000 0.100000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd TB_Walls_Texture.002_BaseColor.jpg
+map_Ns TB_Walls_Texture.002_Roughness.jpg

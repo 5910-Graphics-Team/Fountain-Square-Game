@@ -30,15 +30,17 @@ const char* OBJ_COOLTREE   = "res/objects/flora/trees/Cool_Tree/Cool Tree.obj";
 const char* OBJ_AZALEA	   = "res/objects/flora/Pink_Azalea_Flowers/Pink Azalea Flowers.obj";
 const char* OBJ_COTTAGE    = "res/objects/85-cottage_obj/Japanese House 1.obj";
 const char* OBJ_HOUSE2	   = "res/objects/Houses/House2/Neighbor's House (Act 1).obj";
+//const char* OBJ_HOUSE2     = "res/objects/Houses/House4/cottage/cottage_obj.obj";
 const char* OBJ_WILLOWTREE = "res/objects/flora/trees/Willow Tree/treewillow_tslocator_gmdc.obj";
 const char* OBJ_WELL	   = "res/objects/Houses/Well/Well.obj";
 const char* OBJ_TOWNHOUSE  = "res/objects/Houses/Cool Town Hall/Cool Town Hall.obj";
 const char* OBJ_COIN = "res/objects/coins/coin1/coin.obj";
 const char* OBJ_JAPANESE_TREE  = "res/objects/flora/trees/Oak_Tree/oakTree.obj";
 const char* OBJ_JAPANESE_TREE2 = "res/objects/flora/trees/GreenTree/Tree.obj";
-const char* OBJ_HOUSE4 = "res/objects/Houses/MedievalHouse/casa.obj";
+const char* OBJ_HOUSE4 = "res/objects/Houses/Stable/uploads_files_2279663_HoiAnHouse_M2.obj";
 const char* OBJ_HOUSE3 = "res/objects/Houses/abandoned_cottage/abandoned_cottage.obj";
 const char* OBJ_BUSH = "res/objects/flora/trees/hazelnutbush/Hazelnut.obj";
+const char* OBJ_TREE_BUSH = "res/objects/flora/Tree4/uploads_files_885045_tree_1.obj";
 
 
 
@@ -68,7 +70,8 @@ glm::vec3 tranfir4(-15.0f, -1.5f, -38.0f), scalefir4(0.65f), rotfir4(0.0f);
 glm::vec3 tranfir5(5.0f, -0.5f, 45.0f), scalefir5(0.65f), rotfir5(0.0f);
 glm::vec3 tranfir6(30.0f, -0.5f, 45.0f), scalefir6(0.65f), rotfir6(0.0f);
 glm::vec3 tranHouse(-32.0f, 0.0f, -38.0f), scaleHouse(0.018f), rotHouse(0.0f, 30.0f, 0.0f);
-glm::vec3 tranHouse4(-5.0f, 0.0f, -23.0f), scaleHouse4(0.15f), rotHouse4(0.0f, 220.0f, 0.0f);
+glm::vec3 tranHouse4(-40.0f, 0.0f, -10.0f), scaleHouse4(0.65f), rotHouse4(0.0f, 110.0f, 0.0f);
+glm::vec3 tranbush(-20.5f, 0.1f, -9.0f), scalebush(0.80f), rotbush(0.0f);
 
 // AABB box sizes
 glm::vec3 AABB_DIMS_CHARACTER(3.0f);
