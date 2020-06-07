@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "AABB.h"
+#include "SphereCollider.h"
 #include "GameData.h"
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
@@ -25,7 +26,7 @@ const float ZOOM = 45.0f;
 
 
 // A camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
-class CharacterCamera : public AABB
+class CharacterCamera : public SphereCollider
 {
 public:
     //bool debugCamera = false; TODO add ability to change between cameras for debugging
@@ -49,7 +50,8 @@ public:
 
     // Constructor with vectors
     CharacterCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) 
-        : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), AABB(position, AABB_DIMS_CHARACTER)
+        : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), 
+        SphereCollider(position, 1.0f)
     {
         Position = position;
         WorldUp = up;
@@ -97,7 +99,7 @@ public:
             MovementSpeed = SPEED_WALKING;
         
         // update AABB with new location
-        generateAABBoxAroundPoint(Position);
+        updateSphereColliderPosition(Position);
     }
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.

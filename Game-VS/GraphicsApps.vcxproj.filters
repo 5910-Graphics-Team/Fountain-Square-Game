@@ -129,6 +129,9 @@
     <ClInclude Include="src\Game-Engine\Grass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Game-Engine\SphereCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="res\sound\Medieval Village2.5_Loop1_ImplementationDemo.wav">

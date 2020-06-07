@@ -3,12 +3,13 @@
 #include "GameObject.h"
 #include "AABB.h"
 #include "GameData.h"
+#include "SphereCollider.h"
 
-class Coin : public GameObject, public Animation, public AABB {
+class Coin : public GameObject, public Animation, public SphereCollider {
 
 public:
 	Coin(const char* objFile, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) 
-		: GameObject(objFile, defTrans, defScale, defRot), AABB(defTrans, AABB_DIMS_COIN) {
+		: GameObject(objFile, defTrans, defScale, defRot), SphereCollider(defTrans, 1.5f) {
 	}
 		
 	
