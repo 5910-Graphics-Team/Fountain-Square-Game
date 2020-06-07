@@ -14,7 +14,7 @@ glm::vec4 COLOR_SKY(0.53f , 0.81f, 0.92f, 1.0f);
 glm::vec3 STARTING_PLAYER_LOCATION(-4.0f, 1.0f, -25.0f);
 
 // obj file locations
-const char* OBJ_FOUNTAIN   = "res/objects/fountains/fountainOBJ/fountainOBJ.obj";
+const char* OBJ_FOUNTAIN   = "res/objects/fountains/Basic Fountain 1/Basic Fountain 1.obj";
 const char* OBJ_BACKPACK   = "res/LearnOpenGL/objects/backpack/backpack.obj";
 const char* OBJ_HOUSE      = "res/objects/Monster House/Monster House.obj";
 const char* OBJ_ROCK       = "res/objects/ground/rock/rock.obj";
@@ -50,7 +50,7 @@ glm::vec3 tranBackpack(0.5f, -6.8f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f
 glm::vec3 tranGround(-80.0f, 0.0f, -30.0f), scaleGround(70.0f), rotGround(0.0f, 10.0f, 180.0f);
 glm::vec3 tranTreeFir(0.0f, 0.0f, -10.0f), scaleTreeFir(0.008f), rotTreeFir(0.0f);
 glm::vec3 tranRock(-8.0f, 0.0f, -15.0f), scaleRock(0.38f), rotRock(0.0f);
-glm::vec3 tranFountain(-10.0f, 0.1f, -5.0f), scaleFountain(0.06f), rotFountain(0.0f);
+glm::vec3 tranFountain(-10.0f, 0.3f, -5.0f), scaleFountain(0.37f), rotFountain(3.0f, 0.0f, 0.0f);
 glm::vec3 tranBirds(0.5f, 6.8f, 0.0f), scaleBirds(0.05f), rotBirds(0.0f, 180.0f, 0.0f);
 glm::vec3 tranHarp(tranFountain.x, tranFountain.y + 2.0f, tranFountain.z), scaleHarp(0.0022f), rotHarp(0.0f, 120.0f, 0.0f);
 glm::vec3 tranPine(-32.0f, 0.0f, -10.0f), scalePine(0.60f), rotPine(0.0f);
