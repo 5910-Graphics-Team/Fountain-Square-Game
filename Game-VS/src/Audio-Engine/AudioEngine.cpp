@@ -50,6 +50,7 @@ void AudioEngine::playSound(SoundInfo soundInfo) {
         if (soundInfo.is3D())
             set3dChannelPosition(soundInfo, channel);
 
+        //std::cout << "Playing sound at volume " << soundInfo.getVolume() << '\n';
         channel->setVolume(soundInfo.getVolume());
 
         if (soundInfo.isLoop()) // add to channel map of sounds currently playing, to stop later
@@ -84,9 +85,9 @@ void AudioEngine::updateSoundLoopVolume(SoundInfo& soundInfo, float newVolume, i
             ERRCHECK( channel->setVolume(newVolume) ); // 
             unsigned long long parentclock = 0;
             ERRCHECK( channel->getDSPClock(NULL, &parentclock) );
-            ERRCHECK( channel->addFadePoint(parentclock, 0.0f) );//soundInfo.getVolume()));
+            ERRCHECK( channel->addFadePoint(parentclock, 0.0f) );
             ERRCHECK( channel->addFadePoint(parentclock + fadeSampleLength, newVolume) );
-            //std::cout << "Current DSP Clock: " << parentclock << ", fadein time  = " << fadeSampleLength << "\n";
+            //std::cout << "Current DSP Clock: " << parentclock << ", fadein samples  = " << fadeSampleLength << "\n";
         }
 
         soundInfo.setVolume(newVolume);

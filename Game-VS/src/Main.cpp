@@ -190,13 +190,15 @@ int main()
 		gameObject->setScale(gameObject->getScale() * GLOBAL_SCALE);
 		gameObject->setTranslation(gameObject->getTranslation()* GLOBAL_POSITION_SCALE);
 	}
+
+
 	/*
 		Initialize instanced game objects
 	*/
 
-	AsteroidRing* asteroidRing = new AsteroidRing(OBJ_ROCK, instancedObjectShader);
-	instancedObjects.push_back(asteroidRing);
-	animationObjects.push_back(asteroidRing);
+	//AsteroidRing* asteroidRing = new AsteroidRing(OBJ_ROCK, instancedObjectShader);
+	//instancedObjects.push_back(asteroidRing);
+	//animationObjects.push_back(asteroidRing);
 
 	Grass* grass = new Grass(OBJ_GRASS, instancedObjectShader);
 	instancedObjects.push_back(grass);

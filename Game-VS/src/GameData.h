@@ -52,7 +52,7 @@ glm::vec3 tranFountain(-10.0f, 0.1f, -5.0f), scaleFountain(0.06f), rotFountain(0
 glm::vec3 tranBirds(0.5f, 6.8f, 0.0f), scaleBirds(0.05f), rotBirds(0.0f, 180.0f, 0.0f);
 glm::vec3 tranHarp(tranFountain.x, tranFountain.y + 2.0f, tranFountain.z), scaleHarp(0.0022f), rotHarp(0.0f, 120.0f, 0.0f);
 glm::vec3 tranPine(-32.0f, 0.0f, -10.0f), scalePine(0.60f), rotPine(0.0f);
-glm::vec3 tranGrass(-32.0f, -0.5f, -9.0f), scaleGrass(0.80f), rotGrass(0.0f);
+glm::vec3 tranGrass(50.0f, -0.0f, 50.0f), scaleGrass(0.2f), rotGrass(0.0f);
 glm::vec3 tranCooltree(-37.0f, -1.0f, -10.0f), scaleCooltree(0.70f), rotCooltree(0.0f);
 glm::vec3 tranHouse2(10.0f, 0.2f, 20.0f), scaleHouse2(0.40f), rotHouse2(0.0f, 205.0f, 0.0f);
 glm::vec3 tranJapaneseTree(12.0f, -0.5f, -15.0f), scaleJapaneseTree(0.06f), rotJapaneseTree(0.0f);

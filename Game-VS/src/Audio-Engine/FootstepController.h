@@ -44,15 +44,15 @@ private:
 
 class FootstepSoundController {
 public:
-	std::vector<SoundInfo> soundsFootsteps {
-		SoundInfo(SFX_FOOTSTEP1, defVolume, defReverb),
-		SoundInfo(SFX_FOOTSTEP2, defVolume, defReverb),
-		SoundInfo(SFX_FOOTSTEP3, defVolume, defReverb),
-		SoundInfo(SFX_FOOTSTEP4, defVolume, defReverb),
-		SoundInfo(SFX_FOOTSTEP5, defVolume, defReverb),
-		SoundInfo(SFX_FOOTSTEP6, defVolume, defReverb),
-		SoundInfo(SFX_FOOTSTEP7, defVolume, defReverb),
-		SoundInfo(SFX_FOOTSTEP8, defVolume, defReverb)
+	std::vector<SoundInfo> soundsFootsteps{
+		SoundInfo(SFX_FOOTSTEP1, 0.4f, defReverb),
+		SoundInfo(SFX_FOOTSTEP2, 0.4f, defReverb),
+		SoundInfo(SFX_FOOTSTEP3, 0.4f, defReverb),
+		SoundInfo(SFX_FOOTSTEP4, 0.4f, defReverb),
+		SoundInfo(SFX_FOOTSTEP5, 0.4f, defReverb),
+		SoundInfo(SFX_FOOTSTEP6, 0.4f, defReverb),
+		SoundInfo(SFX_FOOTSTEP7, 0.4f, defReverb),
+		SoundInfo(SFX_FOOTSTEP8, 0.4f, defReverb)
 	};
 
 
@@ -77,13 +77,13 @@ public:
 		this->isRunning = isRunning;
 		setFootstepTimeRandomely();
 	}
-	
+
 private:
 
 	std::shared_ptr<AudioEngine> audioEngine;
-	
+
 	IndexRandomizer indexRandomizer;
-	
+
 	void init() {
 		for (SoundInfo sound : soundsFootsteps) {
 			audioEngine->loadSound(sound);
@@ -99,6 +99,7 @@ private:
 	float currFrame = 0.0f;
 	bool isRunning = false;
 
+	//float defFootstepVolume;// = 0.5f;
 	// Sample variation information
 	int nSounds = 0;
 	int nextFootstepIndex = 0, lastFootstepIndex = 0;
