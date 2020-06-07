@@ -127,9 +127,12 @@ int main()
 	GameObject* house2 = new GameObject(OBJ_HOUSE2, tranHouse2, scaleHouse2, rotHouse2);
 	//GameObject* japaneseTree = new GameObject(OBJ_JAPANESE_TREE, tranJapaneseTree, scaleJapaneseTree, rotJapaneseTree);
 	GameObject* cottage = new GameObject(OBJ_COTTAGE, tranCottage, scaleCottage, rotCottage);
+	GameObject* cottage1 = new GameObject(OBJ_COTTAGE, tranCottage1, scaleCottage1, rotCottage1);
+	GameObject* cottage2 = new GameObject(OBJ_COTTAGE, tranCottage2, scaleCottage2, rotCottage2);
 	GameObject* willowtree = new GameObject(OBJ_WILLOWTREE, tranWillowtree, scaleWillowtree, rotWillowtree);
 	GameObject* well = new GameObject(OBJ_WELL, tranWell, scaleWell, rotWell);
 	GameObject* townhouse = new GameObject(OBJ_TOWNHOUSE, tranGreenPine, scaleGreenPine, rotGreenPine);
+	GameObject* townhouse1 = new GameObject(OBJ_TOWNHOUSE, tranGreenPine1, scaleGreenPine1, rotGreenPine1);
 	GameObject* fir1 = new GameObject(OBJ_OAK, tranfir1, scalefir1, rotfir1);
 	GameObject* fir2 = new GameObject(OBJ_OAK, tranfir2, scalefir2, rotfir2);
 	GameObject* fir3 = new GameObject(OBJ_OAK, tranfir3, scalefir3, rotfir3);
@@ -139,6 +142,9 @@ int main()
 	GameObject* fir4 = new GameObject(OBJ_TREE_BUSH, tranfir4, scalefir4, rotfir4);
 	GameObject* fir5 = new GameObject(OBJ_OAK, tranfir5, scalefir5, rotfir5);
 	GameObject* fir6 = new GameObject(OBJ_OAK, tranfir6, scalefir6, rotfir6);
+	GameObject* fir7 = new GameObject(OBJ_OAK, tranfir7, scalefir7, rotfir7);
+	GameObject* fir8 = new GameObject(OBJ_OAK, tranfir8, scalefir8, rotfir8);
+	GameObject* fir9 = new GameObject(OBJ_OAK, tranfir9, scalefir9, rotfir9);
 	GameObject* house4 = new GameObject(OBJ_HOUSE4, tranHouse4, scaleHouse4, rotHouse4);
 	GameObject* tree_bush = new GameObject(OBJ_TREE_BUSH, tranbush, scalebush, rotbush);
 	GameObject* tree_bush_1 = new GameObject(OBJ_TREE_BUSH, tranbush1, scalebush1, rotbush1);
@@ -156,9 +162,12 @@ int main()
 	gameObjects.push_back(house2);
 	//gameObjects.push_back(japaneseTree);
 	gameObjects.push_back(cottage);
+	gameObjects.push_back(cottage1);
+	gameObjects.push_back(cottage2);
 	gameObjects.push_back(willowtree);
 	gameObjects.push_back(well);
 	gameObjects.push_back(townhouse);
+	gameObjects.push_back(townhouse1);
 	gameObjects.push_back(japaneseTree2);
 	gameObjects.push_back(fir1);
 	gameObjects.push_back(fir2);
@@ -166,6 +175,9 @@ int main()
 	gameObjects.push_back(fir4);
 	gameObjects.push_back(fir5);
 	gameObjects.push_back(fir6);
+	gameObjects.push_back(fir7);
+	gameObjects.push_back(fir8);
+	gameObjects.push_back(fir9);
 	gameObjects.push_back(house4);
     gameObjects.push_back(tree_bush);
 	gameObjects.push_back(tree_bush_1);
