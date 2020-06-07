@@ -136,11 +136,13 @@ int main()
 	GameObject* house3 = new GameObject(OBJ_HOUSE3, tranHouse, scaleHouse, rotHouse);
 	//GameObject* house4 = new GameObject(OBJ_HOUSE4, tranHouse4, scaleHouse4, rotHouse4);
 	GameObject* japaneseTree2 = new GameObject(OBJ_JAPANESE_TREE2, tranJapaneseTree2, scaleJapaneseTree2, rotJapaneseTree2);
-	GameObject* fir4 = new GameObject(OBJ_BUSH, tranfir4, scalefir4, rotfir4);
+	GameObject* fir4 = new GameObject(OBJ_TREE_BUSH, tranfir4, scalefir4, rotfir4);
 	GameObject* fir5 = new GameObject(OBJ_OAK, tranfir5, scalefir5, rotfir5);
 	GameObject* fir6 = new GameObject(OBJ_OAK, tranfir6, scalefir6, rotfir6);
 	GameObject* house4 = new GameObject(OBJ_HOUSE4, tranHouse4, scaleHouse4, rotHouse4);
 	GameObject* tree_bush = new GameObject(OBJ_TREE_BUSH, tranbush, scalebush, rotbush);
+	GameObject* tree_bush_1 = new GameObject(OBJ_TREE_BUSH, tranbush1, scalebush1, rotbush1);
+	GameObject* tree_bush_2 = new GameObject(OBJ_TREE_BUSH, tranbush2, scalebush2, rotbush2);
 
 	// List for all game objects
 	gameObjects.push_back(fountain);
@@ -166,6 +168,8 @@ int main()
 	gameObjects.push_back(fir6);
 	gameObjects.push_back(house4);
     gameObjects.push_back(tree_bush);
+	gameObjects.push_back(tree_bush_1);
+	gameObjects.push_back(tree_bush_2);
 
 
     /*
@@ -278,7 +282,7 @@ int main()
         // Do collision detection
         for (auto coin : coins) {
             if (!coin->isDestroyed()) {
-                if (coin->collides(camera)) {
+                if (coin->collidesWithSphere(camera)) {
                     coin->setDestroyed(true);
 					coinSoundController->characterPickedUpCoin();
 					// TODO move below sound-playing logic into CoinChallengeSoundController

@@ -14,7 +14,7 @@ glm::vec4 COLOR_SKY(0.53f , 0.81f, 0.92f, 1.0f);
 glm::vec3 STARTING_PLAYER_LOCATION(-4.0f, 1.0f, -25.0f);
 
 // obj file locations
-const char* OBJ_FOUNTAIN   = "res/objects/fountains/fountainOBJ/fountainOBJ.obj";
+const char* OBJ_FOUNTAIN   = "res/objects/fountains/Basic Fountain 1/Basic Fountain 1.obj";
 const char* OBJ_BACKPACK   = "res/LearnOpenGL/objects/backpack/backpack.obj";
 const char* OBJ_HOUSE      = "res/objects/Monster House/Monster House.obj";
 const char* OBJ_ROCK       = "res/objects/ground/rock/rock.obj";
@@ -50,7 +50,7 @@ glm::vec3 tranBackpack(0.5f, -6.8f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f
 glm::vec3 tranGround(-80.0f, 0.0f, -30.0f), scaleGround(70.0f), rotGround(0.0f, 10.0f, 180.0f);
 glm::vec3 tranTreeFir(0.0f, 0.0f, -10.0f), scaleTreeFir(0.008f), rotTreeFir(0.0f);
 glm::vec3 tranRock(-8.0f, 0.0f, -15.0f), scaleRock(0.38f), rotRock(0.0f);
-glm::vec3 tranFountain(-10.0f, 0.1f, -5.0f), scaleFountain(0.06f), rotFountain(0.0f);
+glm::vec3 tranFountain(-10.0f, 0.3f, -5.0f), scaleFountain(0.37f), rotFountain(3.0f, 0.0f, 0.0f);
 glm::vec3 tranBirds(0.5f, 6.8f, 0.0f), scaleBirds(0.05f), rotBirds(0.0f, 180.0f, 0.0f);
 glm::vec3 tranHarp(tranFountain.x, tranFountain.y + 2.0f, tranFountain.z), scaleHarp(0.0022f), rotHarp(0.0f, 120.0f, 0.0f);
 glm::vec3 tranPine(-32.0f, 0.0f, -10.0f), scalePine(0.60f), rotPine(0.0f);
@@ -66,13 +66,14 @@ glm::vec3 tranJapaneseTree2(-15.0f, 0.5f, 30.0f), scaleJapaneseTree2(0.60f), rot
 glm::vec3 tranfir1(-40.0f, -0.5f, 38.0f), scalefir1(0.65f), rotfir1(0.0f);
 glm::vec3 tranfir2(-40.0f, -0.5f, 60.0f), scalefir2(0.65f), rotfir2(0.0f);
 glm::vec3 tranfir3(-40.0f, -0.5f, 75.0f), scalefir3(0.65f), rotfir3(0.0f);
-glm::vec3 tranfir4(-15.0f, -1.5f, -38.0f), scalefir4(0.65f), rotfir4(0.0f);
+glm::vec3 tranfir4(-15.0f, 0.1f, -38.0f), scalefir4(0.65f), rotfir4(0.0f);
 glm::vec3 tranfir5(5.0f, -0.5f, 45.0f), scalefir5(0.65f), rotfir5(0.0f);
 glm::vec3 tranfir6(30.0f, -0.5f, 45.0f), scalefir6(0.65f), rotfir6(0.0f);
 glm::vec3 tranHouse(-32.0f, 0.0f, -38.0f), scaleHouse(0.018f), rotHouse(0.0f, 30.0f, 0.0f);
 glm::vec3 tranHouse4(-40.0f, 0.0f, -10.0f), scaleHouse4(0.65f), rotHouse4(0.0f, 110.0f, 0.0f);
 glm::vec3 tranbush(-20.5f, 0.1f, -9.0f), scalebush(0.80f), rotbush(0.0f);
-
+glm::vec3 tranbush1(-30.5f, 0.1f, -25.0f), scalebush1(0.90f), rotbush1(0.0f);
+glm::vec3 tranbush2(-10.5f, 0.1f, 25.0f), scalebush2(0.90f), rotbush2(0.0f);
 // AABB box sizes
 glm::vec3 AABB_DIMS_CHARACTER(3.0f);
 glm::vec3 AABB_DIMS_COIN(3.0f);
