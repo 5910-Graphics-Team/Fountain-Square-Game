@@ -167,7 +167,7 @@ int main()
 	GameObject* treeline2 = new GameObject(OBJ_TREE_LINE, trantreeline2, scaletreeline2, rottreeline2);
 	GameObject* treeline3 = new GameObject(OBJ_TREE_LINE, trantreeline3, scaletreeline3, rottreeline3);
 	GameObject* treeline4 = new GameObject(OBJ_TREE_LINE, trantreeline4, scaletreeline4, rottreeline4);
-
+	GameObject* treeline5 = new GameObject(OBJ_TREE_LINE, trantreeline5, scaletreeline4, rottreeline4);
 	//GameObject* rainbow = new GameObject(OBJ_RAINBOW, tranrainbow, scalerainbow, rotrainbow);
 
 	// List for all game objects
@@ -221,6 +221,7 @@ int main()
 	gameObjects.push_back(treeline2);
 	gameObjects.push_back(treeline3);
 	gameObjects.push_back(treeline4);
+	gameObjects.push_back(treeline5);
 	//gameObjects.push_back(rainbow);
 
 

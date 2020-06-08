@@ -100,6 +100,7 @@ glm::vec3 trantreeline1(120.5f, -0.3f, 60.0f), scaletreeline1(0.90f), rottreelin
 glm::vec3 trantreeline2(140.5f, -4.8f, 60.0f), scaletreeline2(0.90f), rottreeline2(0.0f);
 glm::vec3 trantreeline3(160.5f, -1.4f, 60.0f), scaletreeline3(0.90f), rottreeline3(0.0f);
 glm::vec3 trantreeline4(180.5f, -1.4f, 60.0f), scaletreeline4(0.90f), rottreeline4(0.0f);
+glm::vec3 trantreeline5(-10.5f, -1.4f, -70.0f);
 //glm::vec3 tranrainbow(-10.5f, 0.1f, 25.0f), scalerainbow(0.90f), rotrainbow(180.0f, 180.0f,180.0f);
 
 
