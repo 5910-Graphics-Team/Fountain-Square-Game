@@ -41,8 +41,8 @@ const char* OBJ_HOUSE4 = "res/objects/Houses/Stable/uploads_files_2279663_HoiAnH
 const char* OBJ_HOUSE3 = "res/objects/Houses/abandoned_cottage/abandoned_cottage.obj";
 const char* OBJ_BUSH = "res/objects/flora/trees/hazelnutbush/Hazelnut.obj";
 const char* OBJ_TREE_BUSH = "res/objects/flora/Tree4/uploads_files_885045_tree_1.obj";
-
-
+const char* OBJ_TREE_LINE = "res/objects/flora/Tree_Line/FKLPI_Forest/FKLPI_Forest.dae";
+//const char* OBJ_RAINBOW = "res/objects/flora/Jungle Island Background/Tree4JungleIslandBg.obj";
 
 glm::vec3 GLOBAL_SCALE(0.5f), GLOBAL_POSITION_SCALE(0.75);
 // game object starting positions
@@ -80,6 +80,14 @@ glm::vec3 tranHouse4(-40.0f, 0.0f, -10.0f), scaleHouse4(0.65f), rotHouse4(0.0f, 
 glm::vec3 tranbush(-20.5f, 0.1f, -9.0f), scalebush(0.80f), rotbush(0.0f);
 glm::vec3 tranbush1(-30.5f, 0.1f, -25.0f), scalebush1(0.90f), rotbush1(0.0f);
 glm::vec3 tranbush2(-10.5f, 0.1f, 25.0f), scalebush2(0.90f), rotbush2(0.0f);
+glm::vec3 trantreeline(100.5f, -0.3f, 60.0f), scaletreeline(0.90f), rottreeline(0.0f);
+glm::vec3 trantreeline1(120.5f, -0.3f, 60.0f), scaletreeline1(0.90f), rottreeline1(0.0f);
+glm::vec3 trantreeline2(140.5f, -4.8f, 60.0f), scaletreeline2(0.90f), rottreeline2(0.0f);
+glm::vec3 trantreeline3(160.5f, -1.4f, 60.0f), scaletreeline3(0.90f), rottreeline3(0.0f);
+glm::vec3 trantreeline4(180.5f, -1.4f, 60.0f), scaletreeline4(0.90f), rottreeline4(0.0f);
+//glm::vec3 tranrainbow(-10.5f, 0.1f, 25.0f), scalerainbow(0.90f), rotrainbow(180.0f, 180.0f,180.0f);
+
+
 // AABB box sizes
 glm::vec3 AABB_DIMS_CHARACTER(3.0f);
 glm::vec3 AABB_DIMS_COIN(3.0f);
