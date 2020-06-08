@@ -137,18 +137,31 @@ int main()
 	GameObject* fir2 = new GameObject(OBJ_OAK, tranfir2, scalefir2, rotfir2);
 	GameObject* fir3 = new GameObject(OBJ_OAK, tranfir3, scalefir3, rotfir3);
 	GameObject* house3 = new GameObject(OBJ_HOUSE3, tranHouse, scaleHouse, rotHouse);
-	//GameObject* house4 = new GameObject(OBJ_HOUSE4, tranHouse4, scaleHouse4, rotHouse4);
+	GameObject* backhouse2 = new GameObject(OBJ_HOUSE3, tranHouseback2, scaleHouseback2, rotHouseback2);
 	GameObject* japaneseTree2 = new GameObject(OBJ_JAPANESE_TREE2, tranJapaneseTree2, scaleJapaneseTree2, rotJapaneseTree2);
+	GameObject* japaneseTree3 = new GameObject(OBJ_JAPANESE_TREE2, tranJapaneseTree3, scaleJapaneseTree2, rotJapaneseTree2);
 	GameObject* fir4 = new GameObject(OBJ_TREE_BUSH, tranfir4, scalefir4, rotfir4);
 	GameObject* fir5 = new GameObject(OBJ_OAK, tranfir5, scalefir5, rotfir5);
 	GameObject* fir6 = new GameObject(OBJ_OAK, tranfir6, scalefir6, rotfir6);
 	GameObject* fir7 = new GameObject(OBJ_OAK, tranfir7, scalefir7, rotfir7);
 	GameObject* fir8 = new GameObject(OBJ_OAK, tranfir8, scalefir8, rotfir8);
 	GameObject* fir9 = new GameObject(OBJ_OAK, tranfir9, scalefir9, rotfir9);
+	GameObject* fir10 = new GameObject(OBJ_OAK, tranfir10, scalefir9, rotfir9);
+	GameObject* fir11 = new GameObject(OBJ_OAK, tranfir11, scalefir9, rotfir9);
+	GameObject* fir12 = new GameObject(OBJ_OAK, tranfir12, scalefir9, rotfir9);
 	GameObject* house4 = new GameObject(OBJ_HOUSE4, tranHouse4, scaleHouse4, rotHouse4);
+	GameObject* house5 = new GameObject(OBJ_HOUSE4, tranHouse5, scaleHouse4, rotHouse5);
 	GameObject* tree_bush = new GameObject(OBJ_TREE_BUSH, tranbush, scalebush, rotbush);
 	GameObject* tree_bush_1 = new GameObject(OBJ_TREE_BUSH, tranbush1, scalebush1, rotbush1);
 	GameObject* tree_bush_2 = new GameObject(OBJ_TREE_BUSH, tranbush2, scalebush2, rotbush2);
+	GameObject* backfir1 = new GameObject(OBJ_OAK, tranfirback1, scalefirback1, rotfirback1);
+	GameObject* backfir2 = new GameObject(OBJ_OAK, tranfirback2, scalefirback2, rotfirback2);
+	GameObject* backfir3 = new GameObject(OBJ_OAK, tranfirback3, scalefirback3, rotfirback3);
+	GameObject* backfir5 = new GameObject(OBJ_OAK, tranfirback5, scalefirback5, rotfirback5);
+	GameObject* backfir6 = new GameObject(OBJ_OAK, tranfirback6, scalefirback6, rotfirback6);
+	GameObject* backfir7 = new GameObject(OBJ_OAK, tranfirback7, scalefirback7, rotfirback7);
+	GameObject* backfir8 = new GameObject(OBJ_OAK, tranfirback8, scalefirback8, rotfirback8);
+	GameObject* backfir9 = new GameObject(OBJ_OAK, tranfirback9, scalefirback9, rotfirback9);
 
 	// List for all game objects
 	gameObjects.push_back(fountain);
@@ -169,6 +182,7 @@ int main()
 	gameObjects.push_back(townhouse);
 	gameObjects.push_back(townhouse1);
 	gameObjects.push_back(japaneseTree2);
+	gameObjects.push_back(japaneseTree3);
 	gameObjects.push_back(fir1);
 	gameObjects.push_back(fir2);
 	gameObjects.push_back(fir3);
@@ -178,10 +192,23 @@ int main()
 	gameObjects.push_back(fir7);
 	gameObjects.push_back(fir8);
 	gameObjects.push_back(fir9);
+	gameObjects.push_back(fir10);
+	gameObjects.push_back(fir11);
+	gameObjects.push_back(fir12);
 	gameObjects.push_back(house4);
+	gameObjects.push_back(house5);
+	gameObjects.push_back(backhouse2);
     gameObjects.push_back(tree_bush);
 	gameObjects.push_back(tree_bush_1);
 	gameObjects.push_back(tree_bush_2);
+	gameObjects.push_back(backfir1);
+	gameObjects.push_back(backfir2);
+	gameObjects.push_back(backfir3);
+	gameObjects.push_back(backfir5);
+	gameObjects.push_back(backfir6);
+	gameObjects.push_back(backfir7);
+	gameObjects.push_back(backfir8);
+	gameObjects.push_back(backfir9);
 
 
     /*
