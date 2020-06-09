@@ -72,7 +72,18 @@ public:
 
 
 	}
+	void reset() {
+		nCharacterCoins = 0;
+		audioEngine->stopSound(musicLayer_BeforeChallenge);
+		audioEngine->stopSound(musicLayer_ChallengeIntensity2);
+		audioEngine->stopSound(musicLayer_StartedChallenge);
+		audioEngine->stopSound(musicSection2_FullMix);
+		initLoopingSoundInfoVolumes();
+		startScore();
+	}
+
 private:
+	
 	// Player stats
 	int nTotalCoins;
 	// Total coins needed
@@ -103,8 +114,15 @@ private:
 	SoundInfo stinger_Success                { STINGER_CHALLENGE_SUCCESS, defVolume, 0.0f };
 	
 
+	void initLoopingSoundInfoVolumes() {
+		musicLayer_BeforeChallenge.setVolume(0.0f);
+		musicLayer_StartedChallenge.setVolume(0.0f);
+		musicLayer_ChallengeIntensity2.setVolume(0.0f);
+		musicSection2_FullMix.setVolume(1.0f);
 
+	}
 	void init() {
+		initLoopingSoundInfoVolumes();
 		audioEngine->loadSound(stinger_CoinPickup);
 		audioEngine->loadSound(musicLayer_BeforeChallenge);
 		audioEngine->loadSound(musicLayer_StartedChallenge);
