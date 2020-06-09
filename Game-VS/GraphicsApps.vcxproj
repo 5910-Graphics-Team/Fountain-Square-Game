@@ -173,16 +173,8 @@
     <ClCompile Include="..\Lib\Numbers.cpp" />
     <ClCompile Include="..\Lib\Quaternion.cpp" />
     <ClCompile Include="..\Lib\Widgets.cpp" />
-    <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="ParticleGenerator.cpp" />
-    <ClCompile Include="particle_object.cpp" />
-    <ClCompile Include="particle_shader.cpp" />
-    <ClCompile Include="Pool.cpp" />
-    <ClCompile Include="resource_manager.cpp" />
-    <ClCompile Include="sprite_renderer.cpp" />
     <ClCompile Include="src\Audio-Engine\AudioEngine.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -192,14 +184,6 @@
     <Image Include="res\objects\environment\grass.tga" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Particle.h" />
-    <ClInclude Include="ParticleGenerator.h" />
-    <ClInclude Include="particle_object.h" />
-    <ClInclude Include="particle_shader.h" />
-    <ClInclude Include="Pool.h" />
-    <ClInclude Include="PoolTexture.h" />
-    <ClInclude Include="resource_manager.h" />
-    <ClInclude Include="sprite_renderer.h" />
     <ClInclude Include="src\Audio-Engine\CoinSoundController.h" />
     <ClInclude Include="src\Audio-Engine\FootstepController.h" />
     <ClInclude Include="src\Audio-Engine\SoundInfo.h" />
@@ -221,7 +205,6 @@
     <ClInclude Include="src\Game-Engine\Model.h" />
     <ClInclude Include="src\Game-Engine\Shader.h" />
     <ClInclude Include="src\Util\Console.h" />
-    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="res\sound\Medieval Village2.5_Loop1_ImplementationDemo.wav" />
