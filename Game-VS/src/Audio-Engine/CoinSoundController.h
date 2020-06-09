@@ -21,6 +21,7 @@ public:
 		audioEngine->playSound(musicLayer_BeforeChallenge);
 		audioEngine->playSound(musicLayer_StartedChallenge);
 		audioEngine->playSound(musicLayer_ChallengeIntensity2);
+		// fade in music	
 		audioEngine->updateSoundLoopVolume(musicLayer_BeforeChallenge, defVolume, beatSampleLength * timeSignatureNumerator);
 	}
 
@@ -46,7 +47,6 @@ public:
 			audioEngine->updateSoundLoopVolume(musicLayer_StartedChallenge, 0.0f, fadeLength);
 			audioEngine->updateSoundLoopVolume(musicLayer_ChallengeIntensity2, 0.0f, fadeLength);
 
-
 			// play success sound TODO update sound
 			audioEngine->playSound(stinger_Success);
 			
@@ -60,8 +60,7 @@ public:
 			
 			audioEngine->updateSoundLoopVolume(musicSection2_FullMix, 0.0f, beat2SampleLength * timeSignatureNumerator * remainingLoops);
 			// TODO Fix setSoundLoopCount
-			//audioEngine->setSoundLoopCount(musicSection2_FullMix, remainingLoops);
-			
+			//audioEngine->setSoundLoopCount(musicSection2_FullMix, remainingLoops);s
 			// TODO fade back into 'regular' ambient music (non-coin challenge)?
 		}
 
@@ -106,12 +105,12 @@ private:
 	const char* STINGER_CHALLENGE_SUCCESS = "res/sound/music/coin-challenge/CoinChallenge_Stinger_CompleteChallenge.wav"; 
 	const char* MUSIC2_FULLMIX =            "res/sound/music/coin-challenge/CoinChallenge_MX2_FullMix.wav";
 
-	SoundInfo musicLayer_BeforeChallenge     { MUSIC_LAYER1,        0.0f,      0.0f, SOUND_LOOP };
-	SoundInfo musicLayer_StartedChallenge    { MUSIC_LAYER2,        0.0f,      0.0f, SOUND_LOOP };
-	SoundInfo musicLayer_ChallengeIntensity2 { MUSIC_LAYER3,        0.0f,      0.0f, SOUND_LOOP };
-	SoundInfo musicSection2_FullMix          { MUSIC2_FULLMIX,      1.0f,      0.0f, SOUND_LOOP };
-	SoundInfo stinger_CoinPickup             { STINGER_COIN_PICKUP, defVolume, 0.0f };
-	SoundInfo stinger_Success                { STINGER_CHALLENGE_SUCCESS, defVolume, 0.0f };
+	SoundInfo musicLayer_BeforeChallenge     { MUSIC_LAYER1,              0.0f,      0.0f, SOUND_LOOP };
+	SoundInfo musicLayer_StartedChallenge    { MUSIC_LAYER2,              0.0f,      0.0f, SOUND_LOOP };
+	SoundInfo musicLayer_ChallengeIntensity2 { MUSIC_LAYER3,              0.0f,      0.0f, SOUND_LOOP };
+	SoundInfo musicSection2_FullMix          { MUSIC2_FULLMIX,            0.8f,      0.0f, SOUND_LOOP };
+	SoundInfo stinger_CoinPickup             { STINGER_COIN_PICKUP,       0.75f,     0.0f };
+	SoundInfo stinger_Success                { STINGER_CHALLENGE_SUCCESS, 0.70f,     0.0f };
 	
 
 	void initLoopingSoundInfoVolumes() {

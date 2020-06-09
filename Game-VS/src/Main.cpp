@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdlib.h> // rand()
 #include <memory>   // shared_ptr
+#include <thread>
+#include <chrono>
 #include <glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -19,6 +21,7 @@
 #include "Game-Engine/AsteroidRing.h"
 #include "Game-Engine/Coin.h"
 #include "Game-Engine/Grass.h"
+#include "Game-Engine/NPC.h"
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 void MouseCallback(GLFWwindow* window, double xpos, double ypos);
@@ -38,6 +41,8 @@ std::vector<Animation*> animationObjects;
 std::vector<InstancedObject*> instancedObjects;
 //std::vector<AABB*> aabbObjects;
 std::vector<Coin*> coins;
+SphereCollider npcDialogZone(tranNPC, 10.0f);
+std::thread dialog_Display_SyncThread; // thread which is used to display coins after waiting for dialog sound to finish
 
 // timing globals
 float deltaTime = 0.0f;
@@ -48,6 +53,19 @@ float currentFrame = 0.0f;
 std::shared_ptr<AudioEngine> audioEngine;
 FootstepSoundController* footstepController;
 CoinChallengeSoundController* coinSoundController;
+
+void resetCoins() {
+	for (Coin* coin : coins) coin->setDestroyed(false);
+}
+
+void waitForDialogueCompletion(unsigned int lengthMS) {
+	std::cout << "In thread, length MS = "<< lengthMS << '\n';
+	std::this_thread::sleep_for(std::chrono::milliseconds(lengthMS));
+	resetCoins();
+	coinSoundController->startScore();
+
+
+}
 
 
 static glm::mat4 getProjection() {
@@ -171,11 +189,11 @@ int main()
 	GameObject* tree_bush_4 = new GameObject(OBJ_TREE_BUSH, tranbushback4, scalebushback4, rotbushback4);
 	GameObject* tree_bush_5 = new GameObject(OBJ_TREE_BUSH, tranbushback5, scalebushback5, rotbushback5);
 	GameObject* tree_bush_6 = new GameObject(OBJ_OAK, tranbush6, scalebush6, rotbush6);
-	GameObject* npc = new GameObject(OBJ_YUN, tranYun, scaleYun, rotYun);
+	//GameObject* npc = new GameObject(OBJ_YUN, tranNPC, scaleNPC, rotNPC);
 	//GameObject* rainbow = new GameObject(OBJ_RAINBOW, tranrainbow, scalerainbow, rotrainbow);
 
 	// List for all game objects
-	gameObjects.push_back(npc);
+	//gameObjects.push_back(npc);
 	gameObjects.push_back(fountain);
 	gameObjects.push_back(house3);
 	//gameObjects.push_back(house4);
@@ -239,9 +257,10 @@ int main()
 
     Bird* birds = new Bird(OBJ_BIRDS, tranBirds, scaleBirds, rotBirds);
     Harp* harp  = new Harp(OBJ_HARP, tranHarp, scaleHarp, rotHarp);
-
+	NPC* npc    = new NPC (OBJ_YUN, tranNPC, scaleNPC, rotNPC, 5.0f);
     gameObjects.push_back(birds);
     gameObjects.push_back(harp);
+	gameObjects.push_back(npc);
 
     // add to list of animation objects which need to be updated each frame
     animationObjects.push_back(birds);
@@ -250,6 +269,7 @@ int main()
     // Load all animated coins and add to game objects, animation objects, and coin list
 	for (auto trans : coinTranslations) {
 		Coin* coin = new Coin(OBJ_COIN, trans, scaleCoins, rotCoins);
+		coin->setDestroyed(true);
         gameObjects.push_back(coin);
         animationObjects.push_back(coin);
         coins.push_back(coin);
@@ -285,10 +305,11 @@ int main()
 	audioEngine->loadSound(soundOneShot);
 	audioEngine->loadSound(musicLoop2d);
 	audioEngine->loadSound(soundOneShot3D);
-	audioEngine->loadSound(soundLoop3D);
+	audioEngine->loadSound(fountainSoundLoop);
 	audioEngine->loadSound(soundLoop3DMoving);
 	audioEngine->loadSound(soundTree);
 	audioEngine->loadSound(soundJapaneseTree);
+	audioEngine->loadSound(dialogue);
 	//audioEngine->loadSound(soundCoinPickup);
 	//audioEngine->loadSound(soundCoinSuccess);
 	// load FMOD soundbanks
@@ -308,11 +329,11 @@ int main()
 	/*
 		Startlay inital soundscape
 	*/
-	audioEngine->playSound(soundLoop3D);
+	//audioEngine->playSound(fountainSoundLoop);
 	//audioEngine->playSound(musicLoop2d);
 	audioEngine->playSound(soundTree);
 	audioEngine->playSound(soundJapaneseTree);
-	coinSoundController->startScore();
+	//coinSoundController->startScore();
     // draw in wireframe mode
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
@@ -346,11 +367,21 @@ int main()
                 if (coin->collidesWithSphere(camera)) {
                     coin->setDestroyed(true);
 					coinSoundController->characterPickedUpCoin();
-					// TODO move below sound-playing logic into CoinChallengeSoundController
 					
                 }
             }
         }
+
+		if (!npc->hasSaidDialogueLine()) {
+			if (npc->collidesWithSphere(camera)) {
+				audioEngine->playSound(dialogue);
+				npc->setHasSaidDialogueLine(true);
+				unsigned int lengthMS = audioEngine->getSoundLengthInMS(dialogue);
+				std::cout << "Before thread, length MS = " << lengthMS << '\n';
+				std::thread thd(waitForDialogueCompletion, lengthMS);
+				thd.detach();
+			}
+		}
 
         // update animation objects with current frame
         for (int i = 0; i < animationObjects.size(); i++)
@@ -451,19 +482,16 @@ void ProcessInput(GLFWwindow* window)
 		audioEngine->playSound(soundOneShot3D);
 	
 	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && keyCanRetrigger(currentFrame, key4LastTime)) 
-		audioEngine->soundIsPlaying(soundLoop3D) ? audioEngine->stopSound(soundLoop3D) : audioEngine->playSound(soundLoop3D);
+		audioEngine->soundIsPlaying(fountainSoundLoop) ? audioEngine->stopSound(fountainSoundLoop) : audioEngine->playSound(fountainSoundLoop);
 	
 	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && keyCanRetrigger(currentFrame, key5LastTime))
 		audioEngine->eventIsPlaying(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE) ? 
 				audioEngine->stopEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE):
 				audioEngine->playEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
 	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS && keyCanRetrigger(currentFrame, key9LastTime)) {
-		
-		for(Coin* coin: coins) coin->setDestroyed(false);
+		resetCoins();
 		coinSoundController->reset();
 	}
-		
-
 	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && keyCanRetrigger(currentFrame, key0LastTime))
 		audioEngine->isMuted() ? 
 				audioEngine->unmuteAllSound():

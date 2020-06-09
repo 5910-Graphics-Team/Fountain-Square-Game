@@ -195,6 +195,7 @@
     <ClInclude Include="src\Game-Engine\Grass.h" />
     <ClInclude Include="src\Game-Engine\Harp.h" />
     <ClInclude Include="src\Game-Engine\InstancedObject.h" />
+    <ClInclude Include="src\Game-Engine\NPC.h" />
     <ClInclude Include="src\Game-Engine\Player.h" />
     <ClInclude Include="src\Game-Engine\SphereCollider.h" />
     <ClInclude Include="src\GameData.h" />

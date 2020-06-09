@@ -21,6 +21,11 @@
 void ERRCHECK_fn(FMOD_RESULT result, const char* file, int line);
 #define ERRCHECK(_result) ERRCHECK_fn(_result, __FILE__, __LINE__)
 
+
+struct SoundBus {
+
+};
+
 class AudioEngine {
 public:
     /**
@@ -67,6 +72,16 @@ public:
      * Stops a looping sound if it's currently playing.
      */
     void stopSound(SoundInfo soundInfo);
+
+    unsigned int getSoundLengthInMS(SoundInfo soundInfo) {
+        unsigned int length = 0;
+        if (sounds.count(soundInfo.getUniqueID())) {
+		
+			ERRCHECK(sounds[soundInfo.getUniqueID()]->getLength(&length, FMOD_TIMEUNIT_MS));
+            
+        }
+        return length;
+    }
 
     void updateSoundLoopVolume(SoundInfo &soundInfo, float newVolume, unsigned int fadeSampleLength = 0);
 
@@ -180,8 +195,6 @@ private:
     
     // FMOD's low-level audio system which plays audio files and is obtained from Studio System
     FMOD::System* lowLevelSystem = nullptr;          
-
-   
 
     // Max FMOD::Channels for the audio engine 
     static const unsigned int MAX_AUDIO_CHANNELS = 1024; 

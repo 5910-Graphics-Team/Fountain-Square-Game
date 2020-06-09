@@ -11,7 +11,7 @@ void AudioEngine::init() {
     ERRCHECK( FMOD::Studio::System::create(&studioSystem) );
     ERRCHECK( studioSystem->getCoreSystem(&lowLevelSystem) );
     ERRCHECK( lowLevelSystem->setSoftwareFormat(AUDIO_SAMPLE_RATE, FMOD_SPEAKERMODE_STEREO, 0) );
-    ERRCHECK( lowLevelSystem->set3DSettings(1.0, DISTANCEFACTOR, 1.0f) );
+    ERRCHECK( lowLevelSystem->set3DSettings(1.0, DISTANCEFACTOR, 0.5f) );
     ERRCHECK( studioSystem->initialize(MAX_AUDIO_CHANNELS, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0) );
     ERRCHECK( lowLevelSystem->getMasterChannelGroup(&mastergroup) );
     initReverb();
@@ -34,6 +34,9 @@ void AudioEngine::loadSound(SoundInfo soundInfo) {
         ERRCHECK(sound->setMode(soundInfo.isLoop() ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF));
         ERRCHECK(sound->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR));
         sounds.insert({ soundInfo.getUniqueID(), sound });
+        unsigned int msLength = 0;
+		ERRCHECK(sounds[soundInfo.getUniqueID()]->getLength(&msLength, FMOD_TIMEUNIT_MS));
+        soundInfo.setMSLength(msLength);
         soundInfo.setLoaded(SOUND_LOADED);
     }
     else

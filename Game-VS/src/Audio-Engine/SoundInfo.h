@@ -41,7 +41,7 @@ public:
         this->soundPositionType = soundPositionType;
         this->soundLoadInfo = SOUND_NOT_LOADED;
     }
-
+    
 
     bool isLoop() {
         return soundPlaybackType == SOUND_LOOP;
@@ -95,9 +95,17 @@ public:
     void setVolume(float vol) {
         this->volume = vol;
     }
+    // TODO FIX
+    void setMSLength(unsigned int msLength) {
+        this->msLength = msLength;
+        //this->msLength = new unsigned int(msLength);
+    }
+    // TODO FIX
+    const unsigned int getMSLength() {
+        return msLength;
+    }
 
 private:
-
     std::string uniqueID;
     const char* filePath;
 
@@ -107,10 +115,12 @@ private:
     SOUND_LOAD_INFO     soundLoadInfo;
 
     
-    
     float reverbAmount;
     float volume; // 0 to 1
     float x, y, z;
+
+    // Calculated and set during loading by the audio engine
+	unsigned int msLength;
 
 
     // TODO implement sound instancing
