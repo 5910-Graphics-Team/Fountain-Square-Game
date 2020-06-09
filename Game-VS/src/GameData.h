@@ -99,10 +99,10 @@ glm::vec3 tranbushback4(-79.0f, -1.5f, -5.0f), scalebushback4(0.65f), rotbushbac
 glm::vec3 tranbushback5(-75.0f, -1.5f, -15.0f), scalebushback5(0.65f), rotbushback5(0.0f);
 glm::vec3 tranbush6(-60.5f, -1.5f, 5.0f), scalebush6(0.65f), rotbush6(0.0f);
 glm::vec3 trantreeline(100.5f, -0.3f, 60.0f), scaletreeline(0.90f), rottreeline(0.0f);
-glm::vec3 trantreeline1(120.5f, -0.3f, 60.0f), scaletreeline1(0.90f), rottreeline1(0.0f);
-glm::vec3 trantreeline2(140.5f, -4.8f, 60.0f), scaletreeline2(0.90f), rottreeline2(0.0f);
-glm::vec3 trantreeline3(160.5f, -1.4f, 60.0f), scaletreeline3(0.90f), rottreeline3(0.0f);
-glm::vec3 trantreeline4(180.5f, -1.4f, 60.0f), scaletreeline4(0.90f), rottreeline4(0.0f);
+glm::vec3 trantreeline1(120.5f, -1.5f, 60.0f), scaletreeline1(0.90f), rottreeline1(0.0f, 0.0f, -4.0f);
+glm::vec3 trantreeline2(140.5f, -2.9f, 60.0f), scaletreeline2(0.90f), rottreeline2(0.0f, 0.0f, -9.0f);
+glm::vec3 trantreeline3(160.5f, -7.7f, 60.0f), scaletreeline3(0.90f), rottreeline3(0.0f, 0.0f,-1.2f);
+glm::vec3 trantreeline4(180.5f, -1.6f, 60.0f), scaletreeline4(0.90f), rottreeline4(0.0f, 0.0f, 7.0f);
 glm::vec3 trantreeline5(-10.5f, -1.4f, -70.0f);
 
 
