@@ -42,10 +42,12 @@ const char* OBJ_HOUSE3 = "res/objects/Houses/abandoned_cottage/abandoned_cottage
 const char* OBJ_BUSH = "res/objects/flora/trees/hazelnutbush/Hazelnut.obj";
 const char* OBJ_TREE_BUSH = "res/objects/flora/Tree4/uploads_files_885045_tree_1.obj";
 const char* OBJ_TREE_LINE = "res/objects/flora/Tree_Line/FKLPI_Forest/FKLPI_Forest.dae";
+const char* OBJ_YUN = "res/objects/Yun/Yun.obj";
 //const char* OBJ_RAINBOW = "res/objects/flora/Jungle Island Background/Tree4JungleIslandBg.obj";
 
 glm::vec3 GLOBAL_SCALE(0.5f), GLOBAL_POSITION_SCALE(0.75);
 // game object starting positions
+glm::vec3 tranYun(-5.0f, -0.3f, 0.0f), scaleYun(12.5f), rotYun(0.0f);
 glm::vec3 tranBackpack(0.5f, -6.8f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
 glm::vec3 tranGround(-80.0f, 0.0f, -30.0f), scaleGround(70.0f), rotGround(0.0f, 10.0f, 180.0f);
 glm::vec3 tranTreeFir(0.0f, 0.0f, -10.0f), scaleTreeFir(0.008f), rotTreeFir(0.0f);
