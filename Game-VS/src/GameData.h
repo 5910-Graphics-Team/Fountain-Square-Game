@@ -30,7 +30,6 @@ const char* OBJ_COOLTREE   = "res/objects/flora/trees/Cool_Tree/Cool Tree.obj";
 const char* OBJ_AZALEA	   = "res/objects/flora/Pink_Azalea_Flowers/Pink Azalea Flowers.obj";
 const char* OBJ_COTTAGE    = "res/objects/85-cottage_obj/Japanese House 1.obj";
 const char* OBJ_HOUSE2	   = "res/objects/Houses/House2/Neighbor's House (Act 1).obj";
-//const char* OBJ_HOUSE2     = "res/objects/Houses/House4/cottage/cottage_obj.obj";
 const char* OBJ_WILLOWTREE = "res/objects/flora/trees/Willow Tree/treewillow_tslocator_gmdc.obj";
 const char* OBJ_WELL	   = "res/objects/Houses/Well/Well.obj";
 const char* OBJ_TOWNHOUSE  = "res/objects/Houses/Cool Town Hall/Cool Town Hall.obj";
@@ -42,7 +41,6 @@ const char* OBJ_HOUSE3 = "res/objects/Houses/abandoned_cottage/abandoned_cottage
 const char* OBJ_BUSH = "res/objects/flora/trees/hazelnutbush/Hazelnut.obj";
 const char* OBJ_TREE_BUSH = "res/objects/flora/Tree4/uploads_files_885045_tree_1.obj";
 const char* OBJ_TREE_LINE = "res/objects/flora/Tree_Line/FKLPI_Forest/FKLPI_Forest.dae";
-//const char* OBJ_RAINBOW = "res/objects/flora/Jungle Island Background/Tree4JungleIslandBg.obj";
 
 glm::vec3 GLOBAL_SCALE(0.5f), GLOBAL_POSITION_SCALE(0.75);
 // game object starting positions
@@ -82,7 +80,6 @@ glm::vec3 tranfir12(10.0f, -0.5f, -15.0f);
 glm::vec3 tranfirback1(-40.0f, -0.5f, -38.0f), scalefirback1(0.65f), rotfirback1(0.0f);
 glm::vec3 tranfirback2(-40.0f, -0.5f, -60.0f), scalefirback2(0.65f), rotfirback2(0.0f);
 glm::vec3 tranfirback3(-40.0f, -0.5f, -75.0f), scalefirback3(0.65f), rotfirback3(0.0f);
-//glm::vec3 tranfir4(-15.0f, 0.1f, -38.0f), scalefir4(0.65f), rotfir4(0.0f);
 glm::vec3 tranfirback5(5.0f, -0.5f, -45.0f), scalefirback5(0.65f), rotfirback5(0.0f);
 glm::vec3 tranfirback6(30.0f, -0.5f, -45.0f), scalefirback6(0.65f), rotfirback6(0.0f);
 glm::vec3 tranfirback7(35.0f, -0.5f, -35.0f), scalefirback7(0.65f), rotfirback7(0.0f);
@@ -104,7 +101,6 @@ glm::vec3 trantreeline2(140.5f, -4.8f, 60.0f), scaletreeline2(0.90f), rottreelin
 glm::vec3 trantreeline3(160.5f, -1.4f, 60.0f), scaletreeline3(0.90f), rottreeline3(0.0f);
 glm::vec3 trantreeline4(180.5f, -1.4f, 60.0f), scaletreeline4(0.90f), rottreeline4(0.0f);
 glm::vec3 trantreeline5(-10.5f, -1.4f, -70.0f);
-//glm::vec3 tranrainbow(-10.5f, 0.1f, 25.0f), scalerainbow(0.90f), rotrainbow(180.0f, 180.0f,180.0f);
 
 
 // AABB box sizes
