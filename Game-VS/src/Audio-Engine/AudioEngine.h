@@ -68,7 +68,9 @@ public:
      */
     void stopSound(SoundInfo soundInfo);
 
-    void updateSoundLoopVolume(SoundInfo &soundInfo, float newVolume, int fadeSampleLength = 0);
+    void updateSoundLoopVolume(SoundInfo &soundInfo, float newVolume, unsigned int fadeSampleLength = 0);
+
+    void setSoundLoopCount(SoundInfo& soundInfo, int loopCount);
 
     void createSubmixGroup(std::vector<SoundInfo> sounds);
 

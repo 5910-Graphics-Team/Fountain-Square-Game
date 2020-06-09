@@ -76,24 +76,44 @@ void AudioEngine::stopSound(SoundInfo soundInfo) {
         std::cout << "Audio Engine: Can't stop a looping sound that's not playing!\n";
 }
 
-void AudioEngine::updateSoundLoopVolume(SoundInfo& soundInfo, float newVolume, int fadeSampleLength) {
+void AudioEngine::updateSoundLoopVolume(SoundInfo& soundInfo, float newVolume, unsigned int fadeSampleLength) {
     if (soundIsPlaying(soundInfo)) {
         FMOD::Channel* channel = loopsPlaying[soundInfo.getUniqueID()];
-        if (fadeSampleLength == 0)
+        if (fadeSampleLength <= 64) // 64 samples is default volume fade out
             ERRCHECK( channel->setVolume(newVolume) );
         else {
-            ERRCHECK( channel->setVolume(newVolume) ); // 
+            bool fadeUp = newVolume > soundInfo.getVolume();
+            // get current audio clock time
             unsigned long long parentclock = 0;
-            ERRCHECK( channel->getDSPClock(NULL, &parentclock) );
-            ERRCHECK( channel->addFadePoint(parentclock, 0.0f) );
-            ERRCHECK( channel->addFadePoint(parentclock + fadeSampleLength, newVolume) );
-            //std::cout << "Current DSP Clock: " << parentclock << ", fadein samples  = " << fadeSampleLength << "\n";
+			ERRCHECK(channel->getDSPClock(NULL, &parentclock));
+            
+            float targetFadeVol = fadeUp ? 1.0f : newVolume;
+                
+            if (fadeUp) ERRCHECK(channel->setVolume(newVolume));
+            
+            ERRCHECK(channel->addFadePoint(parentclock, soundInfo.getVolume()));
+            ERRCHECK(channel->addFadePoint(parentclock + fadeSampleLength, targetFadeVol));
+            //std::cout << "Current DSP Clock: " << parentclock << ", fade length in samples  = " << fadeSampleLength << "\n";
         }
-
-        soundInfo.setVolume(newVolume);
+        //std::cout << "Updating with new soundinfo vol \n";
+        soundInfo.setVolume(newVolume); // update the SoundInfo's volume
     }
     else
         std::cout << "AudioEngine: Can't update sound loop volume! (It isn't playing or might not be loaded)\n";
+}
+
+void AudioEngine::setSoundLoopCount(SoundInfo& soundInfo, int loopCount) {
+    if (/*soundInfo.isLoaded() */ sounds.count(soundInfo.getUniqueID()) > 0) {
+        ERRCHECK(sounds[soundInfo.getUniqueID()]->setLoopCount(loopCount));
+        std::cout << "Setting loop count to " << loopCount << '\n';
+    }
+    
+    if (loopCount != -1 && loopsPlaying.count(soundInfo.getUniqueID()) > 0)
+        loopsPlaying.erase(soundInfo.getUniqueID());
+        
+
+        
+        
 }
 
 //void AudioEngine::createSubmixGroup(std::vector<SoundInfo> sounds) {

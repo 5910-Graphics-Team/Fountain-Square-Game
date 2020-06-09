@@ -1,6 +1,5 @@
 #pragma once
 
-
 typedef enum {
     SOUND_LOOP,
     SOUND_ONE_SHOT,
@@ -8,9 +7,8 @@ typedef enum {
 
 typedef enum {
     SOUND_2D,
-    SOUND_3D,
+    SOUND_3D
     // TODO SOUND_2D_MONO, SOUND_2D_STEREO, SOUND_3D_MONO, SOUND_3D_STEREO
-
 } SOUND_POSITION_TYPE;
 
 typedef enum {
