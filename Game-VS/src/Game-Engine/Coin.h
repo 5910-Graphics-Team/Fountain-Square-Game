@@ -9,7 +9,7 @@ class Coin : public GameObject, public Animation, public SphereCollider {
 
 public:
 	Coin(const char* objFile, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) 
-		: GameObject(objFile, defTrans, defScale, defRot), SphereCollider(defTrans, 1.5f) {
+		: GameObject(objFile, defTrans, defScale, defRot), SphereCollider(defTrans, 3.0f) {
 	}
 		
 	

@@ -39,11 +39,7 @@ bool firstMouse = true;
 std::vector<GameObject*> gameObjects;
 std::vector<Animation*> animationObjects;
 std::vector<InstancedObject*> instancedObjects;
-//std::vector<AABB*> aabbObjects;
 std::vector<Coin*> coins;
-SphereCollider npcDialogZone(tranNPC, 10.0f);
-std::thread dialog_Display_SyncThread; // thread which is used to display coins after waiting for dialog sound to finish
-
 // timing globals
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -58,12 +54,12 @@ void resetCoins() {
 	for (Coin* coin : coins) coin->setDestroyed(false);
 }
 
+// method used by helper thread to display coins after waiting for dialog sound to finish
 void waitForDialogueCompletion(unsigned int lengthMS) {
-	std::cout << "In thread, length MS = "<< lengthMS << '\n';
+	//std::cout << "In thread, waiting for  "<< lengthMS << " ms\n";
 	std::this_thread::sleep_for(std::chrono::milliseconds(lengthMS));
 	resetCoins();
 	coinSoundController->startScore();
-
 
 }
 
@@ -189,11 +185,8 @@ int main()
 	GameObject* tree_bush_4 = new GameObject(OBJ_TREE_BUSH, tranbushback4, scalebushback4, rotbushback4);
 	GameObject* tree_bush_5 = new GameObject(OBJ_TREE_BUSH, tranbushback5, scalebushback5, rotbushback5);
 	GameObject* tree_bush_6 = new GameObject(OBJ_OAK, tranbush6, scalebush6, rotbush6);
-	//GameObject* npc = new GameObject(OBJ_YUN, tranNPC, scaleNPC, rotNPC);
-	//GameObject* rainbow = new GameObject(OBJ_RAINBOW, tranrainbow, scalerainbow, rotrainbow);
-
+	
 	// List for all game objects
-	//gameObjects.push_back(npc);
 	gameObjects.push_back(fountain);
 	gameObjects.push_back(house3);
 	//gameObjects.push_back(house4);
@@ -248,7 +241,7 @@ int main()
 	gameObjects.push_back(tree_bush_4);
 	gameObjects.push_back(tree_bush_5);
 	gameObjects.push_back(tree_bush_6);
-	//gameObjects.push_back(rainbow);
+
 
 
     /*
@@ -333,9 +326,7 @@ int main()
 	//audioEngine->playSound(musicLoop2d);
 	audioEngine->playSound(soundTree);
 	audioEngine->playSound(soundJapaneseTree);
-	//coinSoundController->startScore();
-    // draw in wireframe mode
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	
     
     /* render loop */ 
     while (!glfwWindowShouldClose(window))
@@ -426,7 +417,7 @@ int main()
 }
 
 // audio timing
-float key1LastTime = 0.0f, key2LastTime = 0.0f, key3LastTime = 0.0f, key4LastTime = 0.0f, key5LastTime = 0.0f, key9LastTime = 0.0f, key0LastTime = 0.0f;
+float key1LastTime = 0.0f, key2LastTime = 0.0f, key3LastTime = 0.0f, key4LastTime = 0.0f, key5LastTime = 0.0f, key6LastTime = 0.0f, key7LastTime = 0.0f, key8LastTime = 0.0f, key9LastTime = 0.0f, key0LastTime = 0.0f;
 float MIN_SOUND_KEY_RETRIGGER_TIME = 0.2f;
 
 // Checks if a key can be triggered depending on how recently it was last triggered. 
@@ -471,28 +462,72 @@ void ProcessInput(GLFWwindow* window)
 		footstepController->setRunning(false);
 	}
 
-	// Number Keys: Audio Controls
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime))
-		audioEngine->playSound(soundOneShot);
-	
-	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && keyCanRetrigger(currentFrame, key2LastTime))
-		audioEngine->soundIsPlaying(musicLoop2d) ? audioEngine->stopSound(musicLoop2d) : audioEngine->playSound(musicLoop2d);
-	
-	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && keyCanRetrigger(currentFrame, key3LastTime))
-		audioEngine->playSound(soundOneShot3D);
-	
-	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && keyCanRetrigger(currentFrame, key4LastTime)) 
-		audioEngine->soundIsPlaying(fountainSoundLoop) ? audioEngine->stopSound(fountainSoundLoop) : audioEngine->playSound(fountainSoundLoop);
-	
-	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && keyCanRetrigger(currentFrame, key5LastTime))
-		audioEngine->eventIsPlaying(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE) ? 
-				audioEngine->stopEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE):
-				audioEngine->playEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
-	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS && keyCanRetrigger(currentFrame, key9LastTime)) {
+	// Number Keys: Coin Controls
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+		if (!coins[0]->isDestroyed()) {
+			coins[0]->setDestroyed(true);
+			coinSoundController->characterPickedUpCoin();
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && keyCanRetrigger(currentFrame, key2LastTime)) {
+		if (!coins[1]->isDestroyed()) {
+			coins[1]->setDestroyed(true);
+			coinSoundController->characterPickedUpCoin();
+		}
+	}	
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && keyCanRetrigger(currentFrame, key3LastTime)) {
+		if (!coins[2]->isDestroyed()) {
+			coins[2]->setDestroyed(true);
+			coinSoundController->characterPickedUpCoin();
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS && keyCanRetrigger(currentFrame, key4LastTime)) {
+		if (!coins[3]->isDestroyed()) {
+			coins[3]->setDestroyed(true);
+			coinSoundController->characterPickedUpCoin();
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS && keyCanRetrigger(currentFrame, key5LastTime)) {
+		if (!coins[4]->isDestroyed()) {
+			coins[4]->setDestroyed(true);
+			coinSoundController->characterPickedUpCoin();
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+		if (!coins[5]->isDestroyed()) {
+			coins[5]->setDestroyed(true);
+			coinSoundController->characterPickedUpCoin();
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+		if (!coins[6]->isDestroyed()) {
+			coins[6]->setDestroyed(true);
+			coinSoundController->characterPickedUpCoin();
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+		if (!coins[7]->isDestroyed()) {
+			coins[7]->setDestroyed(true);
+			coinSoundController->characterPickedUpCoin();
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+		if (!coins[8]->isDestroyed()) {
+			coins[8]->setDestroyed(true);
+			coinSoundController->characterPickedUpCoin();
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+		if (!coins[9]->isDestroyed()) {
+			coins[9]->setDestroyed(true);
+			coinSoundController->characterPickedUpCoin();
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS && keyCanRetrigger(currentFrame, key9LastTime)) {
 		resetCoins();
 		coinSoundController->reset();
 	}
-	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && keyCanRetrigger(currentFrame, key0LastTime))
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && keyCanRetrigger(currentFrame, key0LastTime))
 		audioEngine->isMuted() ? 
 				audioEngine->unmuteAllSound():
 				audioEngine->muteAllSounds();

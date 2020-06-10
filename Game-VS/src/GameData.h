@@ -106,20 +106,30 @@ glm::vec3 trantreeline4(180.5f, -1.6f, 60.0f), scaletreeline4(0.90f), rottreelin
 glm::vec3 trantreeline5(-10.5f, -1.4f, -70.0f);
 
 
-// AABB box sizes
-glm::vec3 AABB_DIMS_CHARACTER(3.0f);
-glm::vec3 AABB_DIMS_COIN(3.0f);
+// AABB box sizes	
+//glm::vec3 AABB_DIMS_CHARACTER(3.0f);
+//glm::vec3 AABB_DIMS_COIN(3.0f);
 
 
 // Coin starting scale/rotation for all coin instances
-glm::vec3 scaleCoins(0.1f), rotCoins(0.0f);
+glm::vec3 scaleCoins(0.085f), rotCoins(0.0f);
+//glm::vec3 scale
 // Coin translations for each individual coin
-static std::vector<glm::vec3> coinTranslations {
-	glm::vec3(2.0f, 0.0f, -5.0f),
-	glm::vec3(2.8f, 0.0f, -12.0f),
+static std::vector<glm::vec3> coinTranslations{
+	glm::vec3(12.0f, 0.0f, -23.0f),
+	glm::vec3((tranGreenPine1* GLOBAL_POSITION_SCALE) + glm::vec3(3.0f, 0.0f, 3.0f)),
 	glm::vec3(4.0f, 0.0f, -15.0f),
-	glm::vec3(5.3f, 0.0f, -21.0f),
-	glm::vec3(6.0f, 0.0f, -25.0f),
+	glm::vec3(2.0f, 0.0f, -10.0f),
+	glm::vec3(-5.0f, 0.0f, 5.0f),
+	
+	glm::vec3((tranWell* GLOBAL_POSITION_SCALE) + glm::vec3(3.0f, 0.0f, 3.0f)),
+	glm::vec3((tranGreenPine* GLOBAL_POSITION_SCALE) + glm::vec3(3.0f, 0.0f, 3.0f)),
+	
+	
+	glm::vec3((tranWillowtree* GLOBAL_POSITION_SCALE) + glm::vec3(3.0f, 0.0f, 3.0f)),
+	
+	glm::vec3(-15.0f, 0.0f, -10.0f),
+	glm::vec3((tranHouse* GLOBAL_POSITION_SCALE) + glm::vec3(3.0f, 0.0f, 3.0f)),
 
 };
 
@@ -130,7 +140,7 @@ const char* STINGER_1_GUITAR     = "res/sound/music/Medieval Village_Stinger1 Gu
 const char* STINGER_2_GUITAR_2   = "res/sound/music/Medieval Village_Stinger2 Guitar_2.5.1.3.wav";
 const char* STINGER_3_HARP       = "res/sound/music/Medieval Village_Stinger3 Harp_2.5.1.3.wav";
 const char* SFX_LOOP_FOUNTAIN    = "res/sound/fountain/Fountain_Loop2.wav";
-const char* DIALOGUE_TOWN_INTRO = "res/sound/dialogue/Character1_Dialogue_TownIntroduction.wav";
+const char* DIALOGUE_TOWN_INTRO  = "res/sound/dialogue/Character1_Dialogue_TownIntroduction.wav";
 const char* SFX_LOOP_BIRD        = "res/sound/animals/birds/SFX_LOOP_BIRDS.wav";
 const char* SFX_LOOP_TREE_BIRDS  = "res/sound/animals/birds/SFX_LOOP_TREE_BIRDS.wav";
 

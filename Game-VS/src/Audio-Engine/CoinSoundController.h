@@ -12,17 +12,18 @@ public:
 	CoinChallengeSoundController(std::shared_ptr<AudioEngine> audioEngine, int nTotalCoins)
 		: audioEngine(audioEngine), nTotalCoins(nTotalCoins) {
 		init();
-		std::cout << "Beat sample length: " << beatSampleLength << "\n";
+		//std::cout << "Beat sample length: " << beatSampleLength << "\n";
 	}
 
 	// starts the interactive music container from ambienct music level 1 
 	void startScore() {
 		std::cout << "Starting Coin Challenge Score\n";
+		//unsigned long fadeInSamples = fadeInLengthMS / 1000 * AudioEngine::AUDIO_SAMPLE_RATE;
 		audioEngine->playSound(musicLayer_BeforeChallenge);
 		audioEngine->playSound(musicLayer_StartedChallenge);
 		audioEngine->playSound(musicLayer_ChallengeIntensity2);
 		// fade in music	
-		audioEngine->updateSoundLoopVolume(musicLayer_BeforeChallenge, defVolume, beatSampleLength * timeSignatureNumerator);
+		audioEngine->updateSoundLoopVolume(musicLayer_BeforeChallenge, defVolume, 2 * beatSampleLength * timeSignatureNumerator);
 	}
 
 
@@ -30,8 +31,9 @@ public:
 		nCharacterCoins++;
 		std::cout << "Character picked up a coin\n";
 		// start search with intensity level 1
-		if (nCharacterCoins == 1) {
-			audioEngine->updateSoundLoopVolume(musicLayer_StartedChallenge, defVolume, timeSignatureNumerator * beatSampleLength / 2);
+		
+		if (nCharacterCoins <= nTotalCoins / 2) {
+			audioEngine->updateSoundLoopVolume(musicLayer_StartedChallenge, defVolume / (nTotalCoins / 2) * nCharacterCoins, timeSignatureNumerator * beatSampleLength / 2);
 			audioEngine->playSound(stinger_CoinPickup);
 		}
 		// intensity level 2
@@ -42,7 +44,7 @@ public:
 		else if (nCharacterCoins == nTotalCoins) {
 			std::cout << "Completed challenge\n";
 			// stop song 1 layers
-			float fadeLength = beat2SampleLength / 2;
+			unsigned long fadeLength = beat2SampleLength / 2;
 			audioEngine->updateSoundLoopVolume(musicLayer_BeforeChallenge, 0.0f, fadeLength);
 			audioEngine->updateSoundLoopVolume(musicLayer_StartedChallenge, 0.0f, fadeLength);
 			audioEngine->updateSoundLoopVolume(musicLayer_ChallengeIntensity2, 0.0f, fadeLength);
