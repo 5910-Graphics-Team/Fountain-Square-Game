@@ -1,7 +1,5 @@
 #pragma once
 #include "Model.h"
-//#include "Mesh.h"
-//#include "Shader.h"
 
 
 // Container for a Model and its default translation,scale, and rotation values. 

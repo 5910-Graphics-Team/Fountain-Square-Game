@@ -1,14 +1,16 @@
 #pragma once
 
+
 typedef enum {
     SOUND_LOOP,
-    SOUND_ONE_SHOT,
+    SOUND_ONE_SHOT
 } SOUND_PLAYBACK_TYPE;
 
 typedef enum {
     SOUND_2D,
     SOUND_3D
-    // TODO SOUND_2D_MONO, SOUND_2D_STEREO, SOUND_3D_MONO, SOUND_3D_STEREO
+    // TODO:
+    //SOUND_2D_MONO, SOUND_2D_STEREO, SOUND_3D_MONO, SOUND_3D_STEREO
 } SOUND_POSITION_TYPE;
 
 typedef enum {
@@ -17,15 +19,14 @@ typedef enum {
 } SOUND_LOAD_INFO;
 
 /**
- * Holds the information about a raw audio file needed by the Audio Engine
- * to load, configure and play a sound with user-controlled settings.
+ * Container class for all data about an audio file and its intended implentation.
+ * Used by AudioEngine to load, configure and play back a sound with user-controlled settings.
  */
 class SoundInfo {
 public:
 
     /**
      * SoundInfo main constructor
-     * TODO Update Doc
      * @var filepath (default = "")    Relative location of audio file
      * @var reverbAmount
      * @var soundPlaybackType

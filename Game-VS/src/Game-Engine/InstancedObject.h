@@ -3,57 +3,38 @@
 
 class InstancedObject {
 public:
-	/*struct InstanceData {
-		glm::vec3 trans, scale, rotAngs;
-		bool destroyed = false;
-	};*/
 
 	InstancedObject(const char* filepath, Shader* shader, int numInstances) : model(filepath), shader(shader), numInstances(numInstances) {
 		rotAngs = new float[numInstances];
 		modelMatrices = new glm::mat4[numInstances];
-		
-	
 	}
-	
-	//virtual void drawInstances(glm::mat4 projection, glm::mat4 view) {}//= 0;
 
-
+	/**
+	 * Draws the instanced object using the provided project and view matrices
+	 */
 	void drawInstances(glm::mat4 projection, glm::mat4 view) {
-
-		//std::cout << "In AsteroidRing::drawInstances(), numInstances = " << numInstances << "\n";
 		shader->use();
-
 		shader->setMat4("projection", projection);
 		shader->setMat4("view", view);
-
-		//std::cout << "After shader->use():\n";
-
-		 //texture code (causes errors)
 		shader->setInt("texture_diffuse1", 0);
-		//std::cout << "After shader->setInt():\n";
 		glActiveTexture(GL_TEXTURE0);
-		//std::cout << "After glActiveTexture, model.textures_loaded[0].id = " << model.textures_loaded[0].id << "\n";
-		glBindTexture(GL_TEXTURE_2D, model.textures_loaded[0].id); // note: we also made the textures_loaded vector public (instead of private) from the model class.
-
-		//std::cout << "After glBindTexture\n";
-
+		glBindTexture(GL_TEXTURE_2D, model.textures_loaded[0].id);
 		for (unsigned int i = 0; i < model.meshes.size(); i++) {
-			//std::cout << "In ForLoop i = " << i << "\n";
 			glBindVertexArray(model.meshes[i].VAO);
 			glDrawElementsInstanced(GL_TRIANGLES, model.meshes[i].indices.size(), GL_UNSIGNED_INT, 0, numInstances);
 			glBindVertexArray(0);
 		}
 	}
 protected:
-	Shader* shader;
 
+	Shader* shader;
 	Model model;
 
 	unsigned int numInstances;
 	glm::mat4* modelMatrices;// size = numInstances
 	float* rotAngs; // array holding the rotation (euler) angles of the instances. size = numInstances
 
-	virtual void initModelTransformations() {}// = 0;
+	virtual void initModelTransformations() {}
 
 	//virtual void configureInstancedArray() {} //= 0;
 	void configureInstancedArray() {

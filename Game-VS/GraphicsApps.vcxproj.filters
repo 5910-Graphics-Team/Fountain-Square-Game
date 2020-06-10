@@ -81,9 +81,6 @@
     <ClInclude Include="src\Game-Engine\Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game-Engine\Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game-Engine\Harp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -102,12 +99,6 @@
     <ClInclude Include="src\Game-Engine\Coin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game-Engine\LOGL_Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Audio-Engine\CoinSoundController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Audio-Engine\SoundInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -118,6 +109,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Game-Engine\NPC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game-Engine\CharacterCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Audio-Engine\CoinChallengeSoundController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

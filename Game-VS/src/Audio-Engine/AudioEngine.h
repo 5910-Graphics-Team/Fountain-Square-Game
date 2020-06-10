@@ -6,7 +6,7 @@
 /// playback, looping playback, FMOD Soundbank/Event playback
 ///
 /// @author Ross Hoyt
-/// @dependencies FMOD Studio & Core
+/// @dependencies FMOD Studio & Core .dll's, .lib's, etc.
 /// 
 #include <FMOD/fmod_studio.hpp>
 #include <FMOD/fmod.hpp>
@@ -22,15 +22,11 @@ void ERRCHECK_fn(FMOD_RESULT result, const char* file, int line);
 #define ERRCHECK(_result) ERRCHECK_fn(_result, __FILE__, __LINE__)
 
 
-struct SoundBus {
-
-};
-
 class AudioEngine {
 public:
     /**
      * Default AudioEngine constructor. 
-     * AudioeEngine::init() must be called before using the Audio Engine 
+     * AudioEngine::init() must be called before using the Audio Engine 
      */
     AudioEngine();
 
@@ -73,13 +69,14 @@ public:
      */
     void stopSound(SoundInfo soundInfo);
 
+    /**
+     * Utility method that returns the length of a SoundInfo's audio file in milliseconds
+     * If the sound hasn't been loaded, returns 0
+     */
     unsigned int getSoundLengthInMS(SoundInfo soundInfo) {
         unsigned int length = 0;
-        if (sounds.count(soundInfo.getUniqueID())) {
-		
+        if (sounds.count(soundInfo.getUniqueID())) 
 			ERRCHECK(sounds[soundInfo.getUniqueID()]->getLength(&length, FMOD_TIMEUNIT_MS));
-            
-        }
         return length;
     }
 

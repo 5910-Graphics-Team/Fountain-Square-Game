@@ -5,7 +5,6 @@
 class Harp : public GameObject, public Animation {
 public:
 	Harp(const char* objFile, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) : GameObject(objFile, defTrans, defScale, defRot) {
-
 	}
 
 	void update(float time) override {

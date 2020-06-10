@@ -10,10 +10,10 @@
 #include "Game-Engine/GameObject.h"
 #include "Game-Engine/Shader.h"
 #include "Game-Engine/Model.h"
-#include "Game-Engine/LOGL_Camera.h"
+#include "Game-Engine/CharacterCamera.h"
 #include "Audio-Engine/AudioEngine.h"
 #include "Audio-Engine/FootstepController.h"
-#include "Audio-Engine/CoinSoundController.h"
+#include "Audio-Engine/CoinChallengeSoundController.h"
 #include "GameData.h"
 // custom game objects
 #include "Game-Engine/Bird.h"
@@ -130,7 +130,6 @@ int main()
 	/*
 		Initialize game objects and add to list
 	*/
-
 	GameObject* fountain = new GameObject(OBJ_FOUNTAIN, tranFountain, scaleFountain, rotFountain);
 	GameObject* house = new GameObject(OBJ_HOUSE, tranHouse, scaleHouse, rotHouse);
 	GameObject* rock = new GameObject(OBJ_ROCK, tranRock, scaleRock, rotRock);

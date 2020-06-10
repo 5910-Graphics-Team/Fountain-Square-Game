@@ -1,7 +1,10 @@
 #pragma once
 #include "InstancedObject.h"
 #include <tgmath.h>
-
+/**
+ * Custom instanced object displaying an asteroid belt
+ * TODO Origin is set inside the game file, could move to constructor
+ */
 class AsteroidRing : public InstancedObject, public Animation {
 public:
 	//const int NUM_ASTEROIDS = 500;

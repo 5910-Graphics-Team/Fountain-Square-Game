@@ -3,7 +3,10 @@
 #include "SoundInfo.h"
 #include "../GameData.h"
 
-
+/**
+ * Class which manages all sounds associated with the Game's coin challenge,
+ * including SFX and music.
+ */
 class CoinChallengeSoundController {
 	
 public:
@@ -12,13 +15,12 @@ public:
 	CoinChallengeSoundController(std::shared_ptr<AudioEngine> audioEngine, int nTotalCoins)
 		: audioEngine(audioEngine), nTotalCoins(nTotalCoins) {
 		init();
-		//std::cout << "Beat sample length: " << beatSampleLength << "\n";
 	}
 
 	// starts the interactive music container from ambienct music level 1 
 	void startScore() {
 		std::cout << "Starting Coin Challenge Score\n";
-		//unsigned long fadeInSamples = fadeInLengthMS / 1000 * AudioEngine::AUDIO_SAMPLE_RATE;
+		
 		audioEngine->playSound(musicLayer_BeforeChallenge);
 		audioEngine->playSound(musicLayer_StartedChallenge);
 		audioEngine->playSound(musicLayer_ChallengeIntensity2);
@@ -57,12 +59,15 @@ public:
 
 			// TODO Add multi-fadepoint fades with std::pair
 			//audioEngine->updateSoundLoopVolume(musicSection2_FullMix, 0.97f, beat2SampleLength / 4);
+			
 			// set fade out end volume 
 			int remainingLoops = 30;
 			
 			audioEngine->updateSoundLoopVolume(musicSection2_FullMix, 0.0f, beat2SampleLength * timeSignatureNumerator * remainingLoops);
+			
 			// TODO Fix setSoundLoopCount
 			//audioEngine->setSoundLoopCount(musicSection2_FullMix, remainingLoops);s
+			
 			// TODO fade back into 'regular' ambient music (non-coin challenge)?
 		}
 
@@ -99,6 +104,7 @@ private:
 	unsigned int beatSampleLength = AudioEngine::AUDIO_SAMPLE_RATE * 60 / bpm;
 	unsigned int beat2SampleLength = AudioEngine::AUDIO_SAMPLE_RATE * 60 / bpm2;
 
+
 	// Music assets/info 
 	const char* MUSIC_LAYER1 =              "res/sound/music/coin-challenge/CoinChallenge_MXLayer1.wav";
 	const char* MUSIC_LAYER2 =              "res/sound/music/coin-challenge/CoinChallenge_MXLayer2.wav";
@@ -114,14 +120,15 @@ private:
 	SoundInfo stinger_CoinPickup             { STINGER_COIN_PICKUP,       0.75f,     0.0f };
 	SoundInfo stinger_Success                { STINGER_CHALLENGE_SUCCESS, 0.70f,     0.0f };
 	
-
+	// Prepares the volumes of the looping sounds before starting the challenge
 	void initLoopingSoundInfoVolumes() {
 		musicLayer_BeforeChallenge.setVolume(0.0f);
 		musicLayer_StartedChallenge.setVolume(0.0f);
 		musicLayer_ChallengeIntensity2.setVolume(0.0f);
 		musicSection2_FullMix.setVolume(1.0f);
-
 	}
+
+	// 
 	void init() {
 		initLoopingSoundInfoVolumes();
 		audioEngine->loadSound(stinger_CoinPickup);

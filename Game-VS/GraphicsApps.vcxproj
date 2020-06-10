@@ -99,6 +99,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CRT_SECURE_NO_DEPRECATE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\src\Game-Engine;$(ProjectDir)\src\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,6 +135,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CRT_SECURE_NO_DEPRECATE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\src\Game-Engine;$(ProjectDir)\src\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -184,7 +186,7 @@
     <Image Include="res\objects\environment\grass.tga" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Audio-Engine\CoinSoundController.h" />
+    <ClInclude Include="src\Audio-Engine\CoinChallengeSoundController.h" />
     <ClInclude Include="src\Audio-Engine\FootstepController.h" />
     <ClInclude Include="src\Audio-Engine\SoundInfo.h" />
     <ClInclude Include="src\Game-Engine\AABB.h" />
@@ -196,12 +198,11 @@
     <ClInclude Include="src\Game-Engine\Harp.h" />
     <ClInclude Include="src\Game-Engine\InstancedObject.h" />
     <ClInclude Include="src\Game-Engine\NPC.h" />
-    <ClInclude Include="src\Game-Engine\Player.h" />
     <ClInclude Include="src\Game-Engine\SphereCollider.h" />
     <ClInclude Include="src\GameData.h" />
     <ClInclude Include="src\Game-Engine\GameObject.h" />
     <ClInclude Include="src\Audio-Engine\AudioEngine.h" />
-    <ClInclude Include="src\Game-Engine\LOGL_Camera.h" />
+    <ClInclude Include="src\Game-Engine\CharacterCamera.h" />
     <ClInclude Include="src\Game-Engine\Mesh.h" />
     <ClInclude Include="src\Game-Engine\Model.h" />
     <ClInclude Include="src\Game-Engine\Shader.h" />

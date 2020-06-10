@@ -4,9 +4,18 @@
 //#include <tgmath.h>
 #include "../GameData.h"
 
-struct IndexRandomizer {
-	// total entries must be > 0
-	IndexRandomizer(int totalEntries, int roundRobinMin = 3) : totalEntries(totalEntries), roundRobinMin(roundRobinMin), queue() {
+/**
+ * Manages the index randomization process for a random sound container
+ */
+class IndexRandomizer {
+public:
+	/**
+	 * Constructs an index randomizer
+	 * @var totalEntries - the total number of indices 
+	 * @var roundRobinMin - the minimum number of new indices that must be returned from getNewIndex() 
+	 *                      before a previous index is returned again from getNewIndex()
+	 */
+	IndexRandomizer(unsigned int totalEntries, unsigned int roundRobinMin = 3) : totalEntries(totalEntries), roundRobinMin(roundRobinMin), queue() {
 		initQueue();
 	}
 
@@ -14,14 +23,14 @@ struct IndexRandomizer {
 		int index = queue.at(0);
 		queue.erase(queue.begin());
 		queue.push_back(getNewIndex());
-		//std::cout << "Playing footstep #" << index << '\n';
+		//std::cout << "Index #" << index << '\n';
 		return index;
 	}
 private:
 
 	std::vector<int> queue;
-	int totalEntries;
-	int roundRobinMin;// 3 new sounds must be played before a sound is retriggered
+	unsigned int totalEntries;
+	unsigned int roundRobinMin;// 3 new sounds must be played before a sound is retriggered
 
 	void initQueue() {
 		for (int i = 0; i < roundRobinMin; ++i)
@@ -42,8 +51,12 @@ private:
 	}
 };
 
+/**
+ * Class that manages the sounds associated with the game's footstep behavior
+ */
 class FootstepSoundController {
 public:
+	// the list of footstep sounds
 	std::vector<SoundInfo> soundsFootsteps{
 		SoundInfo(SFX_FOOTSTEP1, 0.3f, defReverb),
 		SoundInfo(SFX_FOOTSTEP2, 0.3f, defReverb),

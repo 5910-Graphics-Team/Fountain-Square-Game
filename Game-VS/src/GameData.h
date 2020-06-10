@@ -72,7 +72,7 @@ glm::vec3 tranfir1(-40.0f, -0.5f, 38.0f), scalefir1(0.65f), rotfir1(0.0f);
 glm::vec3 tranfir2(-40.0f, -0.5f, 60.0f), scalefir2(0.65f), rotfir2(0.0f);
 glm::vec3 tranfir3(-40.0f, -0.5f, 75.0f), scalefir3(0.65f), rotfir3(0.0f);
 glm::vec3 tranfir4(-15.0f, 0.1f, -38.0f), scalefir4(0.65f), rotfir4(0.0f);
-glm::vec3 tranfir5(5.0f, -0.5f, 45.0f), scalefir5(0.65f), rotfir5(0.0f);
+glm::vec3 tranfir5(5.0f, -0.5f, 45.0f),   scalefir5(0.65f), rotfir5(0.0f);
 glm::vec3 tranfir6(30.0f, -0.5f, 45.0f), scalefir6(0.65f), rotfir6(0.0f);
 glm::vec3 tranfir7(75.0f, -0.5f, 45.0f), scalefir7(0.65f), rotfir7(0.0f);
 glm::vec3 tranfir8(95.0f, -0.5f, 45.0f), scalefir8(0.65f), rotfir8(0.0f);

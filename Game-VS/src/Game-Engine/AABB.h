@@ -1,15 +1,17 @@
 #pragma once
-//#include <glm/common.hpp>
 #include <iostream>
 
-
+/**
+ * A simple AABB (Axis-Aligned Bounding-Box) collision detection class
+ * Can be implemented by child class to add AABB collision detection functionality
+ * to a game object, or can be used on its own.
+ */
 class AABB {
 
 private:
 	
 	glm::vec3* vecMax, * vecMin;
 	float length, width, height;
-
 
 protected:
 	
@@ -24,18 +26,6 @@ protected:
 		std::cout << "AABB Box Created - vecMax(" << vecMax->x << ", " << vecMax->y << ", " << vecMax->z << ") VecMin(" << vecMin->x << ", " << vecMin->y << ", " << vecMin->z << ")\n";
 	}
 
-	// overloaded method to create AABB around a translation, with specified length, width, and height dimensions
-	//void generateAABBoxAroundPoint(glm::vec3 trans, float length, float width, float height) {
-	//	vecMax = new glm::vec3(trans.x + length / 2.0f, trans.y + length / 2.0f, trans.z + height / 2.0f);
-	//	vecMin = new glm::vec3(trans.x - length / 2.0f, trans.y - length / 2.0f, trans.z - height / 2.0f);
-	//	printAABB();
-	//}
-
-
-	//void initAABB(glm::vec3 vecMax, glm::vec3 vecMin) {
-	//	this->vecMax = new glm::vec3(vecMax);
-	//	this->vecMin = new glm::vec3(vecMin);
-	//}
 
 public:
 
