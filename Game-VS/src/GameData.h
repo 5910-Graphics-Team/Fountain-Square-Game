@@ -46,7 +46,7 @@ const char* OBJ_YUN = "res/objects/Yun/Yun.obj";
 
 glm::vec3 GLOBAL_SCALE(0.5f), GLOBAL_POSITION_SCALE(0.75);
 // game object starting positions
-glm::vec3 tranNPC(-5.0f, -0.3f, 0.0f), scaleNPC(13.5f), rotNPC(0.0f);
+glm::vec3 tranNPC(-5.0f, 0.0f, 0.0f), scaleNPC(13.5f), rotNPC(0.0f);
 glm::vec3 tranBackpack(0.5f, -6.8f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
 glm::vec3 tranGround(-80.0f, 0.0f, -30.0f), scaleGround(70.0f), rotGround(0.0f, 10.0f, 180.0f);
 glm::vec3 tranTreeFir(0.0f, 0.0f, -10.0f), scaleTreeFir(0.008f), rotTreeFir(0.0f);
