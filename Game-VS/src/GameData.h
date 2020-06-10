@@ -46,7 +46,7 @@ const char* OBJ_YUN = "res/objects/Yun/Yun.obj";
 
 glm::vec3 GLOBAL_SCALE(0.5f), GLOBAL_POSITION_SCALE(0.75);
 // game object starting positions
-glm::vec3 tranNPC(-5.0f, -0.3f, 0.0f), scaleNPC(13.5f), rotNPC(0.0f);
+glm::vec3 tranNPC(-5.0f, 0.0f, 0.0f), scaleNPC(13.5f), rotNPC(0.0f);
 glm::vec3 tranBackpack(0.5f, -6.8f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
 glm::vec3 tranGround(-80.0f, 0.0f, -30.0f), scaleGround(70.0f), rotGround(0.0f, 10.0f, 180.0f);
 glm::vec3 tranTreeFir(0.0f, 0.0f, -10.0f), scaleTreeFir(0.008f), rotTreeFir(0.0f);
@@ -163,7 +163,8 @@ float defReverb = 0.5, defVolume = 0.9;
 SoundInfo soundOneShot     (STINGER_1_GUITAR,    defVolume, defReverb);
 SoundInfo soundOneShot3D   (STINGER_3_HARP,      defVolume, defReverb, SOUND_ONE_SHOT, SOUND_3D, tranHarp.x,        tranHarp.y,       tranHarp.z);
 SoundInfo musicLoop2d      (MUSIC_2,             defVolume, 0.0f,      SOUND_LOOP);
-SoundInfo fountainSoundLoop(SFX_LOOP_FOUNTAIN,   defVolume, defReverb, SOUND_LOOP,     SOUND_3D, tranFountain.x,    tranFountain.y,   tranFountain.z);
+glm::vec3 fountainSoundLoc = tranFountain * GLOBAL_POSITION_SCALE;
+SoundInfo fountainSoundLoop(SFX_LOOP_FOUNTAIN,   defVolume, defReverb, SOUND_LOOP,     SOUND_3D, fountainSoundLoc.x,    fountainSoundLoc.y,   fountainSoundLoc.z);
 SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, defVolume, defReverb, SOUND_LOOP,     SOUND_3D, tranTreeFir.x,     tranTreeFir.y,    tranTreeFir.z);
 SoundInfo soundTree        (SFX_LOOP_TREE_BIRDS, defVolume, defReverb, SOUND_LOOP,     SOUND_3D, tranWillowtree.x,  tranWillowtree.y, tranWillowtree.z);
 SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,       defVolume, defReverb, SOUND_LOOP,     SOUND_3D, tranBirds.x,       tranBirds.y,      tranBirds.z);

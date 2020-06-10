@@ -37,8 +37,8 @@ public:
 			audioEngine->playSound(stinger_CoinPickup);
 		}
 		// intensity level 2
-		else if (nCharacterCoins == nTotalCoins / 2) {
-			audioEngine->updateSoundLoopVolume(musicLayer_ChallengeIntensity2, defVolume, beatSampleLength);
+		else if ( nCharacterCoins < nTotalCoins) {
+			audioEngine->updateSoundLoopVolume(musicLayer_ChallengeIntensity2, defVolume / (nTotalCoins / 2) * nCharacterCoins, timeSignatureNumerator * beatSampleLength / 2);
 		}
 		// success
 		else if (nCharacterCoins == nTotalCoins) {

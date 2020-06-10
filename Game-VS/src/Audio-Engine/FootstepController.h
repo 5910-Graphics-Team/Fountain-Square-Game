@@ -45,14 +45,14 @@ private:
 class FootstepSoundController {
 public:
 	std::vector<SoundInfo> soundsFootsteps{
-		SoundInfo(SFX_FOOTSTEP1, 0.4f, defReverb),
-		SoundInfo(SFX_FOOTSTEP2, 0.4f, defReverb),
-		SoundInfo(SFX_FOOTSTEP3, 0.4f, defReverb),
-		SoundInfo(SFX_FOOTSTEP4, 0.4f, defReverb),
-		SoundInfo(SFX_FOOTSTEP5, 0.4f, defReverb),
-		SoundInfo(SFX_FOOTSTEP6, 0.4f, defReverb),
-		SoundInfo(SFX_FOOTSTEP7, 0.4f, defReverb),
-		SoundInfo(SFX_FOOTSTEP8, 0.4f, defReverb)
+		SoundInfo(SFX_FOOTSTEP1, 0.3f, defReverb),
+		SoundInfo(SFX_FOOTSTEP2, 0.3f, defReverb),
+		SoundInfo(SFX_FOOTSTEP3, 0.3f, defReverb),
+		SoundInfo(SFX_FOOTSTEP4, 0.3f, defReverb),
+		SoundInfo(SFX_FOOTSTEP5, 0.3f, defReverb),
+		SoundInfo(SFX_FOOTSTEP6, 0.3f, defReverb),
+		SoundInfo(SFX_FOOTSTEP7, 0.3f, defReverb),
+		SoundInfo(SFX_FOOTSTEP8, 0.3f, defReverb)
 	};
 
 

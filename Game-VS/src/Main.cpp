@@ -242,8 +242,6 @@ int main()
 	gameObjects.push_back(tree_bush_5);
 	gameObjects.push_back(tree_bush_6);
 
-
-
     /*
         Initialize and store animatable game objects 
     */
@@ -285,8 +283,7 @@ int main()
 
 	Grass* grass = new Grass(OBJ_GRASS, instancedObjectShader);
 	instancedObjects.push_back(grass);
-
-
+	
 	/*
 		AUDIO ENGINE and SOUND LOADING
 	*/
@@ -295,8 +292,8 @@ int main()
 	audioEngine = std::make_shared<AudioEngine>();
 	audioEngine->init();
 	// load sounds
-	audioEngine->loadSound(soundOneShot);
-	audioEngine->loadSound(musicLoop2d);
+	//audioEngine->loadSound(soundOneShot);
+	//audioEngine->loadSound(musicLoop2d);
 	audioEngine->loadSound(soundOneShot3D);
 	audioEngine->loadSound(fountainSoundLoop);
 	audioEngine->loadSound(soundLoop3DMoving);
