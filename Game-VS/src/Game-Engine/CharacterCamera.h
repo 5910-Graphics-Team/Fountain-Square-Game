@@ -5,8 +5,10 @@
 #include "SphereCollider.h"
 #include "../GameData.h"
 
-// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-enum Camera_Movement {
+/**
+ * Character movement states
+ */
+enum CharacterMovement {
     FORWARD,
     BACKWARD,
     LEFT,
@@ -16,8 +18,7 @@ enum Camera_Movement {
     RUNNING_STOP,
 };
 
-
-// Default camera values
+// Default character camera values
 const float YAW = 90.0f;
 const float PITCH = 0.0f;
 const float SPEED_WALKING = 3.0f, SPEED_RUNNING = 6.0f;
@@ -25,13 +26,16 @@ const float SENSITIVITY = 0.10f;
 const float ZOOM = 45.0f;
 
 
-// A camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
+/**
+ * A camera class that encapsulates the game user's character, processes keyboard input and calculates the corresponding 
+ * Euler Angles, Vectors and Matrices for use in OpenGL
+ * Also provides collision detection capabilities between the character and other SphereColliders.
+ * source: https://learnopengl.com/Getting-started/Camera
+ */
 class CharacterCamera : public SphereCollider
 {
 public:
-    //bool debugCamera = false; TODO add ability to change between cameras for debugging
-     
-    // CharacterCamera Attributes
+    // CharacterCamera Fields
     glm::vec3 Position;
     glm::vec3 Front;
     glm::vec3 Up;
@@ -50,34 +54,24 @@ public:
 
     // Constructor with vectors
     CharacterCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) 
-        : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), 
-        SphereCollider(position, 1.0f)
-    {
+        : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), SphereCollider(position, 1.0f) {
         Position = position;
         WorldUp = up;
         Yaw = yaw;
         Pitch = pitch;
         updateCameraVectors();
-        
     }
-    // Constructor with scalar values
-   /* CharacterCamera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED_WALKING), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
-    {
-        Position = glm::vec3(posX, posY, posZ);
-        WorldUp = glm::vec3(upX, upY, upZ);
-        Yaw = yaw;
-        Pitch = pitch;
-        updateCameraVectors();
-    }*/
-
-    // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
-    glm::mat4 GetViewMatrix()
-    {
+    /**
+     * Returns the view matrix calculated using Euler Angles and the LookAt Matrix
+     */
+    glm::mat4 GetViewMatrix() {
         return glm::lookAt(Position, Position + Front, Up);
     }
 
-    // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime) {
+    /**
+     *  Processes input received from any keyboard-like input system. Accepts input parameter in the form of CharacterMovement Enum
+     */
+    void processKeyboard(CharacterMovement direction, float deltaTime) {
         float velocity = MovementSpeed * deltaTime;
         if (direction == FORWARD) {
             glm::vec3 temp = Front * velocity;
@@ -102,8 +96,10 @@ public:
         updateSphereColliderPosition(Position);
     }
 
-    // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
+    /**
+     *  Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
+     */
+    void processMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
     {
        
         xoffset *= MouseSensitivity;
@@ -127,8 +123,10 @@ public:
         updateCameraVectors(); // TODO only update if movement occured
     }
 
-    // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-    void ProcessMouseScroll(float yoffset)
+    /**
+     * Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
+     */
+    void processMouseScroll(float yoffset)
     {
         if (Zoom >= 1.0f && Zoom <= 45.0f)
             Zoom -= yoffset;
@@ -139,7 +137,9 @@ public:
     }
 
 private:
-    // Calculates the front vector from the CharacterCamera's (updated) Euler Angles
+    /**
+     *  Calculates the front vector from the CharacterCamera's (updated) Euler Angles
+     */
     void updateCameraVectors()
     {
         // Calculate the new Front vector

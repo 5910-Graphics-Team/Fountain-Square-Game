@@ -57,9 +57,6 @@
     <ClInclude Include="src\Audio-Engine\AudioEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Util\Console.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game-Engine\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -87,9 +84,6 @@
     <ClInclude Include="src\Game-Engine\AABB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Audio-Engine\FootstepController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game-Engine\InstancedObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -115,6 +109,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Audio-Engine\CoinChallengeSoundController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Audio-Engine\FootstepSoundController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Audio-Engine\IndexRandomizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

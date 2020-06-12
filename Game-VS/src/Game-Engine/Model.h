@@ -1,15 +1,12 @@
 #pragma once
 #include <glad.h> 
-
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-
 #include "Mesh.h"
 #include "Shader.h"
-
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -17,10 +14,14 @@
 #include <map>
 #include <vector>
 
+// forward declaration of method that reads a texture from a file
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
 
-class Model
-{
+/**
+ * Class that encapsulates the data and operations associated with a in-game object including its meshes and textures.
+ * Source: https://learnopengl.com/Getting-started/Shaders
+ */
+class Model {
 public:
     // model data 
     std::vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
@@ -29,29 +30,25 @@ public:
     bool gammaCorrection;
 
     // constructor, expects a filepath to a 3D model.
-    Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma)
-    {
+    Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma) {
         std::cout << "Loading Model " << path << "\n";
         loadModel(path); 
     }
 
     // draws the model, and thus all its meshes
-    void Draw(Shader shader)
-    {
+    void Draw(Shader shader) {
         for (unsigned int i = 0; i < meshes.size(); i++)
             meshes[i].Draw(shader);
     }
 
 private:
     // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-    void loadModel(std::string const& path)
-    {
+    void loadModel(std::string const& path) {
         // read file via ASSIMP
         Assimp::Importer importer;
         const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
         // check for errors
-        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
-        {
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) { // if is Not Zero
             std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
             return;
         }
@@ -63,34 +60,29 @@ private:
     }
 
     // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-    void processNode(aiNode* node, const aiScene* scene)
-    {
+    void processNode(aiNode* node, const aiScene* scene) {
         // process each mesh located at the current node
-        for (unsigned int i = 0; i < node->mNumMeshes; i++)
-        {
+        for (unsigned int i = 0; i < node->mNumMeshes; i++) {
             // the node object only contains indices to index the actual objects in the scene. 
             // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
             meshes.push_back(processMesh(mesh, scene));
         }
         // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
-        for (unsigned int i = 0; i < node->mNumChildren; i++)
-        {
+        for (unsigned int i = 0; i < node->mNumChildren; i++) {
             processNode(node->mChildren[i], scene);
         }
 
     }
 
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene)
-    {
+    Mesh processMesh(aiMesh* mesh, const aiScene* scene) {
         // data to fill
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
         std::vector<Texture> textures;
         bool texCoords = false;
         // walk through each of the mesh's vertices
-        for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-        {
+        for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
             Vertex vertex;
             glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
             // positions
@@ -106,8 +98,7 @@ private:
             }
             vertex.Normal = vector;
             // texture coordinates
-            if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
-            {
+            if (mesh->mTextureCoords[0]) { // does the mesh contain texture coordinates?
                 texCoords = true;
                 glm::vec2 vec;
                 // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
@@ -138,8 +129,7 @@ private:
         }
         
         // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
-        for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-        {
+        for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
             aiFace face = mesh->mFaces[i];
             // retrieve all indices of the face and store them in the indices vector
             for (unsigned int j = 0; j < face.mNumIndices; j++)
@@ -173,26 +163,22 @@ private:
 
     // checks all material textures of a given type and loads the textures if they're not loaded yet.
     // the required info is returned as a Texture struct.
-    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
-    {
+    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
         std::vector<Texture> textures;
-        for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
-        {
+        for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
             aiString str;
             mat->GetTexture(type, i, &str);
             // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
             bool skip = false;
-            for (unsigned int j = 0; j < textures_loaded.size(); j++)
-            {
-                if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
-                {
+            for (unsigned int j = 0; j < textures_loaded.size(); j++) {
+                if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0) {
                     textures.push_back(textures_loaded[j]);
                     skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
                     break;
                 }
             }
-            if (!skip)
-            {   // if texture hasn't been loaded already, load it
+            if (!skip) {   
+                // if texture hasn't been loaded already, load it
                 Texture texture;
                 texture.id = TextureFromFile(str.C_Str(), this->directory);
                 texture.type = typeName;
@@ -205,9 +191,10 @@ private:
     }
 };
 
-
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
-{
+/**
+ * Method that loads a texture from a file using STBI image
+ */
+unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma) {
     std::cout << "Loading Texture from file " << path << "\n";
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
@@ -217,8 +204,7 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 
     int width, height, nrComponents;
     unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-    if (data)
-    {
+    if (data) {
         GLenum format;
         if (nrComponents == 1)
             format = GL_RED;
@@ -238,8 +224,7 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 
         stbi_image_free(data);
     }
-    else
-    {
+    else {
         std::cout << "Texture failed to load at path: " << path << std::endl;
         stbi_image_free(data);
     }

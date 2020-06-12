@@ -11,7 +11,13 @@ class CoinChallengeSoundController {
 	
 public:
 
-
+	/**
+	 * Creates the coin challenge sound controller.
+	 * Upon construction, loads all footstep sounds using the provided audio engine
+	 * @param audioEngine Shared audio engine used to load and play sounds.
+	 *                    Must be initialized before passing into this constructor
+	 * @param nTotalCoins The total number of coins in the coin challenge
+	 */
 	CoinChallengeSoundController(std::shared_ptr<AudioEngine> audioEngine, int nTotalCoins)
 		: audioEngine(audioEngine), nTotalCoins(nTotalCoins) {
 		init();
@@ -32,16 +38,13 @@ public:
 	void characterPickedUpCoin() {
 		nCharacterCoins++;
 		std::cout << "Character picked up a coin\n";
+		audioEngine->playSound(stinger_CoinPickup);
 		// start search with intensity level 1
-		
-		if (nCharacterCoins <= nTotalCoins / 2) {
+		if (nCharacterCoins <= nTotalCoins / 2) 
 			audioEngine->updateSoundLoopVolume(musicLayer_StartedChallenge, defVolume / (nTotalCoins / 2) * nCharacterCoins, timeSignatureNumerator * beatSampleLength / 2);
-			audioEngine->playSound(stinger_CoinPickup);
-		}
 		// intensity level 2
-		else if ( nCharacterCoins < nTotalCoins) {
+		else if ( nCharacterCoins < nTotalCoins)
 			audioEngine->updateSoundLoopVolume(musicLayer_ChallengeIntensity2, defVolume / (nTotalCoins / 2) * nCharacterCoins, timeSignatureNumerator * beatSampleLength / 2);
-		}
 		// success
 		else if (nCharacterCoins == nTotalCoins) {
 			std::cout << "Completed challenge\n";
@@ -50,28 +53,17 @@ public:
 			audioEngine->updateSoundLoopVolume(musicLayer_BeforeChallenge, 0.0f, fadeLength);
 			audioEngine->updateSoundLoopVolume(musicLayer_StartedChallenge, 0.0f, fadeLength);
 			audioEngine->updateSoundLoopVolume(musicLayer_ChallengeIntensity2, 0.0f, fadeLength);
-
 			// play success sound TODO update sound
 			audioEngine->playSound(stinger_Success);
-			
 			// play new music
 			audioEngine->playSound(musicSection2_FullMix);
-
-			// TODO Add multi-fadepoint fades with std::pair
-			//audioEngine->updateSoundLoopVolume(musicSection2_FullMix, 0.97f, beat2SampleLength / 4);
-			
-			// set fade out end volume 
+			// set 'Winning' music to fade out
 			int remainingLoops = 30;
-			
 			audioEngine->updateSoundLoopVolume(musicSection2_FullMix, 0.0f, beat2SampleLength * timeSignatureNumerator * remainingLoops);
-			
-			// TODO Fix setSoundLoopCount
-			//audioEngine->setSoundLoopCount(musicSection2_FullMix, remainingLoops);s
-			
 			// TODO fade back into 'regular' ambient music (non-coin challenge)?
 		}
 
-		// regular 
+		// regular TODO delete below else statement
 		else {
 			audioEngine->playSound(stinger_CoinPickup);
 		}
@@ -90,17 +82,19 @@ public:
 
 private:
 	
-	// Player stats
-	int nTotalCoins;
 	// Total coins needed
+	int nTotalCoins;	
+	// Player stats
 	int nCharacterCoins = 0;
 
 	// Audio engine
 	std::shared_ptr<AudioEngine> audioEngine;
 
-	// Tempo speed 
+	// BPM (beats per minute) information about the 2 songs in this container
 	const float bpm = 158.f, bpm2 = 109.f;
+	// Rythmn information about the songs
 	unsigned int timeSignatureNumerator = 4, timeSignatureDenominator = 4;
+	// calculated time length, in audio samples, of a musical beat (ie 'quarter note') in the songs
 	unsigned int beatSampleLength = AudioEngine::AUDIO_SAMPLE_RATE * 60 / bpm;
 	unsigned int beat2SampleLength = AudioEngine::AUDIO_SAMPLE_RATE * 60 / bpm2;
 
@@ -138,5 +132,5 @@ private:
 		audioEngine->loadSound(stinger_Success);
 		audioEngine->loadSound(musicSection2_FullMix);
 	}
-
+	
 };

@@ -1,7 +1,15 @@
+/**
+ * @file Main.cpp
+ * Group: Ross Hoyt, Nazneen Tamboli, Sonali D'Souza, Ruoyang Qiu 
+ * Class: CPSC 5910 Graphics/Game Project
+ * Term:  SeattleU SQ 2020
+ * 
+ * This file provides the main program entry point and manages application/gameplay state.
+ */
 #include <iostream>
 #include <stdlib.h> // rand()
 #include <memory>   // shared_ptr
-#include <thread>
+#include <thread>   // std::thread
 #include <chrono>
 #include <glad.h>
 #include <GLFW/glfw3.h>
@@ -12,7 +20,7 @@
 #include "Game-Engine/Model.h"
 #include "Game-Engine/CharacterCamera.h"
 #include "Audio-Engine/AudioEngine.h"
-#include "Audio-Engine/FootstepController.h"
+#include "Audio-Engine/FootstepSoundController.h"
 #include "Audio-Engine/CoinChallengeSoundController.h"
 #include "GameData.h"
 // custom game objects
@@ -23,38 +31,46 @@
 #include "Game-Engine/Grass.h"
 #include "Game-Engine/NPC.h"
 
+// GLFW callbacks
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 void ProcessInput(GLFWwindow* window);
 
-
-// Character/camera data
-CharacterCamera camera(STARTING_PLAYER_LOCATION);
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
-
-// List for all game objects
-std::vector<GameObject*> gameObjects;
-std::vector<Animation*> animationObjects;
-std::vector<InstancedObject*> instancedObjects;
-std::vector<Coin*> coins;
 // timing globals
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 float currentFrame = 0.0f;
 
-// Audio engine
+// Character/camera data
+CharacterCamera camera(STARTING_PLAYER_LOCATION);
+float lastX = SCREEN_WIDTH / 2.0f;
+float lastY = SCREEN_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+// Lists for all game objects
+std::vector<GameObject*> gameObjects;
+std::vector<Animation*> animationObjects;
+std::vector<InstancedObject*> instancedObjects;
+std::vector<Coin*> coins;
+
+// Audio Engine
 std::shared_ptr<AudioEngine> audioEngine;
+
+// Sound Controllers
 FootstepSoundController* footstepController;
 CoinChallengeSoundController* coinSoundController;
 
+/**
+ * Method used to make all coins appear on the game map
+ */
 void resetCoins() {
 	for (Coin* coin : coins) coin->setDestroyed(false);
 }
 
-// method used by helper thread to display coins after waiting for dialog sound to finish
+/**
+ * Method used by helper thread to display coins after waiting for dialog sound to finish
+ */
 void waitForDialogueCompletion(unsigned int lengthMS) {
 	//std::cout << "In thread, waiting for  "<< lengthMS << " ms\n";
 	std::this_thread::sleep_for(std::chrono::milliseconds(lengthMS));
@@ -63,12 +79,16 @@ void waitForDialogueCompletion(unsigned int lengthMS) {
 
 }
 
-
+/**
+ * Gets the current projection matrix based on screen dimensions and zoom amount
+ */
 static glm::mat4 getProjection() {
-	return glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	return glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 }
 
-// Performs the OpenGL calls to render a GameObject with a provided shader.
+/**
+ *  Performs the OpenGL calls to render a GameObject with a provided shader.
+ */
 static void renderGameObject(GameObject &gameObject, Shader* shader) {
 	// enable shader before setting uniforms
 	shader->use();
@@ -82,7 +102,9 @@ static void renderGameObject(GameObject &gameObject, Shader* shader) {
 	gameObject.draw(shader);
 }
 
-
+/**
+ * Main program entry point which contains the OpenGL Loop.
+ */
 int main()
 {
 	glfwInit();
@@ -94,7 +116,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Fountain Game", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Fountain Game", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -106,9 +128,6 @@ int main()
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, MouseCallback);
 	glfwSetScrollCallback(window, ScrollCallback);
-
-	// tell GLFW what to do with mouse
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	// load all OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -188,14 +207,11 @@ int main()
 	// List for all game objects
 	gameObjects.push_back(fountain);
 	gameObjects.push_back(house3);
-	//gameObjects.push_back(house4);
 	gameObjects.push_back(ground);
 	gameObjects.push_back(rock);
-	//gameObjects.push_back(grass);
 	gameObjects.push_back(cooltree);
 	gameObjects.push_back(oak);
 	gameObjects.push_back(house2);
-	//gameObjects.push_back(japaneseTree);
 	gameObjects.push_back(cottage);
 	gameObjects.push_back(cottage1);
 	gameObjects.push_back(cottage2);
@@ -276,79 +292,50 @@ int main()
 		Initialize instanced game objects
 	*/
 
-	//AsteroidRing* asteroidRing = new AsteroidRing(OBJ_ROCK, instancedObjectShader);
-	//instancedObjects.push_back(asteroidRing);
-	//animationObjects.push_back(asteroidRing);
-
 	Grass* grass = new Grass(OBJ_GRASS, instancedObjectShader);
 	instancedObjects.push_back(grass);
 	
 	/*
 		AUDIO ENGINE and SOUND LOADING
 	*/
-	
 	// Initialize Audio Engine
 	audioEngine = std::make_shared<AudioEngine>();
 	audioEngine->init();
+	
 	// load sounds
-	//audioEngine->loadSound(soundOneShot);
-	//audioEngine->loadSound(musicLoop2d);
-	audioEngine->loadSound(soundOneShot3D);
 	audioEngine->loadSound(fountainSoundLoop);
-	audioEngine->loadSound(soundLoop3DMoving);
 	audioEngine->loadSound(soundTree);
 	audioEngine->loadSound(soundJapaneseTree);
 	audioEngine->loadSound(dialogue);
-	//audioEngine->loadSound(soundCoinPickup);
-	//audioEngine->loadSound(soundCoinSuccess);
-	// load FMOD soundbanks
-	audioEngine->loadFMODStudioBank(FMOD_SOUNDBANK_MASTER);
-	audioEngine->loadFMODStudioBank(FMOD_SOUNDBANK_MASTER_STRINGS);
-	audioEngine->loadFMODStudioBank(FMOD_SOUNDBANK_SFX);
-	// load FMOD event and its parameters
-	audioEngine->loadFMODStudioEvent(FMOD_EVENT_CHARACTER_FOOTSTEPS, PARAM_CHARACTER_FOOTSTEPS_SURFACE);
-	audioEngine->loadFMODStudioEvent(FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE);
-	audioEngine->loadFMODStudioEvent(FMOD_EVENT_2D_ONESHOT_EXPLOSION);
-	// set Event Parameters
-	audioEngine->setEventVolume(FMOD_EVENT_CHARACTER_FOOTSTEPS, 0.4f);
-	// setup sound event controllers
+	
+	// setup sound controllers
 	footstepController = new FootstepSoundController(audioEngine);
 	coinSoundController = new CoinChallengeSoundController(audioEngine, coins.size());
 
-	/*
-		Startlay inital soundscape
-	*/
-	//audioEngine->playSound(fountainSoundLoop);
-	//audioEngine->playSound(musicLoop2d);
+	// Start inital soundscape
 	audioEngine->playSound(soundTree);
 	audioEngine->playSound(soundJapaneseTree);
+	audioEngine->playSound(fountainSoundLoop);
 	
     
     /* render loop */ 
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
-        // --------------------
         currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+		lastFrame = currentFrame;
 
-        
-        // input
-        // -----
         ProcessInput(window);
-
-        // render
-        // ------
-        glClearColor(COLOR_SKY.x, COLOR_SKY.y, COLOR_SKY.z, COLOR_SKY.w);
+		
+		glClearColor(COLOR_SKY.x, COLOR_SKY.y, COLOR_SKY.z, COLOR_SKY.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // enable blended overwrite of color buffer
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
-
-        // Do collision detection
+        // Collision detection for coins
         for (auto coin : coins) {
             if (!coin->isDestroyed()) {
                 if (coin->collidesWithSphere(camera)) {
@@ -359,6 +346,7 @@ int main()
             }
         }
 
+		// Collision detection for dialogue triggering
 		if (!npc->hasSaidDialogueLine()) {
 			if (npc->collidesWithSphere(camera)) {
 				audioEngine->playSound(dialogue);
@@ -373,8 +361,6 @@ int main()
         // update animation objects with current frame
         for (int i = 0; i < animationObjects.size(); i++)
             animationObjects[i]->update(currentFrame);
-        
-        //glDisable(GL_DEPTH_TEST);
 
         // render Game Objects
         for (int i = 0; i < gameObjects.size(); i++) 
@@ -383,25 +369,19 @@ int main()
         // render instanced objects
         for(InstancedObject *instancedObject : instancedObjects)
             instancedObject->drawInstances(getProjection(), camera.GetViewMatrix());
-
-
-        /*
+       
+		/*
             Audio Engine per-frame updates
         */
-		audioEngine->update(); // per-frame FMOD update
-
-        // set current player position
+		// per-frame FMOD update
+		audioEngine->update(); 
+        // set current player position in audio engine (X and Y in Fron and Up vectors need to be swapped for FMOD compatability)
         audioEngine->set3DListenerPosition(camera.Position.x, camera.Position.y, camera.Position.z,
                                           camera.Front.y,    camera.Front.x,    camera.Front.z,
                                           camera.Up.y,       camera.Up.x,       camera.Up.z );
         
-        // Update location of 3D sounds
-        //glm::vec3 newBirdTran = birds->getTranslation();
-        //audioEngine->update3DSoundPosition(SFX_LOOP_BIRD, newBirdTran.x, newBirdTran.y, newBirdTran.z);
 
-
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc)
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -412,21 +392,20 @@ int main()
     return 0;
 }
 
-// audio timing
-float key1LastTime = 0.0f, key2LastTime = 0.0f, key3LastTime = 0.0f, key4LastTime = 0.0f, key5LastTime = 0.0f, key6LastTime = 0.0f, key7LastTime = 0.0f, key8LastTime = 0.0f, key9LastTime = 0.0f, key0LastTime = 0.0f;
-float MIN_SOUND_KEY_RETRIGGER_TIME = 0.2f;
+/**
+ * Checks if a key can be triggered depending on how recently it was last triggered.
+ * If true sets the key's most recent trigger time to current frame
+ */
 
-// Checks if a key can be triggered depending on how recently it was last triggered. 
-// If true sets the key's most recent trigger time to current frame
 bool keyCanRetrigger(float &currFrame, float &lastTriggerFrame) {
-	bool canRetrigger = currFrame - lastTriggerFrame >= MIN_SOUND_KEY_RETRIGGER_TIME;
+	bool canRetrigger = currFrame - lastTriggerFrame >= KEY_MIN_RETRIGGER_TIME;
 	if (canRetrigger) lastTriggerFrame = currFrame;
 	return canRetrigger;
 }
 
-
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
+/**
+ * process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+ */
 void ProcessInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -434,31 +413,41 @@ void ProcessInput(GLFWwindow* window)
 
 	// WASD Handling (Character Movement)
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		camera.ProcessKeyboard(FORWARD, deltaTime);
+		camera.processKeyboard(FORWARD, deltaTime);
 		footstepController->processFootstepKey(currentFrame);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		camera.ProcessKeyboard(BACKWARD, deltaTime);
+		camera.processKeyboard(BACKWARD, deltaTime);
 		footstepController->processFootstepKey(currentFrame);
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		camera.ProcessKeyboard(LEFT, deltaTime);
+		camera.processKeyboard(LEFT, deltaTime);
 		footstepController->processFootstepKey(currentFrame);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		camera.ProcessKeyboard(RIGHT, deltaTime);
+		camera.processKeyboard(RIGHT, deltaTime);
 		footstepController->processFootstepKey(currentFrame);
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-		camera.ProcessKeyboard(RUNNING_START, deltaTime);
+		camera.processKeyboard(RUNNING_START, deltaTime);
 		footstepController->setRunning(true);
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
-		camera.ProcessKeyboard(RUNNING_STOP, deltaTime);
+		camera.processKeyboard(RUNNING_STOP, deltaTime);
 		footstepController->setRunning(false);
 	}
 
-	// Number Keys: Coin Controls
+	// 'Reset Coin Challenge' Key (k)
+	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS && keyCanRetrigger(currentFrame, keyKLastTime)) {
+		resetCoins();
+		coinSoundController->reset();
+	}
+	// Audio Engine Mute Key (m)
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && keyCanRetrigger(currentFrame, keyMLastTime))
+		audioEngine->isMuted() ? audioEngine->unmuteAllSound() : audioEngine->muteAllSounds();
+
+
+	// Number Keys: Coin Controls TODO fix collision detection so that these controls aren't needed
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
 		if (!coins[0]->isDestroyed()) {
 			coins[0]->setDestroyed(true);
@@ -489,56 +478,52 @@ void ProcessInput(GLFWwindow* window)
 			coinSoundController->characterPickedUpCoin();
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS && keyCanRetrigger(currentFrame, key6LastTime)) {
 		if (!coins[5]->isDestroyed()) {
 			coins[5]->setDestroyed(true);
 			coinSoundController->characterPickedUpCoin();
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS && keyCanRetrigger(currentFrame, key7LastTime)) {
 		if (!coins[6]->isDestroyed()) {
 			coins[6]->setDestroyed(true);
 			coinSoundController->characterPickedUpCoin();
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS && keyCanRetrigger(currentFrame, key8LastTime)) {
 		if (!coins[7]->isDestroyed()) {
 			coins[7]->setDestroyed(true);
 			coinSoundController->characterPickedUpCoin();
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS && keyCanRetrigger(currentFrame, key9LastTime)) {
 		if (!coins[8]->isDestroyed()) {
 			coins[8]->setDestroyed(true);
 			coinSoundController->characterPickedUpCoin();
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && keyCanRetrigger(currentFrame, key1LastTime)) {
+	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && keyCanRetrigger(currentFrame, key0LastTime)) {
 		if (!coins[9]->isDestroyed()) {
 			coins[9]->setDestroyed(true);
 			coinSoundController->characterPickedUpCoin();
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS && keyCanRetrigger(currentFrame, key9LastTime)) {
-		resetCoins();
-		coinSoundController->reset();
-	}
-	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && keyCanRetrigger(currentFrame, key0LastTime))
-		audioEngine->isMuted() ? 
-				audioEngine->unmuteAllSound():
-				audioEngine->muteAllSounds();
+
 
 }
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
+/**
+ * GLFW resize window function
+ */
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
 }
-
+/**
+ * GLFW mouse function
+ */
 void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
 	if (firstMouse) {
 		lastX = xpos;
@@ -552,9 +537,9 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
 	lastX = xpos;
 	lastY = ypos;
 
-	camera.ProcessMouseMovement(xoffset, yoffset);
+	camera.processMouseMovement(xoffset, yoffset);
 }
 
 void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
-	camera.ProcessMouseScroll(yoffset);
+	camera.processMouseScroll(yoffset);
 }

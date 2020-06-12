@@ -1,0 +1,25 @@
+var annotated_dup =
+[
+    [ "AABB", "class_a_a_b_b.html", "class_a_a_b_b" ],
+    [ "Animation", "class_animation.html", "class_animation" ],
+    [ "AsteroidRing", "class_asteroid_ring.html", "class_asteroid_ring" ],
+    [ "AudioEngine", "class_audio_engine.html", "class_audio_engine" ],
+    [ "Bird", "class_bird.html", "class_bird" ],
+    [ "CharacterCamera", "class_character_camera.html", "class_character_camera" ],
+    [ "Coin", "class_coin.html", "class_coin" ],
+    [ "CoinChallengeSoundController", "class_coin_challenge_sound_controller.html", "class_coin_challenge_sound_controller" ],
+    [ "FootstepSoundController", "class_footstep_sound_controller.html", "class_footstep_sound_controller" ],
+    [ "GameObject", "class_game_object.html", "class_game_object" ],
+    [ "Grass", "class_grass.html", "class_grass" ],
+    [ "Harp", "class_harp.html", "class_harp" ],
+    [ "IndexRandomizer", "class_index_randomizer.html", "class_index_randomizer" ],
+    [ "InstancedObject", "class_instanced_object.html", "class_instanced_object" ],
+    [ "Mesh", "class_mesh.html", "class_mesh" ],
+    [ "Model", "class_model.html", "class_model" ],
+    [ "NPC", "class_n_p_c.html", "class_n_p_c" ],
+    [ "Shader", "class_shader.html", "class_shader" ],
+    [ "SoundInfo", "class_sound_info.html", "class_sound_info" ],
+    [ "SphereCollider", "class_sphere_collider.html", "class_sphere_collider" ],
+    [ "Texture", "struct_texture.html", "struct_texture" ],
+    [ "Vertex", "struct_vertex.html", "struct_vertex" ]
+];

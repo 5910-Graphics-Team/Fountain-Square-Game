@@ -1,33 +1,37 @@
 #pragma once
-#include <glad.h> // holds all OpenGL type declarations
-
+#include <glad.h> 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
 #include "Shader.h"
-
 #include <string>
 #include <vector>
 
+/**
+ * Encasulation of all data for a vertex used by Mesh
+ * source: https://learnopengl.com/Model-Loading/Mesh
+ */
 struct Vertex {
-    // position
     glm::vec3 Position;
-    // normal
     glm::vec3 Normal;
-    // texCoords
     glm::vec2 TexCoords;
-    // tangent
     glm::vec3 Tangent;
-    // bitangent
     glm::vec3 Bitangent;
 };
 
+/**
+ * Encapsulation of all data about a Texture needed by Mesh
+ * source: https://learnopengl.com/Model-Loading/Mesh
+ */
 struct Texture {
     unsigned int id;
     std::string type;
     std::string path;
 };
 
+/**
+ * Encapsulation of a Mesh's data and operations
+ * source: https://learnopengl.com/Model-Loading/Mesh
+ */
 class Mesh {
 public:
     // mesh Data
@@ -36,27 +40,26 @@ public:
     std::vector<Texture>      textures;
     unsigned int VAO;
 
-    // constructor
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
-    {
+    /**
+     * Constructs a mesh from vertices, indeces and textures. Mesh is intialized upon construction.
+     */
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
         this->vertices = vertices;
         this->indices = indices;
         this->textures = textures;
-
-        // now that we have all the required data, set the vertex buffers and its attribute pointers.
         setupMesh();
     }
 
-    // render the mesh
-    void Draw(Shader shader)
-    {
+    /**
+     * Method which renders the mesh using a specific shader
+     */
+    void Draw(Shader shader) {
         // bind appropriate textures
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
         unsigned int normalNr = 1;
         unsigned int heightNr = 1;
-        for (unsigned int i = 0; i < textures.size(); i++)
-        {
+        for (unsigned int i = 0; i < textures.size(); i++) {
             glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
             // retrieve texture number (the N in diffuse_textureN)
             std::string number;
@@ -89,9 +92,10 @@ private:
     // render data 
     unsigned int VBO, EBO;
 
-    // initializes all the buffer objects/arrays
-    void setupMesh()
-    {
+    /**
+     * Method that initializes all the buffer objects/arrays. It set the vertex buffers and its attribute pointers.
+     */
+    void setupMesh() {
         // create buffers/arrays
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -100,9 +104,6 @@ private:
         glBindVertexArray(VAO);
         // load data into vertex buffers
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        // A great thing about structs is that their memory layout is sequential for all its items.
-        // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-        // again translates to 3/2 floats which translates to a byte array.
         glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

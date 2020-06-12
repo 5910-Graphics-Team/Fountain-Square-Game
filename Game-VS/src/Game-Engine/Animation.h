@@ -9,7 +9,7 @@ class Animation {
 public:
     /**
      * Updates the animation based on how much time has passed since previous frame
-     * @var time - float value, in seconds
+     * @param time - float value, in seconds
      */
 	virtual	void update(float time) = 0;
 };

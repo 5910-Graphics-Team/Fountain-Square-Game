@@ -1,18 +1,18 @@
 #pragma once
 
-
+// Sound Playback Types
 typedef enum {
     SOUND_LOOP,
     SOUND_ONE_SHOT
 } SOUND_PLAYBACK_TYPE;
-
+// Sound Position Types
 typedef enum {
     SOUND_2D,
     SOUND_3D
     // TODO:
     //SOUND_2D_MONO, SOUND_2D_STEREO, SOUND_3D_MONO, SOUND_3D_STEREO
 } SOUND_POSITION_TYPE;
-
+// Sound Load States
 typedef enum {
     SOUND_NOT_LOADED,
     SOUND_LOADED
@@ -26,14 +26,15 @@ class SoundInfo {
 public:
 
     /**
-     * SoundInfo main constructor
-     * @var filepath (default = "")    Relative location of audio file
-     * @var reverbAmount
-     * @var soundPlaybackType
-     * @var soundPositionType 
-     * @var x        (default = 0.0f)  X coordinate - only used when @var is3D is true
-     * @var y        (default = 0.0f)  Y coordinate - only used when @var is3D is true
-     * @var z        (default = 0.0f)  Z coordinate - only used when @var is3D is true
+     * Constructs a SoundInfo with provided settings
+     * @param filepath Relative location of audio file
+     * @param volume The intial playback volume
+     * @param reverbAmount the intial Reverb amount
+     * @param soundPlaybackType the intended playback type
+     * @param soundPositionType the intended 3D/2D settings
+     * @param x X 3D coordinate - only used when soundPositionType is SOUND3D
+     * @param y Y 3D coordinate - only used when soundPositionType is SOUND3D
+     * @param z Z 3D coordinate - only used when soundPositionType is SOUND3D
      */
     SoundInfo(const char* filePath, float volume = 1.0f, float reverbAmount = 0.0f, SOUND_PLAYBACK_TYPE soundPlaybackType = SOUND_ONE_SHOT, SOUND_POSITION_TYPE soundPositionType = SOUND_2D,
         float x = 0.0f, float y = 0.0f, float z = 0.0f) : filePath(filePath), volume(volume), reverbAmount(reverbAmount), x(x), y(y), z(z) {
@@ -96,15 +97,16 @@ public:
     void setVolume(float vol) {
         this->volume = vol;
     }
-    // TODO FIX
-    void setMSLength(unsigned int msLength) {
-        this->msLength = msLength;
-        //this->msLength = new unsigned int(msLength);
-    }
-    // TODO FIX
-    const unsigned int getMSLength() {
-        return msLength;
-    }
+
+    //// TODO FIX
+    //void setMSLength(unsigned int msLength) {
+    //    this->msLength = msLength;
+    //    //this->msLength = new unsigned int(msLength);
+    //}
+    //// TODO FIX
+    //const unsigned int getMSLength() {
+    //    return msLength;
+    //}
 
 private:
     std::string uniqueID;

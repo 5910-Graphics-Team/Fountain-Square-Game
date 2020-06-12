@@ -3,11 +3,13 @@
 #include <GLFW/glfw3.h>
 #include <tgmath.h>
 #include <math.h> 
-
+/**
+ * Custom instanced object that initializes and displays all of the instances of grass model.
+ */
 class Grass : public InstancedObject {
 public:
 	/**
-	 * Constructs Grass Instanced object which is an instanced object. 
+	 * Constructs the Instanced object container for all Grass instances with a size of 1024 grass instances
 	 */
 	Grass(const char* filepath, Shader* shader) : InstancedObject(filepath, shader, 1024) {
 		initModelTransformations();
@@ -15,7 +17,9 @@ public:
 	}
 
 protected:
-	
+	/**
+	 * Semi-randomely generates modelView matrices for each grass instance, in a grid-sstyle distribution
+	 */
 	void initModelTransformations() override {
 		// values used in generating the semi-random model matrices
 		// TODO simplify this hard-coded implementation
@@ -34,7 +38,7 @@ protected:
 			float displacementZ = (rand() % (int)(factor * offset * 100)) / 100.0f - offset;
 			float z = (i % (squareRoot * 2)) * offset - offset2 + displacementZ; // + displacementZ;
 			modelMat = glm::translate(modelMat, glm::vec3(x, y, z));
-			std::cout << "ModelMat[" << i << "] x = " << x << " y = " << y << " z = " << z << "\n";
+			//std::cout << "ModelMat[" << i << "] x = " << x << " y = " << y << " z = " << z << "\n";
 			float scale = (rand() % 100) / 100 + 0.7f;
 			modelMat = glm::scale(modelMat, glm::vec3(scale * scaleGrass * GLOBAL_SCALE));
 

@@ -1,16 +1,29 @@
+/*
+* @file GameData.h
+* All game domain information, used in Main and some other code files, is defined here. 
+* Including default window dimensions, item locations/rotations/scales, 
+* some sound file locations, and more.
+*/
 #pragma once
 #include <glm/common.hpp>
 #include "Audio-Engine/SoundInfo.h"
 
-// screen settings
-const unsigned int SCR_WIDTH = 1920;
-const unsigned int SCR_HEIGHT = 1080;
+// window size settings
+const unsigned int SCREEN_WIDTH = 1920, SCREEN_HEIGHT = 1080;
 
-// background colors
+// Minimum amount of time between key presses, used by non-movement related keyboard controls.
+float KEY_MIN_RETRIGGER_TIME = 0.2f;
+// Variables tracking the last time a particular key was pressed
+float key1LastTime = 0.0f, key2LastTime = 0.0f, key3LastTime = 0.0f, key4LastTime = 0.0f, key5LastTime = 0.0f,
+      key6LastTime = 0.0f, key7LastTime = 0.0f, key8LastTime = 0.0f, key9LastTime = 0.0f, key0LastTime = 0.0,
+      keyKLastTime = 0.0f, keyMLastTime = 0.0f;
+
+// black background color
 glm::vec4 COLOR_BLACK(0.05f, 0.05f, 0.05f, 1.0f);
+// sky background color
 glm::vec4 COLOR_SKY(0.53f , 0.81f, 0.92f, 1.0f);
 
-// player data
+// The Player's starting position
 glm::vec3 STARTING_PLAYER_LOCATION(-4.0f, 1.0f, -25.0f);
 
 // obj file locations
@@ -42,10 +55,13 @@ const char* OBJ_BUSH = "res/objects/flora/trees/hazelnutbush/Hazelnut.obj";
 const char* OBJ_TREE_BUSH = "res/objects/flora/Tree4/uploads_files_885045_tree_1.obj";
 const char* OBJ_TREE_LINE = "res/objects/flora/Tree_Line/FKLPI_Forest/FKLPI_Forest.dae";
 const char* OBJ_YUN = "res/objects/Yun/Yun.obj";
-//const char* OBJ_RAINBOW = "res/objects/flora/Jungle Island Background/Tree4JungleIslandBg.obj";
 
-glm::vec3 GLOBAL_SCALE(0.5f), GLOBAL_POSITION_SCALE(0.75);
-// game object starting positions
+// Global object size scaling, used to bring all objects down in size proportionally
+glm::vec3 GLOBAL_SCALE(0.5f);
+// Global object translation scaling, used to scale down the translation locations of all game objects
+glm::vec3 GLOBAL_POSITION_SCALE(0.75);
+
+// Definitions of all starting locations, size scales, and euler rotations of all (non-instanced) game objects 
 glm::vec3 tranNPC(-5.0f, 0.0f, 0.0f), scaleNPC(13.5f), rotNPC(0.0f);
 glm::vec3 tranBackpack(0.5f, -6.8f, 0.0f), scaleBackpack(0.5f), rotBackpack(0.0f);
 glm::vec3 tranGround(-80.0f, 0.0f, -30.0f), scaleGround(70.0f), rotGround(0.0f, 10.0f, 180.0f);
@@ -106,14 +122,8 @@ glm::vec3 trantreeline4(180.5f, -1.6f, 60.0f), scaletreeline4(0.90f), rottreelin
 glm::vec3 trantreeline5(-10.5f, -1.4f, -70.0f);
 
 
-// AABB box sizes	
-//glm::vec3 AABB_DIMS_CHARACTER(3.0f);
-//glm::vec3 AABB_DIMS_COIN(3.0f);
-
-
-// Coin starting scale/rotation for all coin instances
+// Coin-specific starting scale/rotation for all coin instances
 glm::vec3 scaleCoins(0.085f), rotCoins(0.0f);
-//glm::vec3 scale
 // Coin translations for each individual coin
 static std::vector<glm::vec3> coinTranslations{
 	glm::vec3(12.0f, 0.0f, -23.0f),
@@ -121,70 +131,27 @@ static std::vector<glm::vec3> coinTranslations{
 	glm::vec3(4.0f, 0.0f, -15.0f),
 	glm::vec3(2.0f, 0.0f, -10.0f),
 	glm::vec3(-5.0f, 0.0f, 5.0f),
-	
 	glm::vec3((tranWell* GLOBAL_POSITION_SCALE) + glm::vec3(3.0f, 0.0f, 3.0f)),
 	glm::vec3((tranGreenPine* GLOBAL_POSITION_SCALE) + glm::vec3(3.0f, 0.0f, 3.0f)),
-	
-	
 	glm::vec3((tranWillowtree* GLOBAL_POSITION_SCALE) + glm::vec3(3.0f, 0.0f, 3.0f)),
-	
 	glm::vec3(-15.0f, 0.0f, -10.0f),
 	glm::vec3((tranHouse* GLOBAL_POSITION_SCALE) + glm::vec3(3.0f, 0.0f, 3.0f)),
-
 };
 
 // raw audio asset paths
-const char* MUSIC                = "res/sound/music/Medieval Village Full Theme Demo_2.5.1.3.wav";
-const char* MUSIC_2              = "res/sound/music/Medieval Village3.0 DEMO 2 Loop.wav";
-const char* STINGER_1_GUITAR     = "res/sound/music/Medieval Village_Stinger1 Guitar_2.5.1.3.wav";
-const char* STINGER_2_GUITAR_2   = "res/sound/music/Medieval Village_Stinger2 Guitar_2.5.1.3.wav";
-const char* STINGER_3_HARP       = "res/sound/music/Medieval Village_Stinger3 Harp_2.5.1.3.wav";
 const char* SFX_LOOP_FOUNTAIN    = "res/sound/fountain/Fountain_Loop2.wav";
 const char* DIALOGUE_TOWN_INTRO  = "res/sound/dialogue/Character1_Dialogue_TownIntroduction.wav";
-const char* SFX_LOOP_BIRD        = "res/sound/animals/birds/SFX_LOOP_BIRDS.wav";
 const char* SFX_LOOP_TREE_BIRDS  = "res/sound/animals/birds/SFX_LOOP_TREE_BIRDS.wav";
 
-// Coin challenge sounds/music
-//const char* STINGER_COIN_PICKUP  = "res/sound/coin/SFX_ONESHOT_COIN_PICKUP.wav";
-//const char* STINGER_COIN_SUCCESS = "res/sound/coin/SFX_ONESHOT_COIN_SUCCESS.wav";
-
-
-const char* SFX_FOOTSTEP1 = "res/sound/footsteps/SFX_FOOTSTEP1.wav";
-const char* SFX_FOOTSTEP2 = "res/sound/footsteps/SFX_FOOTSTEP2.wav";
-const char* SFX_FOOTSTEP3 = "res/sound/footsteps/SFX_FOOTSTEP3.wav";
-const char* SFX_FOOTSTEP4 = "res/sound/footsteps/SFX_FOOTSTEP4.wav";
-const char* SFX_FOOTSTEP5 = "res/sound/footsteps/SFX_FOOTSTEP5.wav";
-const char* SFX_FOOTSTEP6 = "res/sound/footsteps/SFX_FOOTSTEP6.wav";
-const char* SFX_FOOTSTEP7 = "res/sound/footsteps/SFX_FOOTSTEP7.wav";
-const char* SFX_FOOTSTEP8 = "res/sound/footsteps/SFX_FOOTSTEP8.wav";
-
-// TODO rename sounds for clarity
+// default reverb and volume for sounds used in main
 float defReverb = 0.5, defVolume = 0.9;
-SoundInfo soundOneShot     (STINGER_1_GUITAR,    defVolume, defReverb);
-SoundInfo soundOneShot3D   (STINGER_3_HARP,      defVolume, defReverb, SOUND_ONE_SHOT, SOUND_3D, tranHarp.x,        tranHarp.y,       tranHarp.z);
-SoundInfo musicLoop2d      (MUSIC_2,             defVolume, 0.0f,      SOUND_LOOP);
-glm::vec3 fountainSoundLoc = tranFountain * GLOBAL_POSITION_SCALE;
-SoundInfo fountainSoundLoop(SFX_LOOP_FOUNTAIN,   defVolume, defReverb, SOUND_LOOP,     SOUND_3D, fountainSoundLoc.x,    fountainSoundLoc.y,   fountainSoundLoc.z);
-SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, defVolume, defReverb, SOUND_LOOP,     SOUND_3D, tranTreeFir.x,     tranTreeFir.y,    tranTreeFir.z);
-SoundInfo soundTree        (SFX_LOOP_TREE_BIRDS, defVolume, defReverb, SOUND_LOOP,     SOUND_3D, tranWillowtree.x,  tranWillowtree.y, tranWillowtree.z);
-SoundInfo soundLoop3DMoving(SFX_LOOP_BIRD,       defVolume, defReverb, SOUND_LOOP,     SOUND_3D, tranBirds.x,       tranBirds.y,      tranBirds.z);
-SoundInfo dialogue         (DIALOGUE_TOWN_INTRO, defVolume, defReverb, SOUND_ONE_SHOT, SOUND_3D, tranNPC.x, tranNPC.y, tranNPC.z);
-
-// FMOD Studio sound banks
-const char* FMOD_SOUNDBANK_MASTER         = "res/sound/Master.bank";
-const char* FMOD_SOUNDBANK_MASTER_STRINGS = "res/sound/Master.strings.bank";
-const char* FMOD_SOUNDBANK_SFX            = "res/sound/SFX.bank";
-
-// FMOD Studio Events
-const char* FMOD_EVENT_CHARACTER_FOOTSTEPS = "event:/Character/Player Footsteps";
-static const std::vector<std::pair<const char*, float>> PARAM_CHARACTER_FOOTSTEPS_SURFACE{ 
-	{ "Surface", 2.0f } 
-};
-
-const char* FMOD_EVENT_2D_LOOP_COUNTRY_AMBIENCE = "event:/Ambience/Country";
-
-const char* FMOD_EVENT_2D_ONESHOT_EXPLOSION = "event:/Weapons/Explosion";
-
-//cosnt char* FMOD_EVENT_2D_UI_
-
-
+// Scaled translations of in-game 3D sounds. TODO add sounds to more trees
+glm::vec3 fountainSoundLocation = tranFountain * GLOBAL_POSITION_SCALE;
+glm::vec3 japaneseTreeSoundLocation = tranfir1 * GLOBAL_POSITION_SCALE;
+glm::vec3 treeSoundLocation = tranWillowtree * GLOBAL_POSITION_SCALE;
+glm::vec3 npcSoundLocation = tranNPC * GLOBAL_POSITION_SCALE;
+// SoundInfo objects used in Main
+SoundInfo fountainSoundLoop(SFX_LOOP_FOUNTAIN,   defVolume, defReverb, SOUND_LOOP,     SOUND_3D, fountainSoundLocation.x, fountainSoundLocation.y,   fountainSoundLocation.z);
+SoundInfo soundJapaneseTree(SFX_LOOP_TREE_BIRDS, defVolume, defReverb, SOUND_LOOP,     SOUND_3D, japaneseTreeSoundLocation.x, japaneseTreeSoundLocation.y, japaneseTreeSoundLocation.z);
+SoundInfo soundTree        (SFX_LOOP_TREE_BIRDS, defVolume, defReverb, SOUND_LOOP,     SOUND_3D, treeSoundLocation.x,  treeSoundLocation.y, treeSoundLocation.z);
+SoundInfo dialogue         (DIALOGUE_TOWN_INTRO, defVolume, defReverb, SOUND_ONE_SHOT, SOUND_3D, npcSoundLocation.x, npcSoundLocation.y, npcSoundLocation.z);

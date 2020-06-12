@@ -5,7 +5,8 @@
 #include <FMOD/fmod_errors.h>
 #include <iostream>
 
-AudioEngine::AudioEngine() : sounds(), loopsPlaying(), soundBanks(), eventDescriptions(), eventInstances() {}
+AudioEngine::AudioEngine() : sounds(), loopsPlaying(), soundBanks(), 
+    eventDescriptions(), eventInstances() {}
 
 void AudioEngine::init() {
     ERRCHECK( FMOD::Studio::System::create(&studioSystem) );
@@ -36,7 +37,7 @@ void AudioEngine::loadSound(SoundInfo soundInfo) {
         sounds.insert({ soundInfo.getUniqueID(), sound });
         unsigned int msLength = 0;
 		ERRCHECK(sounds[soundInfo.getUniqueID()]->getLength(&msLength, FMOD_TIMEUNIT_MS));
-        soundInfo.setMSLength(msLength);
+        //soundInfo.setMSLength(msLength);
         soundInfo.setLoaded(SOUND_LOADED);
     }
     else
@@ -105,23 +106,7 @@ void AudioEngine::updateSoundLoopVolume(SoundInfo& soundInfo, float newVolume, u
         std::cout << "AudioEngine: Can't update sound loop volume! (It isn't playing or might not be loaded)\n";
 }
 
-void AudioEngine::setSoundLoopCount(SoundInfo& soundInfo, int loopCount) {
-    if (/*soundInfo.isLoaded() */ sounds.count(soundInfo.getUniqueID()) > 0) {
-        ERRCHECK(sounds[soundInfo.getUniqueID()]->setLoopCount(loopCount));
-        std::cout << "Setting loop count to " << loopCount << '\n';
-    }
-    
-    if (loopCount != -1 && loopsPlaying.count(soundInfo.getUniqueID()) > 0)
-        loopsPlaying.erase(soundInfo.getUniqueID());
-        
 
-        
-        
-}
-
-//void AudioEngine::createSubmixGroup(std::vector<SoundInfo> sounds) {
-//
-//}
 
 void AudioEngine::update3DSoundPosition(SoundInfo soundInfo) {
     if (soundIsPlaying(soundInfo)) 
@@ -135,12 +120,18 @@ bool AudioEngine::soundIsPlaying(SoundInfo soundInfo) {
 	return soundInfo.isLoop() && loopsPlaying.count(soundInfo.getUniqueID());
 }
 
-
 void AudioEngine::set3DListenerPosition(float posX, float posY, float posZ, float forwardX, float forwardY, float forwardZ, float upX, float upY, float upZ) {
     listenerpos = { posX,     posY,     posZ };
     forward =     { forwardX, forwardY, forwardZ };
     up =          { upX,      upY,      upZ };
     ERRCHECK(lowLevelSystem->set3DListenerAttributes(0, &listenerpos, 0, &forward, &up));
+}
+
+unsigned int AudioEngine::getSoundLengthInMS(SoundInfo soundInfo) {
+	unsigned int length = 0;
+	if (sounds.count(soundInfo.getUniqueID()))
+		ERRCHECK(sounds[soundInfo.getUniqueID()]->getLength(&length, FMOD_TIMEUNIT_MS));
+	return length;
 }
 
 void AudioEngine::loadFMODStudioBank(const char* filepath) {
@@ -218,6 +209,21 @@ bool AudioEngine::isMuted() {
 	return muted;
 }
 
+// TODO Fix
+//void AudioEngine::setSoundLoopCount(SoundInfo& soundInfo, int loopCount) {
+//    if (/*soundInfo.isLoaded() */ sounds.count(soundInfo.getUniqueID()) > 0) {
+//        ERRCHECK(sounds[soundInfo.getUniqueID()]->setLoopCount(loopCount));
+//        std::cout << "Setting loop count to " << loopCount << '\n';
+//    }
+//    
+//    if (loopCount != -1 && loopsPlaying.count(soundInfo.getUniqueID()) > 0)
+//        loopsPlaying.erase(soundInfo.getUniqueID());
+//        
+//}
+// TODO Fix
+//void AudioEngine::createSubmixGroup(std::vector<SoundInfo> sounds) {
+//
+//}
 
 // Private definitions 
 bool AudioEngine::soundLoaded(SoundInfo soundInfo) {

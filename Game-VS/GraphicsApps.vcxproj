@@ -187,7 +187,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio-Engine\CoinChallengeSoundController.h" />
-    <ClInclude Include="src\Audio-Engine\FootstepController.h" />
+    <ClInclude Include="src\Audio-Engine\FootstepSoundController.h" />
+    <ClInclude Include="src\Audio-Engine\IndexRandomizer.h" />
     <ClInclude Include="src\Audio-Engine\SoundInfo.h" />
     <ClInclude Include="src\Game-Engine\AABB.h" />
     <ClInclude Include="src\Game-Engine\Animation.h" />
@@ -206,7 +207,6 @@
     <ClInclude Include="src\Game-Engine\Mesh.h" />
     <ClInclude Include="src\Game-Engine\Model.h" />
     <ClInclude Include="src\Game-Engine\Shader.h" />
-    <ClInclude Include="src\Util\Console.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="res\sound\Medieval Village2.5_Loop1_ImplementationDemo.wav" />

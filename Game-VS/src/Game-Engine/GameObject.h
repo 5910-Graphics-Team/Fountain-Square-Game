@@ -1,8 +1,10 @@
 #pragma once
 #include "Model.h"
 
-
-// Container for a Model and its default translation,scale, and rotation values. 
+/**
+ * Basic Container for a regular in-game object. 
+ * Can also be implemented to provide access to the classes' functionality 
+ */
 class GameObject {
 
 protected:
@@ -12,10 +14,15 @@ protected:
     bool destroyed = false;
 
 public:
-    
+    /**
+     * Default Constructor which sets the position, scale and rotation fields to default values.
+     */
     GameObject(const char* filepath) : GameObject(filepath,glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f)) {}
 
-
+    /**
+	 * Creates a game object using the OBJ file at the specified relative path, with provided translation, size scale, and rotation values. 
+     * The object will try to load any textures inside the provided directory and map them onto the object.
+     */
     GameObject(const char* filepath, glm::vec3 defTrans, glm::vec3 defScale, glm::vec3 defRot) : filepath(filepath), model(filepath), trans(defTrans), scale(defScale), rotAngs(defRot) {}
 
     void draw(Shader* shader) {
@@ -43,7 +50,9 @@ public:
     glm::vec3 getRotationAngles() {
         return rotAngs;
     }
-
+    /**
+     * Method which gets the model matrix for this game object.
+     */
     glm::mat4 getModel() {
         glm::mat4 m = glm::mat4(1.0f);
         m = glm::translate(m, trans);
@@ -62,6 +71,9 @@ public:
         return filepath;
     }
 
+    /**
+     * Method which can be used to prevent the GameObject from displaying, without removing it from OpenGL. 
+     */
 	bool isDestroyed() {
 		return destroyed;
 	}

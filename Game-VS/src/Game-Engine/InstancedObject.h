@@ -1,9 +1,13 @@
 #pragma once
 #include "GameObject.h"
-
+/**
+ * Base abstract class for an instanced object. Can be implemented to allow for efficient instanced rendering of a model.
+ */
 class InstancedObject {
 public:
-
+	/**
+	 * Constructs an instanced object from a OBJ filepath and a shader.
+	 */
 	InstancedObject(const char* filepath, Shader* shader, int numInstances) : model(filepath), shader(shader), numInstances(numInstances) {
 		rotAngs = new float[numInstances];
 		modelMatrices = new glm::mat4[numInstances];
@@ -32,11 +36,14 @@ protected:
 
 	unsigned int numInstances;
 	glm::mat4* modelMatrices;// size = numInstances
-	float* rotAngs; // array holding the rotation (euler) angles of the instances. size = numInstances
+	float* rotAngs; // array holding the rotation (euler) angles of the instances. size = numInstances. Not necisarily used by inheriting class 
 
+	/**
+	 * Method that can be implemented by the inheriting class to generate the locations of the instances in a custom way.
+	 */
 	virtual void initModelTransformations() {}
 
-	//virtual void configureInstancedArray() {} //= 0;
+	
 	void configureInstancedArray() {
 		// configure instanced array
 		// -------------------------
@@ -71,8 +78,5 @@ protected:
 			glBindVertexArray(0);
 		}
 	}
-
-	
-private:
 
 };

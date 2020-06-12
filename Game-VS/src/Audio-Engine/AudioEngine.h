@@ -4,6 +4,8 @@
 /// 
 /// This audio engine is an FMOD wrapper with provides sound file loading, 2D/3D audio
 /// playback, looping playback, FMOD Soundbank/Event playback
+/// Implements the FMOD Studio and FMOD Core API's to allow raw audio file-based implementations
+/// as well as the use and control of FMOD Studio Sound Banks.
 ///
 /// @author Ross Hoyt
 /// @dependencies FMOD Studio & Core .dll's, .lib's, etc.
@@ -17,11 +19,18 @@
 #include <map>
 #include "SoundInfo.h"
 
-// FMOD Error Handling Function
+/**
+ * Error Handling Function for FMOD Errors
+ * @param result - the FMOD_RESULT generated during every FMOD 
+ */
 void ERRCHECK_fn(FMOD_RESULT result, const char* file, int line);
 #define ERRCHECK(_result) ERRCHECK_fn(_result, __FILE__, __LINE__)
 
-
+/**
+ * A class that handles the process of loading and playing sounds by wrapping FMOD's functionality.
+ * Deals with all FMOD calls so that FMOD-specific code does not need to be used outside this class.
+ * Only one AudioEngine should be constructed for an application.
+ */
 class AudioEngine {
 public:
     /**
@@ -31,15 +40,12 @@ public:
     AudioEngine();
 
     /**
-     * Initializes Audio Engine Studio and Core systems
-     * FMOD's Distance factor is set to 1.0f by default (1 meter/ 3D game unit)
+     * Initializes Audio Engine Studio and Core systems to default values. 
      */
     void init();
 
     /**
-     * Method that is called when audio engine is destroyed
-     * TODO research FMOD deactivation more, 
-     * TODO possibly call this in destructor
+     * Method that is called to deactivate the audio engine after use.
      */
     void deactivate();
 
@@ -51,7 +57,8 @@ public:
     /**
      * Loads a sound from disk using provided settings
      * Prepares for later playback with playSound()
-     * Only reads file and creates the sound if it has not already been added to the cache
+     * Only reads the audio file and loads into the audio engine
+     * if the sound file has already been added to the cache
      */
     void loadSound(SoundInfo soundInfo);
 
@@ -59,7 +66,7 @@ public:
     * Plays a sound file using FMOD's low level audio system. If the sound file has not been
     * previously loaded using loadSoundFile(), a console message is displayed
     *
-    * @var filename - relative path to file from project directory. (Can be .OGG, .WAV, .MP3,
+    * @param filename - relative path to file from project directory. (Can be .OGG, .WAV, .MP3,
     *                 or any other FMOD-supported audio format)
     */
     void playSound(SoundInfo soundInfo);
@@ -70,21 +77,14 @@ public:
     void stopSound(SoundInfo soundInfo);
 
     /**
-     * Utility method that returns the length of a SoundInfo's audio file in milliseconds
-     * If the sound hasn't been loaded, returns 0
+     * Method that updates the volume of a soundloop that is playing. This can be used to create audio 'fades'
+     * where the volume ramps up or down to the provided new volume
+     * @param fadeSampleLength the length in samples of the intended volume sample. If less than 64 samples, the default 
+     *                         FMOD fade out is used
      */
-    unsigned int getSoundLengthInMS(SoundInfo soundInfo) {
-        unsigned int length = 0;
-        if (sounds.count(soundInfo.getUniqueID())) 
-			ERRCHECK(sounds[soundInfo.getUniqueID()]->getLength(&length, FMOD_TIMEUNIT_MS));
-        return length;
-    }
-
     void updateSoundLoopVolume(SoundInfo &soundInfo, float newVolume, unsigned int fadeSampleLength = 0);
 
-    void setSoundLoopCount(SoundInfo& soundInfo, int loopCount);
-
-    void createSubmixGroup(std::vector<SoundInfo> sounds);
+   
 
     /**
     * Updates the position of a looping 3D sound that has already been loaded and is playing back.
@@ -94,20 +94,26 @@ public:
     void update3DSoundPosition(SoundInfo soundInfo); 
       
     /**
-     * TODO doc
+     * Checks if a looping sound is playing.
      */
     bool soundIsPlaying(SoundInfo soundInfo); 
    
 
     /**
      * Sets the position of the listener in the 3D scene.
-     * @var posX, posY, posZ - 3D translation of listener
-     * @var forwardX, forwardY, forwardZ - forward angle character is looking in
-     * @var upX, upY, upZ - up which must be perpendicular to forward vector
+     * @param posX, posY, posZ - 3D translation of listener
+     * @param forwardX, forwardY, forwardZ - forward angle character is looking in
+     * @param upX, upY, upZ - up which must be perpendicular to forward vector
      */
     void set3DListenerPosition(float posX,     float posY,     float posZ,
                                float forwardX, float forwardY, float forwardZ,
                                float upX,      float upY,      float upZ);
+
+    /**
+    * Utility method that returns the length of a SoundInfo's audio file in milliseconds
+    * If the sound hasn't been loaded, returns 0
+    */
+    unsigned int getSoundLengthInMS(SoundInfo soundInfo);
 
     /**
      * Loads an FMOD Studio soundbank 
@@ -141,7 +147,7 @@ public:
  
     /**
      * Sets the volume of an event.
-     * @var volume0to1 - volume of the event, from 0 (min vol) to 1 (max vol)
+     * @param volume0to1 - volume of the event, from 0 (min vol) to 1 (max vol)
      */
     void setEventVolume(const char* eventName, float volume0to1 = .75f);
 
@@ -165,6 +171,11 @@ public:
      */
 	bool isMuted();
 
+	// TODO: Fix
+    //void setSoundLoopCount(SoundInfo& soundInfo, int loopCount);
+    // TODO: Fix
+    //void createSubmixGroup(std::vector<SoundInfo> sounds);
+
     // The audio sampling rate of the audio engine
     static const int AUDIO_SAMPLE_RATE = 44100;
 
@@ -180,6 +191,9 @@ private:
      */
     void set3dChannelPosition(SoundInfo soundInfo, FMOD::Channel* channel);
 
+    /**
+     * Initializes the reverb effect
+     */
     void initReverb();
 
     /**
