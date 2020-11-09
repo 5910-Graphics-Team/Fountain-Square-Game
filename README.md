@@ -1,4 +1,4 @@
-# Fountain-Square-Game
-## 3D Game Demo made with C++, OpenGL, GLFW, GLM and FMOD
-### All dependencies included inside this repository's Lib/ and Include/ directories 
-### Dependencies: GLFW, GLAD, GLM, Stb_Image, ASSIMP, and FMOD
+# Fountain Square: The Game
+## A 3D Game Project, made using raw C++ 
+### Video demonstration:  [https://youtu.be/zsPBrNlp8GM](https://youtu.be/zsPBrNlp8GM)
+### Dependencies (all inside the Lib/ and Include/ folders): OpenGL, GLFW, GLAD, GLM, Stb_Image, ASSIMP and FMOD.
